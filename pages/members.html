@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KAS IT v2 - Anggota</title>
+<link rel="stylesheet" href="/css/styles.css">
+<style>
+/* Page-specific: members.html */
+.content { max-width: 900px; }
+</style>
+</head>
+<body>
+
+<div id="app" v-cloak>
+  <app-header></app-header>
+  <app-nav active="members" :pending-count="pendingCount"></app-nav>
+
+  <div class="content">
+    <div class="card">
+      <div class="card-header">
+        <h2>👥 Daftar Anggota</h2>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-add" @click="loadMembers">🔄 Refresh</button>
+        <button class="btn-add" @click="openModal()">+ Tambah Anggota</button>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div v-if="loading" class="table-loading">
+      <div class="spinner"></div> Memuat data...
+    </div>
+
+    <template v-else>
+    <!-- Member Cards -->
+    <div v-for="m in sortedMembers" :key="m.nik" @click="openDetail(m)" style="margin-bottom:10px;padding:14px 16px;border-radius:12px;border:1px solid #e8e8e8;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all 0.2s;box-shadow:0 1px 4px rgba(0,0,0,0.04);" :style="{ opacity: isActive(m) ? 1 : 0.5 }" @mouseover="$event.currentTarget.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" @mouseout="$event.currentTarget.style.boxShadow='0 1px 4px rgba(0,0,0,0.04)'">
+      <div style="width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:16px;" :style="{ background: posColors[m.position] || '#7DCD85' }">{{ getInitials(m.name) }}</div>
+      <div style="flex:1;">
+        <div style="font-size:14px;font-weight:600;color:#333;">{{ m.name }} <span v-if="m.isAdmin === true || m.isAdmin === 'TRUE'" style="font-size:10px;background:#e3f2fd;color:#1565c0;padding:1px 6px;border-radius:4px;margin-left:4px;font-weight:600;">ADMIN</span></div>
+        <div style="font-size:10px;color:#888;margin-top:2px;">{{ m.nik }} | <span :style="{ color: posColors[m.position] || '#555', fontWeight: '500' }">{{ m.position }}</span></div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <span v-if="Number(m.retry_count) >= 3" style="font-size:11px;background:#ffebee;color:#c62828;padding:3px 8px;border-radius:6px;font-weight:600;">🔒 Reset</span>
+        <span style="font-size:11px;padding:3px 8px;border-radius:6px;font-weight:600;" :style="{ background: isActive(m) ? '#e8f5e9' : '#ffebee', color: isActive(m) ? '#2e7d32' : '#c62828' }">{{ isActive(m) ? 'Active' : 'Inactive' }}</span>
+      </div>
+    </div>
+    </template>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal-overlay" :class="{ active: showDetailModal }" @click.self="showDetailModal = false">
+    <div class="modal" style="max-width:420px;position:relative;">
+      <span @click="showDetailModal = false" style="position:absolute;top:14px;right:18px;font-size:20px;cursor:pointer;color:#999;font-weight:300;">✕</span>
+      <div v-if="detailMember" style="text-align:center;margin-bottom:20px;">
+        <div style="font-size:36px;margin-bottom:8px;">👤</div>
+        <h2 style="margin-bottom:4px;color:#333;">{{ detailMember.name }}</h2>
+        <div style="font-size:13px;color:#888;">NIK: {{ detailMember.nik }}</div>
+        <div style="margin-top:8px;">
+          <span :style="{ fontSize:'12px', fontWeight:'600', color: posColors[detailMember.position] || '#555' }">{{ detailMember.position }}</span>
+          <span class="badge" :class="isActive(detailMember) ? 'badge-active' : 'badge-inactive'" style="margin-left:8px;">{{ isActive(detailMember) ? 'Active' : 'Inactive' }}</span>
+          <span v-if="detailMember.isAdmin === true || detailMember.isAdmin === 'TRUE'" style="font-size:10px;background:#e3f2fd;color:#1565c0;padding:2px 8px;border-radius:4px;margin-left:6px;font-weight:600;">ADMIN</span>
+          <span v-if="Number(detailMember.retry_count) >= 3" style="font-size:10px;background:#ffebee;color:#c62828;padding:2px 8px;border-radius:4px;margin-left:6px;font-weight:600;">LOCKED</span>
+        </div>
+        <div style="font-size:12px;color:#999;margin-top:6px;">Aktif sejak: {{ formatActiveFrom(detailMember.activeFrom) }}</div>
+      </div>
+      <div v-if="detailMember" style="display:flex;gap:8px;">
+        <button style="flex:1;padding:10px;background:#f5f5f5;color:#333;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;" @click="showDetailModal=false;editMember(detailMember)">✏️ Edit</button>
+        <button style="flex:1;padding:10px;background:#fff3e0;color:#e65100;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;" @click="resetPassword(detailMember)">🔑 Reset</button>
+        <button style="flex:1;padding:10px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;" :style="{ background: isActive(detailMember) ? '#ffebee' : '#e8f5e9', color: isActive(detailMember) ? '#c62828' : '#2e7d32' }" @click="toggleMember(detailMember)">{{ isActive(detailMember) ? '⏸ Nonaktif' : '▶ Aktifkan' }}</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" :class="{ active: showModal }" @click.self="closeModal">
+    <div class="modal">
+      <h2>{{ editingMember ? '✏️ Edit Anggota' : '+ Tambah Anggota' }}</h2>
+      <div class="form-group"><label>NIK</label><input type="text" v-model="form.nik" :disabled="!!editingMember" placeholder="NIK anggota"></div>
+      <div class="form-group"><label>Nama</label><input type="text" v-model="form.name" placeholder="Nama lengkap"></div>
+      <div class="form-group"><label>Jabatan</label>
+        <select v-model="form.position">
+          <option value="">-- Pilih Jabatan --</option>
+          <option value="Direktur">Direktur</option>
+          <option value="Senior Manager">Senior Manager</option>
+          <option value="Junior Manager">Junior Manager</option>
+          <option value="Coordinator">Coordinator</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Aktif Mulai</label><input type="month" v-model="form.activeFrom"></div>
+      <div class="form-group" style="display:flex;align-items:center;gap:8px;">
+        <input type="checkbox" id="isAdminCb" v-model="form.isAdmin" style="width:auto;">
+        <label for="isAdminCb" style="margin:0;cursor:pointer;">Admin</label>
+      </div>
+      <div class="form-actions">
+        <button class="btn-cancel" @click="closeModal">Batal</button>
+        <button class="btn-save" @click="saveMember" :disabled="saving">{{ saving ? 'Menyimpan...' : 'Simpan' }}</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <app-toast :show="toast.show" :message="toast.message" :success="toast.success" @close="toast.show = false"></app-toast>
+  </div>
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/components.js"></script>
+<script>
+const { createApp } = Vue;
+
+if (!checkAuth()) { /* redirected */ } else { initApp(); }
+
+function initApp() {
+const app = createApp({
+  mixins: [authMixin],
+  data() {
+    return {
+      pendingCount: 0,
+      members: [],
+      loading: false,
+      showModal: false,
+      saving: false,
+      editingMember: null,
+      form: { nik: '', name: '', position: '', activeFrom: '', isAdmin: false },
+      toast: { show: false, message: '', success: true },
+      // Detail modal
+      showDetailModal: false,
+      detailMember: null,
+      posColors: { 'Direktur': '#e53935', 'Senior Manager': '#1565c0', 'Junior Manager': '#f9a825', 'Coordinator': '#2e7d32' },
+      posOrder: { 'Direktur': 0, 'Senior Manager': 1, 'Junior Manager': 2, 'Coordinator': 3 }
+    };
+  },
+  computed: {
+    sortedMembers() {
+      return [...this.members].sort((a, b) => {
+        const activeA = this.isActive(a) ? 0 : 1;
+        const activeB = this.isActive(b) ? 0 : 1;
+        if (activeA !== activeB) return activeA - activeB;
+        return (this.posOrder[a.position] ?? 9) - (this.posOrder[b.position] ?? 9);
+      });
+    }
+  },
+  mounted() {
+    this.loadMembers();
+    // Fetch pending count for nav badge
+    fetch(API_URL + '?action=transactions').then(r => r.json()).then(txs => {
+      this.pendingCount = txs.filter(t => t.status === 'pending').length;
+    }).catch(() => {});
+  },
+  methods: {
+    isActive(m) {
+      return m.isActive === true || m.isActive === 'TRUE' || m.isActive === true;
+    },
+
+    async loadMembers() {
+      this.loading = true;
+      try {
+        const res = await fetch(API_URL + '?action=members');
+        this.members = await res.json();
+      } catch (err) {
+        console.error('Gagal memuat members:', err);
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    formatActiveFrom(af) {
+      if (!af) return '-';
+      try {
+        return new Date(af + '-01').toLocaleDateString('id-ID', { month: 'short', year: 'numeric' });
+      } catch { return af; }
+    },
+
+    openDetail(member) {
+      this.detailMember = member;
+      this.showDetailModal = true;
+    },
+
+    getInitials(name) {
+      if (!name) return '?';
+      const parts = name.trim().split(' ');
+      if (parts.length >= 2) return parts[0][0] + parts[1][0];
+      return parts[0].slice(0, 2);
+    },
+
+    openModal(member) {
+      this.editingMember = member || null;
+      if (member) {
+        this.form = { nik: member.nik, name: member.name, position: member.position, activeFrom: member.activeFrom || '', isAdmin: member.isAdmin === true || member.isAdmin === 'TRUE' };
+      } else {
+        this.form = { nik: '', name: '', position: '', activeFrom: new Date().toISOString().slice(0, 7), isAdmin: false };
+      }
+      this.showModal = true;
+    },
+
+    closeModal() {
+      this.showModal = false;
+      // If was editing from detail, go back to detail modal
+      if (this.editingMember && this.detailMember) {
+        this.showDetailModal = true;
+      }
+      this.editingMember = null;
+    },
+
+    editMember(m) {
+      this.openModal(m);
+    },
+
+    async saveMember() {
+      if (!this.form.name.trim() || !this.form.nik.trim()) {
+        this.showToast('NIK dan Nama wajib diisi', false);
+        return;
+      }
+      this.saving = true;
+      const payload = this.editingMember
+        ? {
+            action: 'updateMember',
+            nik: this.form.nik.trim(),
+            name: this.form.name.trim().toUpperCase(),
+            position: this.form.position,
+            activeFrom: this.form.activeFrom,
+            isAdmin: this.form.isAdmin
+          }
+        : {
+            action: 'addMember',
+            nik: this.form.nik.trim(),
+            name: this.form.name.trim().toUpperCase(),
+            position: this.form.position,
+            isActive: true,
+            activeFrom: this.form.activeFrom,
+            isAdmin: this.form.isAdmin
+          };
+
+      try {
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+        const result = await res.json();
+        if (result.ok !== false) {
+          this.showToast(this.editingMember ? `${payload.name} berhasil diupdate` : `${payload.name} berhasil ditambahkan`);
+          this.closeModal();
+          this.loadMembers();
+        } else {
+          this.showToast('Gagal menyimpan', false);
+        }
+      } catch (err) {
+        this.showToast('Gagal: koneksi error', false);
+      } finally {
+        this.saving = false;
+      }
+    },
+
+    async resetPassword(m) {
+      if (!confirm('Reset password ' + m.name + '? User harus buat password baru saat login berikutnya.')) return;
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'resetMemberPassword', nik: m.nik })
+        });
+        const result = await res.json();
+        if (result.ok !== false) {
+          this.showToast(m.name + ' password di-reset. Login berikutnya pakai default "123".');
+          this.showDetailModal = false;
+          this.loadMembers();
+        } else {
+          this.showToast(result.error || 'Gagal reset', false);
+        }
+      } catch (err) {
+        this.showToast('Gagal: koneksi error', false);
+      }
+    },
+
+    async toggleMember(m) {
+      const action = this.isActive(m) ? 'nonaktifkan' : 'aktifkan';
+      if (!confirm(action.charAt(0).toUpperCase() + action.slice(1) + ' ' + m.name + '?')) return;
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'toggleMember', nik: m.nik })
+        });
+        const result = await res.json();
+        if (result.ok !== false) {
+          this.showToast(m.name + ' berhasil di-' + action);
+          this.showDetailModal = false;
+          this.loadMembers();
+        } else {
+          this.showToast('Gagal toggle', false);
+        }
+      } catch (err) {
+        this.showToast('Gagal: koneksi error', false);
+      }
+    },
+
+    showToast(message, success = true) {
+      this.toast = { show: true, message, success };
+    }
+  }
+});
+registerComponents(app);
+app.mount('#app');
+} // end initApp
+</script>
+</body>
+</html>

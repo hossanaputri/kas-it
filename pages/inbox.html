@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KAS IT v2 - Inbox</title>
+<link rel="stylesheet" href="/css/styles.css">
+<style>
+/* Page-specific: inbox.html */
+.content { max-width: 900px; }
+.badge { background: var(--orange-bg); color: var(--orange); }
+</style>
+</head>
+<body>
+
+<div id="app" v-cloak>
+  <app-header></app-header>
+  <app-nav active="inbox" :pending-count="pendingCount"></app-nav>
+
+  <div class="content">
+    <div class="card">
+      <div class="card-header">
+        <h2>📬 Pending Approval <span class="badge">{{ pendingCount }}</span></h2>
+        <button class="btn-add" @click="loadData">🔄 Refresh</button>
+      </div>
+
+      <!-- Loading -->
+      <div v-if="loading" class="table-loading">
+        <div class="spinner"></div> Memuat...
+      </div>
+
+      <!-- Empty -->
+      <div v-else-if="!pendingItems.length" class="empty">
+        ✅ Tidak ada transaksi pending
+      </div>
+
+      <!-- Pending Items (unified) -->
+      <div v-else>
+        <div v-for="tx in pendingItems" :key="tx.id" class="tx-item">
+          <div class="tx-top">
+            <div class="tx-info">
+              <div class="name">{{ tx.memberName || 'Tanpa Anggota' }}</div>
+              <div class="detail">
+                <span class="kat-badge" :class="'kat-' + tx.kategori">
+                  {{ tx.kategori === 'iuran' ? '💳' : tx.kategori === 'event' ? '📅' : '📦' }}
+                  {{ tx.note || kategoriLabel(tx.kategori) }}
+                </span>
+                <span v-if="tx.kategori === 'event'" style="font-size:11px;color:#999;margin-left:4px;">
+                  ({{ getEventName(tx.eventId) }})
+                </span>
+                <span style="font-size:11px;color:#999;margin-left:6px;">• {{ formatDate(tx.submittedAt) }}</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div class="tx-amount" :class="{ keluar: tx.type === 'keluar' }">
+                {{ tx.type === 'keluar' ? '-' : '+' }}{{ fmt(tx.amount) }}
+              </div>
+              <div class="tx-actions">
+                <button class="btn-approve" @click="approveTx(tx)" :disabled="tx._loading">{{ tx._loading ? '⏳' : '✅' }}</button>
+                <button class="btn-reject" @click="rejectTx(tx)" :disabled="tx._loading">{{ tx._loading ? '⏳' : '❌' }}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div class="modal-overlay" :class="{ active: showConfirm }" @click.self="cancelConfirm">
+      <div class="toast" @click.stop>
+        <div class="toast-icon">⚠️</div>
+        <div class="toast-msg">{{ confirmMsg }}</div>
+        <div class="confirm-btns">
+          <button class="btn-no" @click="cancelConfirm">Batal</button>
+          <button class="btn-yes" @click="doConfirm">Reject</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <app-toast :show="toast.show" :message="toast.message" :success="toast.success" @close="toast.show = false"></app-toast>
+  </div>
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/components.js"></script>
+<script>
+const { createApp } = Vue;
+
+if (!checkAuth()) { /* redirected */ } else { initApp(); }
+
+function initApp() {
+const app = createApp({
+  mixins: [authMixin],
+  data() {
+    return {
+      transactions: [],
+      events: [],
+      loading: false,
+      showConfirm: false,
+      confirmMsg: '',
+      confirmCallback: null,
+      toast: { show: false, message: '', success: true }
+    };
+  },
+  computed: {
+    pendingItems() {
+      return this.transactions.filter(t => t.status === 'pending');
+    },
+    pendingCount() {
+      return this.pendingItems.length;
+    }
+  },
+  mounted() {
+    this.loadData();
+  },
+  methods: {
+    fmt(n) { return 'Rp ' + (Number(n) || 0).toLocaleString('id-ID'); },
+
+    formatDate(iso) {
+      if (!iso) return '-';
+      return new Date(iso).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    },
+
+    kategoriLabel(kat) {
+      if (kat === 'iuran') return 'Iuran';
+      if (kat === 'event') return 'Event';
+      return 'Lainnya';
+    },
+
+    getEventName(eventId) {
+      if (!eventId) return '';
+      const ev = this.events.find(e => e.id === eventId);
+      return ev ? ev.name : eventId;
+    },
+
+    async loadData() {
+      this.loading = true;
+      try {
+        const [tRes, evRes] = await Promise.all([
+          fetch(API_URL + '?action=transactions'),
+          fetch(API_URL + '?action=events')
+        ]);
+        this.transactions = (await tRes.json()).map(t => ({ ...t, _loading: false }));
+        this.events = await evRes.json();
+      } catch (err) {
+        console.error('Gagal memuat data:', err);
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    async approveTx(tx) {
+      tx._loading = true;
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'approveTransaction',
+            id: tx.id,
+            approvedAt: new Date().toISOString(),
+            approvedBy: sessionStorage.getItem('kas-it-member-nik') || ''
+          })
+        });
+        const result = await res.json();
+        if (result.ok !== false) {
+          this.showToast('Transaksi di-approve ✅');
+          this.loadData();
+        } else {
+          this.showToast('Gagal approve', false);
+        }
+      } catch (err) {
+        this.showToast('Gagal: koneksi error', false);
+      }
+      tx._loading = false;
+    },
+
+    rejectTx(tx) {
+      const label = tx.memberName || tx.note || 'transaksi ini';
+      this.askConfirm('Reject transaksi dari ' + label + '?', async () => {
+        tx._loading = true;
+        try {
+          const res = await fetch(API_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'rejectTransaction', id: tx.id })
+          });
+          const result = await res.json();
+          if (result.ok !== false) {
+            this.showToast('Transaksi di-reject');
+            this.loadData();
+          } else {
+            this.showToast('Gagal reject', false);
+          }
+        } catch (err) {
+          this.showToast('Gagal: koneksi error', false);
+        }
+        tx._loading = false;
+      });
+    },
+
+    askConfirm(msg, callback) {
+      this.confirmMsg = msg;
+      this.confirmCallback = callback;
+      this.showConfirm = true;
+    },
+    async doConfirm() {
+      this.showConfirm = false;
+      if (this.confirmCallback) await this.confirmCallback();
+    },
+    cancelConfirm() {
+      this.showConfirm = false;
+    },
+
+    showToast(message, success = true) {
+      this.toast = { show: true, message, success };
+    }
+  }
+});
+registerComponents(app);
+app.mount('#app');
+} // end initApp
+</script>
+</body>
+</html>

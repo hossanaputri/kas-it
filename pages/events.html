@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KAS IT v2 - Events</title>
+<link rel="stylesheet" href="/css/styles.css">
+<style>
+/* Page-specific: events.html */
+.content { max-width: 1000px; }
+.card { border-radius: var(--radius-xl); padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.card-header h2 { font-size: 18px; }
+.modal { border-radius: var(--radius-xl); max-width: 480px; box-shadow: var(--shadow-lg); }
+.form-group input { padding: 10px 14px; border-radius: 10px; }
+</style>
+</head>
+<body>
+
+<div id="app" v-cloak>
+  <app-header></app-header>
+  <app-nav active="events" :pending-count="pendingCount"></app-nav>
+
+  <div class="content">
+    <div class="card">
+      <div class="card-header">
+        <h2>📅 Daftar Event</h2>
+        <div style="display:flex;gap:6px;">
+        <button class="btn" style="background:#f5f5f5;color:#333;" @click="loadData">🔄</button>
+        <button class="btn btn-save" @click="openCreateModal">+ Buat Event</button>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div v-if="loading" class="table-loading">
+      <div class="spinner"></div> Memuat data...
+    </div>
+
+    <!-- Empty -->
+    <div v-else-if="!events.length" class="empty-state">
+      <div class="icon">📅</div>
+      <div class="text">Belum ada event. Klik "+ Buat Event" untuk memulai.</div>
+    </div>
+
+    <!-- Event List -->
+    <div v-else>
+      <div v-for="ev in events" :key="ev.id" class="event-row">
+        <div class="event-item" :class="{ closed: ev.status === 'closed' }" @click="showDetail(ev)">
+          <div class="event-top">
+            <div>
+              <span class="event-name">{{ ev.name }}</span>
+              <span class="event-status" :class="ev.status === 'closed' ? 'closed' : 'active'">
+                {{ ev.status === 'closed' ? '⚫ Closed' : '🟢 Aktif' }}
+              </span>
+            </div>
+            <div class="event-stats">
+              <div class="amount">{{ fmt(getCollected(ev)) }}</div>
+              <div class="sub">{{ getPaidCount(ev) }} orang sudah bayar</div>
+            </div>
+          </div>
+          <div class="event-iuran-grid">
+            <span class="iuran-chip" v-if="ev.iuranDirektur" :style="{ borderLeftColor: posColor('Direktur') }"><span class="pos">Direktur:</span> <span class="amt">{{ fmt(ev.iuranDirektur) }}</span></span>
+            <span class="iuran-chip" v-if="ev.iuranSeniorManager" :style="{ borderLeftColor: posColor('Senior Manager') }"><span class="pos">SM:</span> <span class="amt">{{ fmt(ev.iuranSeniorManager) }}</span></span>
+            <span class="iuran-chip" v-if="ev.iuranJuniorManager" :style="{ borderLeftColor: posColor('Junior Manager') }"><span class="pos">JM:</span> <span class="amt">{{ fmt(ev.iuranJuniorManager) }}</span></span>
+            <span class="iuran-chip" v-if="ev.iuranCoordinator" :style="{ borderLeftColor: posColor('Coordinator') }"><span class="pos">Coord:</span> <span class="amt">{{ fmt(ev.iuranCoordinator) }}</span></span>
+          </div>
+        </div>
+        <div class="event-side-actions" @click.stop>
+          <button v-if="ev.status !== 'closed'" class="btn-circle btn-close-ev" @click="closeEvent(ev)" title="Close">⏹</button>
+          <button v-else class="btn-circle btn-reopen" @click="reopenEvent(ev)" title="Reopen">▶</button>
+          <button class="btn-circle btn-delete" @click="deleteEvent(ev)" title="Hapus">🗑</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create/Edit Modal -->
+  <div class="modal-overlay" :class="{ active: showCreateModal }" @click.self="closeCreateModal">
+    <div class="modal">
+      <h2>{{ editingEvent ? '✏️ Edit Event' : '+ Buat Event Baru' }}</h2>
+      <div class="form-group"><label>Nama Event</label><input type="text" v-model="form.name" placeholder="Cth: Halbi 2026"></div>
+      <div class="form-group"><label>Iuran Direktur</label><input type="text" :value="fmtInput(form.iuranDirektur)" @input="form.iuranDirektur = parseRibuan($event.target.value); $event.target.value = fmtInput(form.iuranDirektur)" placeholder="Cth: 50.000" inputmode="numeric"></div>
+      <div class="form-group"><label>Iuran Senior Manager</label><input type="text" :value="fmtInput(form.iuranSeniorManager)" @input="form.iuranSeniorManager = parseRibuan($event.target.value); $event.target.value = fmtInput(form.iuranSeniorManager)" placeholder="Cth: 50.000" inputmode="numeric"></div>
+      <div class="form-group"><label>Iuran Junior Manager</label><input type="text" :value="fmtInput(form.iuranJuniorManager)" @input="form.iuranJuniorManager = parseRibuan($event.target.value); $event.target.value = fmtInput(form.iuranJuniorManager)" placeholder="Cth: 50.000" inputmode="numeric"></div>
+      <div class="form-group"><label>Iuran Coordinator</label><input type="text" :value="fmtInput(form.iuranCoordinator)" @input="form.iuranCoordinator = parseRibuan($event.target.value); $event.target.value = fmtInput(form.iuranCoordinator)" placeholder="Cth: 50.000" inputmode="numeric"></div>
+      <div class="form-actions">
+        <button class="btn btn-cancel" @click="closeCreateModal">Batal</button>
+        <button class="btn btn-save" @click="saveEvent" :disabled="saving">{{ saving ? 'Menyimpan...' : 'Simpan' }}</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal-overlay" :class="{ active: showDetailModal }" @click.self="closeDetailModal">
+    <div class="modal" style="max-width:550px;">
+      <h2>{{ detailEvent ? detailEvent.name : '' }}</h2>
+      <div v-if="detailEvent">
+        <div class="detail-summary">
+          <div class="detail-box green">
+            <div class="label">Terkumpul</div>
+            <div class="value green">{{ fmt(getCollected(detailEvent)) }}</div>
+          </div>
+          <div class="detail-box gray">
+            <div class="label">Sudah / Belum</div>
+            <div class="value dark">{{ getPaidCount(detailEvent) }} / {{ getUnpaidMembers(detailEvent).length }}</div>
+          </div>
+        </div>
+        <div class="detail-iuran">
+          <span class="chip" style="border-color:#e53935;" v-if="detailEvent.iuranDirektur">Direktur: <strong>{{ fmt(detailEvent.iuranDirektur) }}</strong></span>
+          <span class="chip" style="border-color:#1565c0;" v-if="detailEvent.iuranSeniorManager">SM: <strong>{{ fmt(detailEvent.iuranSeniorManager) }}</strong></span>
+          <span class="chip" style="border-color:#f9a825;" v-if="detailEvent.iuranJuniorManager">JM: <strong>{{ fmt(detailEvent.iuranJuniorManager) }}</strong></span>
+          <span class="chip" style="border-color:#2e7d32;" v-if="detailEvent.iuranCoordinator">Coord: <strong>{{ fmt(detailEvent.iuranCoordinator) }}</strong></span>
+        </div>
+        <div class="payment-grid">
+          <div class="payment-list paid">
+            <h4 style="color:#2e7d32;">✅ Sudah Bayar</h4>
+            <div v-for="p in getEventPayments(detailEvent)" :key="p.id" class="payment-item">
+              <span :style="{ color: posColor(getMemberPosition(p.memberNik)), fontWeight: 500 }">{{ p.memberName }} — <strong>{{ fmt(p.amount) }}</strong></span>
+              <span v-if="p.status === 'pending'" class="badge-pending">PENDING</span>
+            </div>
+            <div v-if="!getEventPayments(detailEvent).length" style="color:#999;">-</div>
+          </div>
+          <div class="payment-list unpaid">
+            <h4 style="color:#c62828;">❌ Belum Bayar</h4>
+            <div v-for="m in getUnpaidMembers(detailEvent)" :key="m.nik" class="payment-item">
+              <span :style="{ color: posColor(m.position), fontWeight: 500 }">{{ m.name }}</span>
+            </div>
+            <div v-if="!getUnpaidMembers(detailEvent).length" style="color:#999;">Semua sudah bayar! 🎉</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-actions" style="margin-top:16px;">
+        <button class="btn btn-save" @click="openEditFromDetail">✏️ Edit</button>
+        <button class="btn btn-cancel" @click="closeDetailModal">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Modal -->
+  <div class="modal-overlay" :class="{ active: showConfirm }" @click.self="cancelConfirm">
+    <div class="toast" @click.stop>
+      <div class="toast-icon">⚠️</div>
+      <div class="toast-msg">{{ confirmMsg }}</div>
+      <div v-if="!confirmLoading" class="confirm-btns">
+        <button class="btn-no" @click="cancelConfirm">Batal</button>
+        <button class="btn-yes" @click="doConfirm">{{ confirmBtnText }}</button>
+      </div>
+      <div v-else style="margin-top:18px;font-size:14px;color:#888;">Memproses...</div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <app-toast :show="toast.show" :message="toast.message" :success="toast.success" @close="toast.show = false"></app-toast>
+  </div>
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/components.js"></script>
+<script>
+const POS_COLORS = { 'Direktur': '#e53935', 'Senior Manager': '#1565c0', 'Junior Manager': '#f9a825', 'Coordinator': '#2e7d32' };
+
+const { createApp } = Vue;
+
+if (!checkAuth()) { /* redirected */ } else { initApp(); }
+
+function initApp() {
+const app = createApp({
+  mixins: [authMixin],
+  data() {
+    return {
+      pendingCount: 0,
+      events: [],
+      eventPayments: [],
+      members: [],
+      loading: false,
+      showCreateModal: false,
+      editingEvent: null,
+      form: { name: '', iuranDirektur: 0, iuranSeniorManager: 0, iuranJuniorManager: 0, iuranCoordinator: 0 },
+      saving: false,
+      showDetailModal: false,
+      detailEvent: null,
+      showConfirm: false,
+      confirmMsg: '',
+      confirmBtnText: 'Ya',
+      confirmLoading: false,
+      confirmCallback: null,
+      // Toast
+      toast: { show: false, message: '', success: true }
+    };
+  },
+  mounted() {
+    this.loadData();
+    // Fetch pending count for nav badge
+    fetch(API_URL + '?action=transactions').then(r => r.json()).then(txs => {
+      this.pendingCount = txs.filter(t => t.status === 'pending').length;
+    }).catch(() => {});
+  },
+  methods: {
+    fmt(n) { return 'Rp ' + (Number(n) || 0).toLocaleString('id-ID'); },
+    fmtInput(n) { if (!n && n !== 0) return ''; return Number(n).toLocaleString('id-ID'); },
+    parseRibuan(str) { return Number(String(str).replace(/\D/g, '')) || 0; },
+
+    posColor(position) { return POS_COLORS[position] || '#333'; },
+
+    getMemberPosition(nik) {
+      const m = this.members.find(m => String(m.nik) === String(nik));
+      return m ? m.position : '';
+    },
+
+    async loadData() {
+      this.loading = true;
+      try {
+        const [evRes, epRes, mRes] = await Promise.all([
+          fetch(API_URL + '?action=events'),
+          fetch(API_URL + '?action=transactions&kategori=event'),
+          fetch(API_URL + '?action=members')
+        ]);
+        this.events = await evRes.json();
+        this.eventPayments = await epRes.json();
+        this.members = await mRes.json();
+      } catch (err) {
+        console.error('Gagal memuat data:', err);
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    getEventPayments(ev) {
+      return this.eventPayments.filter(p => p.eventId === ev.id && p.kategori === 'event' && p.status !== 'rejected');
+    },
+
+    getPaidCount(ev) {
+      return this.getEventPayments(ev).length;
+    },
+
+    getCollected(ev) {
+      return this.getEventPayments(ev).reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+    },
+
+    getUnpaidMembers(ev) {
+      const paidNiks = this.getEventPayments(ev).map(p => String(p.memberNik));
+      return this.members.filter(m => (m.isActive === true || m.isActive === 'TRUE') && !paidNiks.includes(String(m.nik)));
+    },
+
+    // Create/Edit
+    openCreateModal() {
+      this.editingEvent = null;
+      this.form = { name: '', iuranDirektur: 0, iuranSeniorManager: 0, iuranJuniorManager: 0, iuranCoordinator: 0 };
+      this.showCreateModal = true;
+    },
+
+    closeCreateModal() {
+      this.showCreateModal = false;
+      this.editingEvent = null;
+    },
+
+    openEditFromDetail() {
+      const ev = this.detailEvent;
+      if (!ev) return;
+      this.closeDetailModal();
+      this.editingEvent = ev;
+      this.form = {
+        name: ev.name,
+        iuranDirektur: Number(ev.iuranDirektur) || 0,
+        iuranSeniorManager: Number(ev.iuranSeniorManager) || 0,
+        iuranJuniorManager: Number(ev.iuranJuniorManager) || 0,
+        iuranCoordinator: Number(ev.iuranCoordinator) || 0
+      };
+      this.showCreateModal = true;
+    },
+
+    async saveEvent() {
+      if (!this.form.name.trim()) {
+        this.showToast('Nama event wajib diisi', false);
+        return;
+      }
+      this.saving = true;
+      const payload = this.editingEvent
+        ? { action: 'updateEvent', id: this.editingEvent.id, ...this.form }
+        : { action: 'addEvent', ...this.form, createdBy: 'admin' };
+
+      try {
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+        const result = await res.json();
+        if (result.ok !== false) {
+          this.showToast(this.editingEvent ? 'Event berhasil diupdate' : 'Event berhasil dibuat');
+          this.closeCreateModal();
+          this.loadData();
+        } else {
+          this.showToast('Gagal menyimpan: ' + (result.error || ''), false);
+        }
+      } catch (err) {
+        this.showToast('Gagal: koneksi error', false);
+      } finally {
+        this.saving = false;
+      }
+    },
+
+    // Detail
+    showDetail(ev) {
+      this.detailEvent = ev;
+      this.showDetailModal = true;
+    },
+
+    closeDetailModal() {
+      this.showDetailModal = false;
+      this.detailEvent = null;
+    },
+
+    // Actions
+    closeEvent(ev) {
+      this.askConfirm('Close event "' + ev.name + '"?', 'Close', async () => {
+        await this.postAction({ action: 'closeEvent', id: ev.id });
+      });
+    },
+
+    reopenEvent(ev) {
+      this.askConfirm('Reopen event "' + ev.name + '"?', 'Reopen', async () => {
+        await this.postAction({ action: 'reopenEvent', id: ev.id });
+      });
+    },
+
+    deleteEvent(ev) {
+      this.askConfirm('Hapus event "' + ev.name + '" beserta semua payment-nya?', 'Hapus', async () => {
+        await this.postAction({ action: 'deleteEvent', id: ev.id });
+      });
+    },
+
+    askConfirm(msg, btnText, callback) {
+      this.confirmMsg = msg;
+      this.confirmBtnText = btnText;
+      this.confirmCallback = callback;
+      this.confirmLoading = false;
+      this.showConfirm = true;
+    },
+
+    async doConfirm() {
+      this.confirmLoading = true;
+      if (this.confirmCallback) await this.confirmCallback();
+      this.showConfirm = false;
+      this.confirmLoading = false;
+    },
+
+    cancelConfirm() {
+      this.showConfirm = false;
+      this.confirmLoading = false;
+    },
+
+    async postAction(payload) {
+      try {
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+        const result = await res.json();
+        if (result.ok !== false) {
+          this.showToast('Berhasil!');
+          this.loadData();
+        } else {
+          this.showToast('Gagal: ' + (result.error || ''), false);
+        }
+      } catch (err) {
+        this.showToast('Gagal: koneksi error', false);
+      }
+    },
+
+    showToast(message, success = true) {
+      this.toast = { show: true, message, success };
+    }
+  }
+});
+registerComponents(app);
+app.mount('#app');
+} // end initApp
+</script>
+</body>
+</html>
