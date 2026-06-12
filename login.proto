@@ -1,0 +1,263 @@
+syntax = "proto3";
+package grpc;
+option go_package = "pkg/grpc";
+
+message LoginMroParams{
+  string nik = 1;
+  string pin = 2;
+  int32 roleLevel = 3;
+  string storeCode = 4;
+  string branchCode = 5;
+  string company = 6;
+  string deviceId = 7;
+  bool isKaryawan = 8;
+}
+
+message LoginMroParamsV2{
+  string nik = 1;
+  string pin = 2;
+  int32 roleLevel = 3;
+  string storeCode = 4;
+  string branchCode = 5;
+  string company = 6;
+  DeviceOfficer device = 7;
+  bool isKaryawan = 8;
+}
+
+message LoginObaOfflineParam{
+  string obaId = 1;
+  string deviceId = 2;
+  string firebaseToken = 3;
+  string nik = 4;
+  double latitude = 5;
+  double longitude = 6;
+  bool isSuperuser = 7;
+  OrderLocation orderLocation = 8;
+}
+
+enum OrderLocation{
+  UNKNOWN = 0;
+  OUTLET = 1;
+  SP = 2;
+}
+
+enum Status{
+  APPROVE = 0;
+  REJECT = 1;
+  BLACKLIST = 2;
+}
+
+message ObaId{
+  string obaId = 1;
+}
+
+message Email{
+  string email = 1;
+}
+
+message Device{
+  string obaId = 1;
+  string deviceId = 2;
+  string firebaseToken = 3;
+  int32 isPrimary = 4;
+  int32 ppobStatus = 5;
+  int32 isDeviceBlacklist = 6;
+  int32 isDeviceActive = 7;
+  int32 tokomodal = 8;
+}
+
+message UserData{
+  string email = 1;
+  string obaId = 2;
+  int32 obaOnline = 3;
+  string storeId = 4;
+  string branchId = 5;
+  string companyId = 6;
+  string groupId = 7;
+  int32 isActivated = 8;
+  int32 isAccountActive = 9;
+  int32 isVerified = 10;
+  int32 isAccountBlacklist = 11;
+  int32 isEmailVerified = 12;
+  int32 isOldMember = 13;
+  string phoneNumber = 14;
+  int32 isPhoneVerified = 15;
+  repeated Device device = 16;
+  repeated string roles = 17;
+  int32 isPinCreated = 18;
+  bool tokomodal = 19;
+  bool ppob = 20;
+  bool flex_ultra = 21;
+  string officer_nik = 22;
+}
+
+message GroupIds{
+  string obaId = 1;
+  string groupIds = 2;
+}
+
+message IsPhoneVerifiedRequest{
+  string phoneNumber = 1;
+}
+
+message IsPhoneExistsReq{
+  string obaId = 1;
+  string phoneNumber = 2;
+}
+
+message UpdatePhoneRequest{
+  string obaId = 1;
+  string phoneNumber = 2;
+  string updateBy = 3;
+  string reason = 4;
+}
+
+message AuthResponse {
+  string status = 1;
+  string token = 2;
+  string expiredAt = 3;
+  string requestId = 4;
+}
+
+message IsActivatedResponse{
+  int32 isActivated = 1;
+}
+
+message IsEmailVerifiedResponse{
+  int32 isEmailRegistered = 1;
+  int32 isEmailVerified = 2;
+}
+
+message IsPhoneVerifiedResponse{
+  int32 isPhoneVerified = 1;
+}
+
+message IsPhoneExistsResp{
+  int32 isPhoneExists = 1;
+  int32 IsPhoneVerified = 2;
+}
+
+message LoginHcRequest{
+  string nik = 1;
+  string pin = 2;
+}
+
+message Response {
+  string status = 1;
+  string message = 2;
+}
+
+message OrderWaCheckReq{
+  string phoneNumber = 1;
+}
+
+message OrderWaCheckResp{
+  bool isMemberValid = 1;
+  bool isFullMember = 2;
+  string obaId = 3;
+  string outletName = 4;
+}
+
+message GroupIdMass{
+  string store = 1;
+  repeated GroupIds member = 2;
+}
+
+message MassUpdateGroupIdReq{
+  repeated GroupIdMass data = 1;
+}
+
+message MassUpdateGroupIdResp{
+  string status = 1;
+  repeated string message = 2;
+}
+
+message DeviceOfficer{
+  string nik = 1;
+  string deviceId = 2;
+  string deviceAgent = 3;
+  string firebaseToken = 4;
+  int64 appsVersion = 5;
+}
+
+message LoginParams {
+  string username = 1;
+  string password = 2;
+  string firebaseToken = 3;
+  string deviceID = 4;
+  float latitude = 5;
+  float longitude = 6;
+  int32 appsVers = 7;
+  bool isB2B = 8;
+  int32 partnerID = 9;
+} 
+
+message GetJwtWaOrderByPhoneRequest{
+ string phone =1;
+}
+
+message GetJwtWaOrderByPhoneResponse{
+  string hash =1;
+}
+
+message GetPhoneWaOrderByJwtRequest{
+  string hash =1;
+}
+
+message GetPhoneWaOrderByJwtResponse{
+  string phone =1;
+}
+
+message DeleteObaByObaIDRequest{
+  string obaID=1;
+}
+
+message SyncMemberBoRequest {
+    message Data {
+        string store_id = 1;
+        repeated string oba_not_found_in_mongo = 2;
+        repeated string oba_not_found_in_bo = 3;
+    }
+
+    repeated Data items = 1;
+}
+
+message LoginMroV3Req{
+  string nik = 1;
+  string pin = 2;
+  DeviceOfficer device = 3;
+  bool isSuperUser = 4;
+}
+
+message OfficerRefreshTokenReq {
+  string token = 1;
+  string firebaseToken = 2;
+}
+
+message NikOfficer {
+  string nik = 1;
+}
+
+service AuthService{
+  rpc LoginV2(LoginParams) returns(AuthResponse);
+  rpc LoginObaOffline(LoginObaOfflineParam) returns(AuthResponse);
+  rpc LoginMro(LoginMroParams) returns(AuthResponse);
+  rpc LoginMroV2(LoginMroParamsV2) returns(AuthResponse);
+  rpc GroupIdsUpdate(GroupIds) returns(Response);
+  rpc UpdatePhoneNumber(UpdatePhoneRequest) returns(Response);
+  rpc CheckObaIsActivated(ObaId) returns(IsActivatedResponse);
+  rpc CheckEmail(Email) returns(IsEmailVerifiedResponse);
+  rpc GetObaPrivilege(ObaId) returns(UserData);
+  rpc CheckIsPhoneVerified(IsPhoneVerifiedRequest) returns(IsPhoneVerifiedResponse);
+  rpc CheckIsPhoneExists(IsPhoneExistsReq) returns(IsPhoneExistsResp);
+  rpc LoginHc(LoginHcRequest) returns(Response);
+  rpc OrderWaCheckMember(OrderWaCheckReq) returns(OrderWaCheckResp);
+  rpc MassUpdateGroupId(MassUpdateGroupIdReq) returns(MassUpdateGroupIdResp);
+  rpc GetJwtWaOrderByPhone(GetJwtWaOrderByPhoneRequest) returns (GetJwtWaOrderByPhoneResponse);
+  rpc GetPhoneWaOrderByJwt(GetPhoneWaOrderByJwtRequest) returns (GetPhoneWaOrderByJwtResponse);
+  rpc DeleteObaByObaID(DeleteObaByObaIDRequest) returns (Response);
+
+  rpc LoginMroV3(LoginMroV3Req) returns(AuthResponse);
+  rpc RefreshTokenOfficerByToken(OfficerRefreshTokenReq) returns(AuthResponse);
+  rpc RefreshDataTokenOfficer(NikOfficer) returns(Response);
+}

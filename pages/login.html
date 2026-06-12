@@ -3,88 +3,370 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KAS IT v2 - Login</title>
+<title>KAS IT - Login</title>
 <link rel="stylesheet" href="/css/styles.css">
 <style>
-/* Page-specific: login.html */
-body { display: flex; align-items: center; justify-content: center; }
-.login-card { background: white; border-radius: var(--radius-xl); padding: 40px; width: 90%; max-width: 360px; box-shadow: var(--shadow-md); text-align: center; }
-.login-card .logo { font-size: 48px; margin-bottom: 8px; }
-.login-card h1 { font-size: 20px; color: var(--text); margin-bottom: 4px; }
-.login-card .subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 28px; }
-.form-group { text-align: left; margin-bottom: 14px; }
-.form-group input { padding: 11px 14px; border-radius: 10px; }
-.btn-login { width: 100%; padding: 12px; background: var(--primary-gradient); color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-top: 8px; }
-.btn-login:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(90,184,98,0.3); }
-.btn-login:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
-.error-msg { color: var(--red); font-size: 12px; margin-top: 12px; display: none; }
-.error-msg.show { display: block; }
+/* Page-specific: login.html — Aesthetic Green */
+body::before, body::after { display: none !important; }
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #0d1f0f;
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+}
+
+/* Animated gradient orbs */
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.5;
+  animation: float 8s ease-in-out infinite;
+}
+.bg-orb-1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #2e7d32, transparent 70%);
+  top: -100px;
+  right: -100px;
+  animation-delay: 0s;
+}
+.bg-orb-2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #1b5e20, transparent 70%);
+  bottom: -80px;
+  left: -80px;
+  animation-delay: -3s;
+}
+.bg-orb-3 {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, #43a047, transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.2;
+  animation-delay: -5s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(20px, -20px) scale(1.05); }
+  66% { transform: translate(-15px, 15px) scale(0.95); }
+}
+.bg-orb-3 {
+  animation-name: floatCenter;
+}
+@keyframes floatCenter {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  33% { transform: translate(-50%, -50%) scale(1.1); }
+  66% { transform: translate(-50%, -50%) scale(0.9); }
+}
+
+/* Grain texture overlay */
+body::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+.login-wrapper {
+  position: relative;
+  z-index: 1;
+  width: 90%;
+  max-width: 400px;
+}
+
+.login-card {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 24px;
+  padding: 48px 36px 40px;
+  text-align: center;
+  animation: cardIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Logo */
+.logo-container {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 20px;
+  background: linear-gradient(135deg, #2e7d32, #66bb6a);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 32px rgba(46, 125, 50, 0.4);
+  position: relative;
+}
+.logo-container::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(102,187,106,0.5), transparent, rgba(46,125,50,0.3));
+  z-index: -1;
+  filter: blur(4px);
+}
+.logo-container span {
+  font-size: 34px;
+}
+
+.login-card h1 {
+  font-size: 24px;
+  color: #ffffff;
+  margin-bottom: 6px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+.login-card .subtitle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 32px;
+}
+
+/* Form */
+.form-group {
+  text-align: left;
+  margin-bottom: 18px;
+}
+.form-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 8px;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.form-group input {
+  width: 100%;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  font-size: 14px;
+  color: #ffffff;
+  transition: all 0.3s ease;
+  outline: none;
+}
+.form-group input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+.form-group input:focus {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: #66bb6a;
+  box-shadow: 0 0 0 3px rgba(102, 187, 106, 0.15), 0 0 20px rgba(102, 187, 106, 0.1);
+}
+
+/* Button */
+.btn-login {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #2e7d32, #43a047);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  letter-spacing: 0.3px;
+  position: relative;
+  overflow: hidden;
+}
+.btn-login::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transition: left 0.5s ease;
+}
+.btn-login:hover::before {
+  left: 100%;
+}
+.btn-login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(46, 125, 50, 0.5);
+}
+.btn-login:active {
+  transform: translateY(0);
+}
+.btn-login:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+.btn-login:disabled::before {
+  display: none;
+}
+
+/* Error */
+.error-msg {
+  color: #ef5350;
+  font-size: 12px;
+  margin-top: 16px;
+  display: none;
+  background: rgba(239, 83, 80, 0.1);
+  border: 1px solid rgba(239, 83, 80, 0.2);
+  padding: 10px 14px;
+  border-radius: 10px;
+  text-align: left;
+}
+.error-msg.show {
+  display: block;
+}
+
+/* Session expired */
+.session-expired-banner {
+  background: rgba(255, 152, 0, 0.1);
+  border: 1px solid rgba(255, 152, 0, 0.2);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+  font-size: 12px;
+  color: #ffb74d;
+  font-weight: 500;
+}
+
+/* Password wrapper */
+.password-wrapper {
+  position: relative;
+}
+.password-wrapper input {
+  padding-right: 44px;
+}
+.eye-toggle {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  opacity: 0.4;
+  transition: opacity 0.2s;
+}
+.eye-toggle:hover {
+  opacity: 0.7;
+}
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 28px 0 20px;
+}
+
+/* Footer */
+.footer-text {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.25);
+  margin-top: 24px;
+}
+
+/* Responsive */
+@media (max-width: 420px) {
+  .login-card { padding: 36px 24px 32px; }
+  .logo-container { width: 60px; height: 60px; border-radius: 16px; }
+  .logo-container span { font-size: 28px; }
+}
 </style>
 </head>
 <body>
 
-<div class="login-card" id="app">
-  <div class="logo">💰</div>
-  <h1>KAS IT Dashboard</h1>
+<!-- Background orbs -->
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+<div class="bg-orb bg-orb-3"></div>
 
-  <!-- Login Form -->
-  <template v-if="!showChangePassword">
-    <div v-if="sessionExpired" style="background:#fff3e0;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#e65100;font-weight:500;">
-      ⏱️ Sesi kamu sudah habis. Silakan login ulang.
-    </div>
-    <div class="subtitle">Silakan login untuk melanjutkan</div>
+<div class="login-wrapper">
+  <div class="login-card" id="app">
+    <div class="logo-container"><span>💰</span></div>
+    <h1>KAS IT</h1>
 
-    <div class="form-group">
-      <label>NIK</label>
-      <input type="text" v-model="nik" placeholder="Masukkan NIK" @keyup.enter="login">
-    </div>
-    <div class="form-group">
-      <label>Password</label>
-      <div style="position:relative;">
-        <input :type="showPass ? 'text' : 'password'" v-model="password" placeholder="Password" @keyup.enter="login" style="padding-right:40px;">
-        <span @click="showPass = !showPass" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;user-select:none;display:flex;align-items:center;">
-          <svg v-if="!showPass" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-        </span>
+    <!-- Login Form -->
+    <template v-if="!showChangePassword">
+      <div v-if="sessionExpired" class="session-expired-banner">
+        ⏱️ Sesi kamu sudah habis. Silakan login ulang.
       </div>
-    </div>
+      <div class="subtitle">Masuk untuk mengelola kas tim IT</div>
 
-    <button class="btn-login" @click="login" :disabled="loading">
-      {{ loading ? 'Memproses...' : 'Login' }}
-    </button>
-  </template>
-
-  <!-- Change Password Form -->
-  <template v-else>
-    <div class="subtitle" style="color:#e65100;">⚠️ Buat password baru untuk akun kamu</div>
-
-    <div class="form-group">
-      <label>Password Baru</label>
-      <div style="position:relative;">
-        <input :type="showNewPass ? 'text' : 'password'" v-model="newPassword" placeholder="Minimal 4 karakter" @keyup.enter="$refs.confirmInput.focus()" style="padding-right:40px;">
-        <span @click="showNewPass = !showNewPass" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;user-select:none;display:flex;align-items:center;">
-          <svg v-if="!showNewPass" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-        </span>
+      <div class="form-group">
+        <label>NIK</label>
+        <input type="text" v-model="nik" placeholder="Masukkan NIK" @keyup.enter="login">
       </div>
-    </div>
-    <div class="form-group">
-      <label>Konfirmasi Password</label>
-      <div style="position:relative;">
-        <input :type="showConfirmPass ? 'text' : 'password'" v-model="confirmPassword" placeholder="Ketik ulang password" ref="confirmInput" @keyup.enter="changePassword" style="padding-right:40px;">
-        <span @click="showConfirmPass = !showConfirmPass" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;user-select:none;display:flex;align-items:center;">
-          <svg v-if="!showConfirmPass" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-        </span>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="password-wrapper">
+          <input :type="showPass ? 'text' : 'password'" v-model="password" placeholder="••••••••" @keyup.enter="login">
+          <span class="eye-toggle" @click="showPass = !showPass">
+            <svg v-if="!showPass" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </span>
+        </div>
       </div>
-    </div>
 
-    <button class="btn-login" @click="changePassword" :disabled="loading">
-      {{ loading ? 'Menyimpan...' : 'Simpan Password' }}
-    </button>
-  </template>
+      <button class="btn-login" @click="login" :disabled="loading">
+        {{ loading ? 'Memproses...' : 'Masuk' }}
+      </button>
+    </template>
 
-  <div class="error-msg" :class="{ show: errorMsg }">{{ errorMsg }}</div>
+    <!-- Change Password Form -->
+    <template v-else>
+      <div class="subtitle" style="color:#ffb74d;">⚠️ Buat password baru untuk akun kamu</div>
+
+      <div class="form-group">
+        <label>Password Baru</label>
+        <div class="password-wrapper">
+          <input :type="showNewPass ? 'text' : 'password'" v-model="newPassword" placeholder="Minimal 4 karakter" @keyup.enter="$refs.confirmInput.focus()">
+          <span class="eye-toggle" @click="showNewPass = !showNewPass">
+            <svg v-if="!showNewPass" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Konfirmasi Password</label>
+        <div class="password-wrapper">
+          <input :type="showConfirmPass ? 'text' : 'password'" v-model="confirmPassword" placeholder="Ketik ulang password" ref="confirmInput" @keyup.enter="changePassword">
+          <span class="eye-toggle" @click="showConfirmPass = !showConfirmPass">
+            <svg v-if="!showConfirmPass" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </span>
+        </div>
+      </div>
+
+      <button class="btn-login" @click="changePassword" :disabled="loading">
+        {{ loading ? 'Menyimpan...' : 'Simpan Password' }}
+      </button>
+    </template>
+
+    <div class="error-msg" :class="{ show: errorMsg }">{{ errorMsg }}</div>
+
+    <div class="divider"></div>
+    <div class="footer-text">KAS IT Dashboard &copy; 2025</div>
+  </div>
 </div>
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
@@ -100,19 +382,16 @@ createApp({
       loading: false,
       errorMsg: '',
       sessionExpired: new URLSearchParams(window.location.search).has('expired'),
-      // Change password
       showChangePassword: false,
       newPassword: '',
       confirmPassword: '',
       pendingToken: '',
-      // Eye toggles
       showPass: false,
       showNewPass: false,
       showConfirmPass: false
     };
   },
   mounted() {
-    // If already has valid token, redirect
     const token = sessionStorage.getItem('kas-it-token');
     if (token) {
       this.verifyAndRedirect(token);
@@ -131,9 +410,7 @@ createApp({
         } else {
           sessionStorage.removeItem('kas-it-token');
         }
-      } catch (err) {
-        // Token check failed, stay on login
-      }
+      } catch (err) {}
     },
 
     async login() {
@@ -158,12 +435,10 @@ createApp({
         let result;
         try { result = JSON.parse(text); } catch(e) { this.errorMsg = 'Server error: response bukan JSON'; return; }
         if (result.token) {
-          // Check if must change password
           if (result.mustChangePassword) {
             this.pendingToken = result.token;
             this.showChangePassword = true;
             this.errorMsg = '';
-            // Store session temporarily (needed for changePassword API)
             sessionStorage.setItem('kas-it-token', result.token);
             sessionStorage.setItem('kas-it-login-time', String(Date.now()));
             sessionStorage.setItem('kas-it-member-nik', result.memberNik || '');
@@ -201,7 +476,6 @@ createApp({
       this.errorMsg = '';
 
       try {
-        // Hash password client-side (SHA-256)
         const encoder = new TextEncoder();
         const data = encoder.encode(this.newPassword);
         const hashBuffer = await crypto.subtle.digest('SHA-256', data);

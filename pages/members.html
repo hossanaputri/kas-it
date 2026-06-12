@@ -33,15 +33,15 @@
 
     <template v-else>
     <!-- Member Cards -->
-    <div v-for="m in sortedMembers" :key="m.nik" @click="openDetail(m)" style="margin-bottom:10px;padding:14px 16px;border-radius:12px;border:1px solid #e8e8e8;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all 0.2s;box-shadow:0 1px 4px rgba(0,0,0,0.04);" :style="{ opacity: isActive(m) ? 1 : 0.5 }" @mouseover="$event.currentTarget.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" @mouseout="$event.currentTarget.style.boxShadow='0 1px 4px rgba(0,0,0,0.04)'">
-      <div style="width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:16px;" :style="{ background: posColors[m.position] || '#7DCD85' }">{{ getInitials(m.name) }}</div>
+    <div v-for="m in sortedMembers" :key="m.nik" @click="openDetail(m)" style="margin-bottom:10px;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:14px;cursor:pointer;transition:all 0.2s;background:rgba(255,255,255,0.06);" :style="{ opacity: isActive(m) ? 1 : 0.5 }" @mouseover="$event.currentTarget.style.background='rgba(255,255,255,0.1)'" @mouseout="$event.currentTarget.style.background='rgba(255,255,255,0.06)'">
+      <div style="width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:16px;" :style="{ background: posColors[m.position] || '#66bb6a' }">{{ getInitials(m.name) }}</div>
       <div style="flex:1;">
-        <div style="font-size:14px;font-weight:600;color:#333;">{{ m.name }} <span v-if="m.isAdmin === true || m.isAdmin === 'TRUE'" style="font-size:10px;background:#e3f2fd;color:#1565c0;padding:1px 6px;border-radius:4px;margin-left:4px;font-weight:600;">ADMIN</span></div>
-        <div style="font-size:10px;color:#888;margin-top:2px;">{{ m.nik }} | <span :style="{ color: posColors[m.position] || '#555', fontWeight: '500' }">{{ m.position }}</span></div>
+        <div style="font-size:14px;font-weight:600;color:var(--text);">{{ m.name }} <span v-if="m.isAdmin === true || m.isAdmin === 'TRUE'" style="font-size:10px;background:rgba(66,165,245,0.15);color:#90caf9;padding:1px 6px;border-radius:4px;margin-left:4px;font-weight:600;">ADMIN</span></div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;">{{ m.nik }} | <span :style="{ color: posColors[m.position] || 'var(--text-light)', fontWeight: '500' }">{{ m.position }}</span></div>
       </div>
       <div style="display:flex;gap:6px;align-items:center;">
-        <span v-if="Number(m.retry_count) >= 3" style="font-size:11px;background:#ffebee;color:#c62828;padding:3px 8px;border-radius:6px;font-weight:600;">🔒 Reset</span>
-        <span style="font-size:11px;padding:3px 8px;border-radius:6px;font-weight:600;" :style="{ background: isActive(m) ? '#e8f5e9' : '#ffebee', color: isActive(m) ? '#2e7d32' : '#c62828' }">{{ isActive(m) ? 'Active' : 'Inactive' }}</span>
+        <span v-if="Number(m.retry_count) >= 3" style="font-size:11px;background:rgba(239,83,80,0.12);color:#ef5350;padding:3px 8px;border-radius:6px;font-weight:600;">🔒 Reset</span>
+        <span style="font-size:11px;padding:3px 8px;border-radius:6px;font-weight:600;" :style="{ background: isActive(m) ? 'rgba(102,187,106,0.12)' : 'rgba(239,83,80,0.12)', color: isActive(m) ? '#66bb6a' : '#ef5350' }">{{ isActive(m) ? 'Active' : 'Inactive' }}</span>
       </div>
     </div>
     </template>
@@ -50,23 +50,23 @@
   <!-- Detail Modal -->
   <div class="modal-overlay" :class="{ active: showDetailModal }" @click.self="showDetailModal = false">
     <div class="modal" style="max-width:420px;position:relative;">
-      <span @click="showDetailModal = false" style="position:absolute;top:14px;right:18px;font-size:20px;cursor:pointer;color:#999;font-weight:300;">✕</span>
+      <span @click="showDetailModal = false" style="position:absolute;top:14px;right:18px;font-size:20px;cursor:pointer;color:rgba(255,255,255,0.4);font-weight:300;">✕</span>
       <div v-if="detailMember" style="text-align:center;margin-bottom:20px;">
         <div style="font-size:36px;margin-bottom:8px;">👤</div>
-        <h2 style="margin-bottom:4px;color:#333;">{{ detailMember.name }}</h2>
-        <div style="font-size:13px;color:#888;">NIK: {{ detailMember.nik }}</div>
+        <h2 style="margin-bottom:4px;color:var(--text);">{{ detailMember.name }}</h2>
+        <div style="font-size:13px;color:rgba(255,255,255,0.4);">NIK: {{ detailMember.nik }}</div>
         <div style="margin-top:8px;">
-          <span :style="{ fontSize:'12px', fontWeight:'600', color: posColors[detailMember.position] || '#555' }">{{ detailMember.position }}</span>
+          <span :style="{ fontSize:'12px', fontWeight:'600', color: posColors[detailMember.position] || 'var(--text-light)' }">{{ detailMember.position }}</span>
           <span class="badge" :class="isActive(detailMember) ? 'badge-active' : 'badge-inactive'" style="margin-left:8px;">{{ isActive(detailMember) ? 'Active' : 'Inactive' }}</span>
-          <span v-if="detailMember.isAdmin === true || detailMember.isAdmin === 'TRUE'" style="font-size:10px;background:#e3f2fd;color:#1565c0;padding:2px 8px;border-radius:4px;margin-left:6px;font-weight:600;">ADMIN</span>
-          <span v-if="Number(detailMember.retry_count) >= 3" style="font-size:10px;background:#ffebee;color:#c62828;padding:2px 8px;border-radius:4px;margin-left:6px;font-weight:600;">LOCKED</span>
+          <span v-if="detailMember.isAdmin === true || detailMember.isAdmin === 'TRUE'" style="font-size:10px;background:rgba(66,165,245,0.15);color:#90caf9;padding:2px 8px;border-radius:4px;margin-left:6px;font-weight:600;">ADMIN</span>
+          <span v-if="Number(detailMember.retry_count) >= 3" style="font-size:10px;background:rgba(239,83,80,0.12);color:#ef5350;padding:2px 8px;border-radius:4px;margin-left:6px;font-weight:600;">LOCKED</span>
         </div>
-        <div style="font-size:12px;color:#999;margin-top:6px;">Aktif sejak: {{ formatActiveFrom(detailMember.activeFrom) }}</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:6px;">Aktif sejak: {{ formatActiveFrom(detailMember.activeFrom) }}</div>
       </div>
       <div v-if="detailMember" style="display:flex;gap:8px;">
-        <button style="flex:1;padding:10px;background:#f5f5f5;color:#333;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;" @click="showDetailModal=false;editMember(detailMember)">✏️ Edit</button>
-        <button style="flex:1;padding:10px;background:#fff3e0;color:#e65100;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;" @click="resetPassword(detailMember)">🔑 Reset</button>
-        <button style="flex:1;padding:10px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;" :style="{ background: isActive(detailMember) ? '#ffebee' : '#e8f5e9', color: isActive(detailMember) ? '#c62828' : '#2e7d32' }" @click="toggleMember(detailMember)">{{ isActive(detailMember) ? '⏸ Nonaktif' : '▶ Aktifkan' }}</button>
+        <button style="flex:1;padding:10px;background:rgba(255,255,255,0.1);color:var(--text-light);border:1px solid rgba(255,255,255,0.15);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;" @click="showDetailModal=false;editMember(detailMember)">✏️ Edit</button>
+        <button style="flex:1;padding:10px;background:rgba(255,167,38,0.12);color:#ffa726;border:1px solid rgba(255,167,38,0.2);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;" @click="resetPassword(detailMember)">🔑 Reset</button>
+        <button style="flex:1;padding:10px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;" :style="{ background: isActive(detailMember) ? 'rgba(239,83,80,0.12)' : 'rgba(102,187,106,0.12)', color: isActive(detailMember) ? '#ef5350' : '#66bb6a', border: '1px solid ' + (isActive(detailMember) ? 'rgba(239,83,80,0.2)' : 'rgba(102,187,106,0.2)') }" @click="toggleMember(detailMember)">{{ isActive(detailMember) ? '⏸ Nonaktif' : '▶ Aktifkan' }}</button>
       </div>
     </div>
   </div>
@@ -127,7 +127,7 @@ const app = createApp({
       // Detail modal
       showDetailModal: false,
       detailMember: null,
-      posColors: { 'Direktur': '#e53935', 'Senior Manager': '#1565c0', 'Junior Manager': '#f9a825', 'Coordinator': '#2e7d32' },
+      posColors: { 'Direktur': '#ef5350', 'Senior Manager': '#42a5f5', 'Junior Manager': '#ffca28', 'Coordinator': '#66bb6a' },
       posOrder: { 'Direktur': 0, 'Senior Manager': 1, 'Junior Manager': 2, 'Coordinator': 3 }
     };
   },
