@@ -81,14 +81,17 @@
           </div>
         </div>
         <!-- Reminder Belum Bayar -->
-        <div v-if="lateMembers.length" style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);">
-          <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);">
+          <div v-if="lateMembers.length" style="display:flex;justify-content:space-between;align-items:center;">
             <span style="font-size:13px;font-weight:600;color:#ef5350;">⚠️ Belum bayar: {{ lateMembers.length }} orang</span>
             <button @click="copyReminder" style="padding:5px 12px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.18);border-radius:6px;font-size:12px;cursor:pointer;font-weight:500;color:var(--text-light);">📋 Copy untuk WA</button>
           </div>
-          <div style="font-size:12px;color:var(--text-muted);margin-top:6px;line-height:1.6;">
+          <div v-if="lateMembers.length" style="font-size:12px;color:var(--text-muted);margin-top:6px;line-height:1.6;">
             <span v-for="(m, i) in lateMembers.slice(0, 10)" :key="m.nik">{{ m.name }}<span v-if="i < Math.min(lateMembers.length, 10) - 1">, </span></span>
             <span v-if="lateMembers.length > 10"> +{{ lateMembers.length - 10 }} lainnya</span>
+          </div>
+          <div v-else style="font-size:13px;color:rgba(255,255,255,0.4);text-align:center;padding:8px 0;">
+            ✅ Semua anggota sudah bayar bulan ini
           </div>
         </div>
       </div>
