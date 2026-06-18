@@ -8,28 +8,88 @@
 <style>
 /* Page-specific: transactions.html */
 .controls { margin-bottom: 16px; justify-content: space-between; }
+
+@media (max-width: 768px) {
+  /* Summary: stack vertical on mobile */
+  .summary-grid {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+  .summary-grid > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .summary-grid > div:last-child { border-bottom: none; }
+  .summary-grid .label { margin-bottom: 0; }
+  .summary-grid .summary-value { font-size: 16px !important; }
+
+  /* Search input */
+  .controls input[type="text"] {
+    min-width: 0 !important;
+    width: 100%;
+  }
+
+  /* Filter chips wrap */
+  .filter-chips {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .chip-divider { display: none; }
+
+  /* Table horizontal scroll */
+  .tx-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tx-table-wrap table {
+    min-width: 700px;
+  }
+  .tx-table-wrap td, .tx-table-wrap th {
+    font-size: 12px;
+    padding: 8px 6px;
+    white-space: nowrap;
+  }
+
+  /* Controls stack */
+  .controls {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 10px;
+  }
+  .controls > div[style*="margin-left:auto"] {
+    margin-left: 0 !important;
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .summary-grid .summary-value { font-size: 14px !important; }
+}
 </style>
 </head>
 <body>
 <div id="app" v-cloak>
-  <app-header></app-header>
-  <app-nav active="transactions" :pending-count="pendingCount"></app-nav>
+  <app-header @toggle-nav="navOpen = !navOpen"></app-header>
+  <app-nav active="transactions" :pending-count="pendingCount" :open="navOpen" @close="navOpen = false"></app-nav>
 
   <div class="content">
     <!-- Summary -->
     <div class="card" style="padding:16px 20px;">
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center;">
+      <div class="summary-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center;">
         <div>
           <div class="label">💰 Total Saldo</div>
-          <div style="font-size:20px;font-weight:700;color:#66bb6a;">{{ fmt(summary.masuk - summary.keluar) }}</div>
+          <div class="summary-value" style="font-size:20px;font-weight:700;color:#66bb6a;">{{ fmt(summary.masuk - summary.keluar) }}</div>
         </div>
         <div>
           <div class="label">📥 Total Masuk</div>
-          <div style="font-size:20px;font-weight:700;color:#81c784;">{{ fmt(summary.masuk) }}</div>
+          <div class="summary-value" style="font-size:20px;font-weight:700;color:#81c784;">{{ fmt(summary.masuk) }}</div>
         </div>
         <div>
           <div class="label">📤 Total Keluar</div>
-          <div style="font-size:20px;font-weight:700;color:#ef5350;">{{ fmt(summary.keluar) }}</div>
+          <div class="summary-value" style="font-size:20px;font-weight:700;color:#ef5350;">{{ fmt(summary.keluar) }}</div>
         </div>
       </div>
     </div>
@@ -69,7 +129,7 @@
       </div>
 
       <!-- Table -->
-      <div v-else>
+      <div v-else class="tx-table-wrap">
         <table>
           <thead>
             <tr>
@@ -133,6 +193,7 @@ const app = createApp({
   mixins: [authMixin],
   data() {
     return {
+      navOpen: false,
       transactions: [],
       loading: false,
       filter: { kategori: [], type: [], status: [], search: '' },
