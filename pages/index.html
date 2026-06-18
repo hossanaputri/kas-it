@@ -68,15 +68,15 @@
           </div>
         </div>
         <!-- Target Kas Tahunan -->
-        <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);">
+        <div class="target-section" style="margin-top:14px;padding-top:14px;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
             <span style="font-size:13px;font-weight:600;color:var(--text-light);">🎯 Target Kas Tahunan</span>
             <span style="font-size:12px;font-weight:600;color:var(--text-light);">{{ fmt(targetKas) }}</span>
           </div>
-          <div style="position:relative;background:rgba(255,255,255,0.06);border-radius:8px;height:28px;overflow:hidden;">
+          <div class="progress-track" style="position:relative;border-radius:8px;height:28px;overflow:hidden;">
             <div :style="{ width: targetPct + '%', height: '100%', borderRadius: '8px', background: 'linear-gradient(90deg,#2e7d32,#66bb6a)', transition: 'width 0.5s' }"></div>
             <div style="position:absolute;inset:0;display:flex;justify-content:flex-end;align-items:center;padding:0 12px;">
-              <span style="font-size:12px;font-weight:600;color:#90caf9;">{{ targetPct }}%</span>
+              <span class="progress-pct" style="font-size:12px;font-weight:600;">{{ targetPct }}%</span>
             </div>
           </div>
         </div>

@@ -1172,6 +1172,14 @@ body.light .empty-state { color: rgba(0,0,0,0.4) !important; }
 body.light .all-paid-msg { color: rgba(0,0,0,0.5) !important; }
 .all-paid-msg { color: rgba(255,255,255,0.4); }
 
+/* Target section divider & progress */
+.target-section { border-top: 1px solid rgba(255,255,255,0.08); }
+body.light .target-section { border-top-color: rgba(0,0,0,0.1); }
+.progress-track { background: rgba(255,255,255,0.08); }
+body.light .progress-track { background: rgba(0,0,0,0.06); }
+.progress-pct { color: #90caf9; }
+body.light .progress-pct { color: #2e7d32; }
+
 /* Dropdown menu */
 body.light [style*="box-shadow:0 8px 24px rgba(0,0,0,0.4)"] {
   background: #ffffff !important;
