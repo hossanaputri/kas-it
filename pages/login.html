@@ -4,19 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KAS IT - Login</title>
-<link rel="stylesheet" href="/css/styles.css">
+<link rel="stylesheet" href="../css/styles.css">
 <style>
 /* Page-specific: login.html — Aesthetic Green */
 body::before, body::after { display: none !important; }
+html {
+  overflow: hidden;
+  height: 100%;
+  position: fixed;
+  width: 100%;
+}
+
 body {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  height: 100%;
   background: #0d1f0f;
-  position: relative;
+  position: fixed;
+  inset: 0;
   overflow: hidden;
   margin: 0;
+  touch-action: none;
+  overscroll-behavior: none;
 }
 
 /* Animated gradient orbs */
@@ -285,11 +295,57 @@ body::after {
   margin-top: 24px;
 }
 
-/* Responsive */
-@media (max-width: 420px) {
-  .login-card { padding: 36px 24px 32px; }
-  .logo-container { width: 60px; height: 60px; border-radius: 16px; }
-  .logo-container span { font-size: 28px; }
+/* Responsive — Mobile */
+@media (max-width: 480px) {
+  body {
+    align-items: center;
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+  }
+  .login-wrapper {
+    width: 92%;
+    max-height: 100vh;
+    max-height: 100dvh;
+    overflow: hidden;
+  }
+  .login-card {
+    padding: 32px 24px 28px;
+    border-radius: 20px;
+  }
+  .logo-container {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    margin-bottom: 14px;
+  }
+  .logo-container span { font-size: 26px; }
+  .login-card h1 { font-size: 22px; }
+  .login-card .subtitle { font-size: 13px; margin-bottom: 22px; }
+  .form-group { margin-bottom: 14px; }
+  .form-group input { padding: 12px 14px; font-size: 16px; /* prevent iOS zoom on focus */ }
+  .btn-login { padding: 13px; font-size: 15px; }
+  .eye-toggle { right: 12px; padding: 4px; }
+  .divider { margin: 20px 0 14px; }
+  .footer-text { font-size: 10px; margin-top: 16px; }
+
+  /* Orbs — smaller on mobile to prevent overflow */
+  .bg-orb-1 { width: 280px; height: 280px; top: -60px; right: -60px; }
+  .bg-orb-2 { width: 220px; height: 220px; bottom: -50px; left: -50px; }
+  .bg-orb-3 { width: 160px; height: 160px; }
+}
+
+@media (max-width: 360px) {
+  .login-card { padding: 24px 18px 22px; }
+  .logo-container { width: 48px; height: 48px; }
+  .logo-container span { font-size: 22px; }
+  .login-card h1 { font-size: 20px; margin-bottom: 4px; }
+  .login-card .subtitle { margin-bottom: 18px; }
+  .form-group { margin-bottom: 12px; }
+  .form-group input { padding: 11px 12px; }
+  .btn-login { padding: 12px; }
+  .divider { margin: 16px 0 12px; }
 }
 </style>
 </head>
@@ -370,7 +426,7 @@ body::after {
 </div>
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-<script src="/js/auth.js"></script>
+<script src="../js/auth.js"></script>
 <script>
 const { createApp } = Vue;
 
