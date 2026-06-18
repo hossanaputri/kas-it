@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KAS IT Dashboard</title>
-<link rel="stylesheet" href="/css/styles.css">
+<link rel="stylesheet" href="../css/styles.css">
 <style>
 /* Page-specific: index.html — Dark Aesthetic */
 .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
@@ -13,8 +13,8 @@
 </head>
 <body>
 <div id="app" v-cloak>
-  <app-header></app-header>
-  <app-nav active="index" :pending-count="pendingCount"></app-nav>
+  <app-header @toggle-nav="navOpen = !navOpen"></app-header>
+  <app-nav active="index" :pending-count="pendingCount" :open="navOpen" @close="navOpen = false"></app-nav>
 
   <div class="content">
     <!-- Loading -->
@@ -24,7 +24,9 @@
 
     <template v-else>
     <!-- Summary + Master Iuran -->
-    <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px;">
+    <!-- Summary + Master Iuran (Gallery on mobile) -->
+    <div class="card-gallery" ref="cardGallery" @scroll="onGalleryScroll">
+      <div class="card-slide">
       <div class="table-section" style="padding:16px 20px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
           <h2 style="font-size:16px;color:var(--text);">📊 Summary</h2>
@@ -33,7 +35,8 @@
             <button class="btn" style="background:rgba(255,255,255,0.12);color:var(--text-light);font-size:12px;padding:6px 12px;border:1px solid rgba(255,255,255,0.18);" @click="loadData">🔄</button>
           </div>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center;">
+        <!-- Desktop: 3 columns -->
+        <div class="summary-desktop" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center;">
           <div>
             <div class="label">💰 Total Saldo</div>
             <div style="font-size:20px;font-weight:700;color:#66bb6a;">{{ fmt(summary.masuk - summary.keluar) }}</div>
@@ -45,6 +48,23 @@
           <div style="cursor:pointer;" @click="openHistory('keluar')">
             <div class="label">📤 Total Keluar</div>
             <div style="font-size:20px;font-weight:700;color:#ef5350;">{{ fmt(summary.keluar) }}</div>
+          </div>
+        </div>
+        <!-- Mobile: stacked layout -->
+        <div class="summary-mobile">
+          <div style="text-align:center;margin-bottom:12px;">
+            <div class="label">💰 Total Saldo</div>
+            <div style="font-size:26px;font-weight:700;color:#66bb6a;">{{ fmt(summary.masuk - summary.keluar) }}</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center;">
+            <div style="cursor:pointer;padding:10px;background:rgba(255,255,255,0.04);border-radius:8px;" @click="openHistory('masuk')">
+              <div class="label" style="font-size:11px;">📥 Masuk</div>
+              <div style="font-size:15px;font-weight:700;color:#81c784;">{{ fmt(summary.masuk) }}</div>
+            </div>
+            <div style="cursor:pointer;padding:10px;background:rgba(255,255,255,0.04);border-radius:8px;" @click="openHistory('keluar')">
+              <div class="label" style="font-size:11px;">📤 Keluar</div>
+              <div style="font-size:15px;font-weight:700;color:#ef5350;">{{ fmt(summary.keluar) }}</div>
+            </div>
           </div>
         </div>
         <!-- Target Kas Tahunan -->
@@ -72,6 +92,8 @@
           </div>
         </div>
       </div>
+      </div>
+      <div class="card-slide">
       <div class="table-section" style="padding:16px 20px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
           <h2 style="font-size:16px;color:var(--text);">📋 Master Iuran Bulanan</h2>
@@ -85,18 +107,25 @@
           <span style="font-size:14px;font-weight:700;color:#90caf9;">{{ fmt(item.amount) }}</span>
         </div>
       </div>
+      </div>
+    </div>
+    <!-- Gallery dots -->
+    <div class="card-gallery-dots">
+      <span class="dot" :class="{ active: galleryIdx === 0 }" @click="scrollGallery(0)"></span>
+      <span class="dot" :class="{ active: galleryIdx === 1 }" @click="scrollGallery(1)"></span>
     </div>
 
     <!-- Rekap Kas per Anggota (full width) -->
-    <div class="table-section" style="padding:16px 20px;margin-bottom:16px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <div class="table-section rekap-section" style="padding:16px 20px;margin-bottom:16px;">
+      <div class="rekap-header">
         <h2 style="font-size:16px;color:var(--text);">📊 Rekap Kas per Anggota</h2>
-        <div class="controls">
+        <div class="rekap-controls-row">
           <select v-model="selectedYear" @change="loadData" style="padding:7px 12px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;font-size:13px;background:rgba(255,255,255,0.06);color:var(--text);">
             <option v-for="y in yearOptions" :key="y" :value="y">{{ y }}</option>
           </select>
           <button @click="loadData" style="background:rgba(255,255,255,0.12);color:var(--text-light);font-size:12px;padding:6px 12px;border:1px solid rgba(255,255,255,0.18);border-radius:6px;">🔄</button>
-          <button v-if="isLoggedIn" @click="showTxMenu = !showTxMenu" style="position:relative;background:rgba(102,187,106,0.25);color:#66bb6a;font-size:12px;padding:6px 12px;border:1px solid rgba(102,187,106,0.3);border-radius:6px;">➕ Transaksi
+          <!-- Desktop only: transaksi button inline -->
+          <button v-if="isLoggedIn" class="rekap-tx-desktop" @click="showTxMenu = !showTxMenu" style="position:relative;background:rgba(102,187,106,0.25);color:#66bb6a;font-size:12px;padding:6px 12px;border:1px solid rgba(102,187,106,0.3);border-radius:6px;">➕ Transaksi
             <div v-if="showTxMenu" style="position:absolute;right:0;top:110%;background:#1a2e1c;border:1px solid rgba(255,255,255,0.08);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.4);min-width:200px;z-index:50;overflow:hidden;color:var(--text);padding:6px;" @click.stop>
               <div style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;openSubmitModal()"><span style="font-size:16px;">💵</span> Submit Kas</div>
               <div v-if="isAdmin" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;showExtModal=true"><span style="font-size:16px;">📥</span> Pemasukan Lain</div>
@@ -106,18 +135,29 @@
           </button>
         </div>
       </div>
-      <div class="table-wrapper">
+      <!-- Mobile only: transaksi button on its own row -->
+      <div class="rekap-actions-mobile">
+        <button v-if="isLoggedIn" @click="showTxMenu = !showTxMenu" style="position:relative;background:rgba(102,187,106,0.25);color:#66bb6a;font-size:12px;padding:6px 12px;border:1px solid rgba(102,187,106,0.3);border-radius:6px;">➕ Transaksi
+          <div v-if="showTxMenu" style="position:absolute;right:0;top:110%;background:#1a2e1c;border:1px solid rgba(255,255,255,0.08);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.4);min-width:200px;z-index:50;overflow:hidden;color:var(--text);padding:6px;" @click.stop>
+            <div style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;openSubmitModal()"><span style="font-size:16px;">💵</span> Submit Kas</div>
+            <div v-if="isAdmin" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;showExtModal=true"><span style="font-size:16px;">📥</span> Pemasukan Lain</div>
+            <div v-if="isAdmin" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;showOutModal=true"><span style="font-size:16px;">📤</span> Pengeluaran</div>
+            <div v-if="isAdmin" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;openBulkModal()"><span style="font-size:16px;">📋</span> Bulk Input</div>
+          </div>
+        </button>
+      </div>
+      <div class="table-wrapper rekap-table">
         <table>
           <thead style="position:sticky;top:0;z-index:2;">
             <tr>
-              <th style="text-align:left;position:sticky;left:0;z-index:3;background:#ffffff;color:#333;">Nama</th>
-              <th v-for="m in months" :key="m" style="background:#ffffff;color:#333;text-align:center;font-size:11px;min-width:36px;">{{ m }}</th>
+              <th style="text-align:left;position:sticky;left:0;z-index:3;background:#ffffff;color:#333;border-right:2px solid rgba(0,0,0,0.1);">Nama</th>
+              <th v-for="m in months" :key="m" style="background:#ffffff;color:#333;text-align:center;font-size:11px;">{{ m }}</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="member in sortedMembers" :key="member.nik" :class="{ inactive: !isMemberActive(member) }">
-              <td style="white-space:nowrap;position:sticky;left:0;z-index:1;font-weight:500;cursor:pointer;" :style="{ background: isMemberLate(member) ? 'rgba(239,83,80,0.12)' : 'rgba(255,255,255,0.1)' }" @click="openProfile(member)">
-                <span :style="{ color: posColors[member.position] || 'var(--text)' }">{{ member.name }}</span>
+              <td class="rekap-name-cell" style="position:sticky;left:0;z-index:1;font-weight:500;cursor:pointer;border-right:2px solid rgba(255,255,255,0.15);" :style="{ background: isMemberLate(member) ? 'rgba(239,83,80,0.12)' : 'rgba(10,26,13,0.95)' }" @click="openProfile(member)">
+                <span class="rekap-name" :style="{ color: posColors[member.position] || 'var(--text)' }">{{ member.name }}</span>
                 <div style="font-size:10px;color:rgba(255,255,255,0.4);">{{ member.position }}</div>
               </td>
               <td v-for="(m, i) in months" :key="i" style="text-align:center;" :style="getMemberMonthStatus(member.nik, i+1) === 'late' ? { background: 'rgba(239,83,80,0.08)' } : getMemberMonthStatus(member.nik, i+1) === 'pending' ? { background: 'rgba(255,202,40,0.08)' } : {}">
@@ -521,8 +561,8 @@
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="/js/auth.js"></script>
-<script src="/js/components.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/components.js"></script>
 <script>
 const { createApp } = Vue;
 
@@ -533,6 +573,8 @@ const app = createApp({
   mixins: [authMixin],
   data() {
     return {
+      navOpen: false,
+      galleryIdx: 0,
       dataLoading: true,
       members: [],
       transactions: [],
@@ -780,6 +822,18 @@ const app = createApp({
     this.loadData();
   },
   methods: {
+    onGalleryScroll() {
+      const el = this.$refs.cardGallery;
+      if (!el) return;
+      const idx = Math.round(el.scrollLeft / el.offsetWidth);
+      this.galleryIdx = idx;
+    },
+    scrollGallery(idx) {
+      const el = this.$refs.cardGallery;
+      if (!el) return;
+      el.scrollTo({ left: idx * el.offsetWidth, behavior: 'smooth' });
+      this.galleryIdx = idx;
+    },
     async loadData() {
       this.dataLoading = true;
       try {
