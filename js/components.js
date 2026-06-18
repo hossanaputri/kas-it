@@ -71,7 +71,7 @@ const AppNav = {
       </div>
       <div class="nav-drawer-footer">
         <div class="nav-divider"></div>
-        <button class="nav-logout-btn" @click="doLogout()">🚪 Logout</button>
+        <button class="nav-logout-btn" @click="logout">🚪 Logout</button>
       </div>
     </nav>
   `,
@@ -81,6 +81,11 @@ const AppNav = {
     },
     userName() {
       return sessionStorage.getItem('kas-it-member-name') || '';
+    }
+  },
+  methods: {
+    logout() {
+      doLogout();
     }
   }
 };
