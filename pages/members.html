@@ -8,13 +8,77 @@
 <style>
 /* Page-specific: members.html */
 .content { max-width: 900px; }
+
+@media (max-width: 768px) {
+  /* Card header: stack title + buttons */
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 10px;
+  }
+  .card-header > div {
+    width: 100%;
+  }
+  .card-header > div button {
+    flex: 1;
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+
+  /* Member cards: compact layout */
+  .member-card {
+    padding: 12px 14px !important;
+    gap: 10px !important;
+  }
+  .member-card .member-avatar {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 14px !important;
+  }
+  .member-card .member-name {
+    font-size: 13px !important;
+  }
+  .member-card .member-meta {
+    font-size: 9px !important;
+  }
+  .member-card .member-badges {
+    flex-direction: column;
+    gap: 4px !important;
+    align-items: flex-end !important;
+  }
+  .member-card .member-badges span {
+    font-size: 10px !important;
+    padding: 2px 6px !important;
+  }
+
+  /* Detail modal: action buttons stack on small screens */
+  .detail-actions {
+    flex-direction: column !important;
+    gap: 6px !important;
+  }
+  .detail-actions button {
+    padding: 12px !important;
+    font-size: 13px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .member-card .member-avatar {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 12px !important;
+  }
+  .member-card .member-name {
+    font-size: 12px !important;
+  }
+}
 </style>
 </head>
 <body>
 
 <div id="app" v-cloak>
-  <app-header></app-header>
-  <app-nav active="members" :pending-count="pendingCount"></app-nav>
+  <app-header @toggle-nav="navOpen = !navOpen"></app-header>
+  <app-nav active="members" :pending-count="pendingCount" :open="navOpen" @close="navOpen = false"></app-nav>
 
   <div class="content">
     <div class="card">
@@ -33,13 +97,13 @@
 
     <template v-else>
     <!-- Member Cards -->
-    <div v-for="m in sortedMembers" :key="m.nik" @click="openDetail(m)" style="margin-bottom:10px;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:14px;cursor:pointer;transition:all 0.2s;background:rgba(255,255,255,0.06);" :style="{ opacity: isActive(m) ? 1 : 0.5 }" @mouseover="$event.currentTarget.style.background='rgba(255,255,255,0.1)'" @mouseout="$event.currentTarget.style.background='rgba(255,255,255,0.06)'">
-      <div style="width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:16px;" :style="{ background: posColors[m.position] || '#66bb6a' }">{{ getInitials(m.name) }}</div>
-      <div style="flex:1;">
-        <div style="font-size:14px;font-weight:600;color:var(--text);">{{ m.name }} <span v-if="m.isAdmin === true || m.isAdmin === 'TRUE'" style="font-size:10px;background:rgba(66,165,245,0.15);color:#90caf9;padding:1px 6px;border-radius:4px;margin-left:4px;font-weight:600;">ADMIN</span></div>
-        <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;">{{ m.nik }} | <span :style="{ color: posColors[m.position] || 'var(--text-light)', fontWeight: '500' }">{{ m.position }}</span></div>
+    <div v-for="m in sortedMembers" :key="m.nik" @click="openDetail(m)" class="member-card" style="margin-bottom:10px;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:14px;cursor:pointer;transition:all 0.2s;background:rgba(255,255,255,0.06);" :style="{ opacity: isActive(m) ? 1 : 0.5 }" @mouseover="$event.currentTarget.style.background='rgba(255,255,255,0.1)'" @mouseout="$event.currentTarget.style.background='rgba(255,255,255,0.06)'">
+      <div class="member-avatar" style="width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:16px;" :style="{ background: posColors[m.position] || '#66bb6a' }">{{ getInitials(m.name) }}</div>
+      <div style="flex:1;min-width:0;">
+        <div class="member-name" style="font-size:14px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ m.name }} <span v-if="m.isAdmin === true || m.isAdmin === 'TRUE'" style="font-size:10px;background:rgba(66,165,245,0.15);color:#90caf9;padding:1px 6px;border-radius:4px;margin-left:4px;font-weight:600;">ADMIN</span></div>
+        <div class="member-meta" style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;">{{ m.nik }} | <span :style="{ color: posColors[m.position] || 'var(--text-light)', fontWeight: '500' }">{{ m.position }}</span></div>
       </div>
-      <div style="display:flex;gap:6px;align-items:center;">
+      <div class="member-badges" style="display:flex;gap:6px;align-items:center;">
         <span v-if="Number(m.retry_count) >= 3" style="font-size:11px;background:rgba(239,83,80,0.12);color:#ef5350;padding:3px 8px;border-radius:6px;font-weight:600;">🔒 Reset</span>
         <span style="font-size:11px;padding:3px 8px;border-radius:6px;font-weight:600;" :style="{ background: isActive(m) ? 'rgba(102,187,106,0.12)' : 'rgba(239,83,80,0.12)', color: isActive(m) ? '#66bb6a' : '#ef5350' }">{{ isActive(m) ? 'Active' : 'Inactive' }}</span>
       </div>
@@ -63,7 +127,7 @@
         </div>
         <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:6px;">Aktif sejak: {{ formatActiveFrom(detailMember.activeFrom) }}</div>
       </div>
-      <div v-if="detailMember" style="display:flex;gap:8px;">
+      <div v-if="detailMember" class="detail-actions" style="display:flex;gap:8px;">
         <button style="flex:1;padding:10px;background:rgba(255,255,255,0.1);color:var(--text-light);border:1px solid rgba(255,255,255,0.15);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;" @click="showDetailModal=false;editMember(detailMember)">✏️ Edit</button>
         <button style="flex:1;padding:10px;background:rgba(255,167,38,0.12);color:#ffa726;border:1px solid rgba(255,167,38,0.2);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;" @click="resetPassword(detailMember)">🔑 Reset</button>
         <button style="flex:1;padding:10px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;" :style="{ background: isActive(detailMember) ? 'rgba(239,83,80,0.12)' : 'rgba(102,187,106,0.12)', color: isActive(detailMember) ? '#ef5350' : '#66bb6a', border: '1px solid ' + (isActive(detailMember) ? 'rgba(239,83,80,0.2)' : 'rgba(102,187,106,0.2)') }" @click="toggleMember(detailMember)">{{ isActive(detailMember) ? '⏸ Nonaktif' : '▶ Aktifkan' }}</button>
@@ -116,6 +180,7 @@ const app = createApp({
   mixins: [authMixin],
   data() {
     return {
+      navOpen: false,
       pendingCount: 0,
       members: [],
       loading: false,
