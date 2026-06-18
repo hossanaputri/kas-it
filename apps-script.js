@@ -58,7 +58,7 @@ const TRX_COL = {
 
 // Auth config
 const DEFAULT_PASS_HASH = 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3'; // SHA-256 of '123'
-const TOKEN_EXPIRY_MS = 10 * 60 * 1000; // 10 minutes
+const TOKEN_EXPIRY_MS = 30 * 60 * 1000; // 30 minutes
 
 function sha256(input) {
   const raw = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, input);
