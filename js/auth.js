@@ -3,6 +3,12 @@
  * Shared authentication logic for all pages.
  */
 
+// Apply saved theme immediately (prevent flash)
+(function() {
+  const theme = localStorage.getItem('kas-it-theme') || 'dark';
+  if (theme === 'light') document.body.classList.add('light');
+})();
+
 const API_URL = 'https://script.google.com/macros/s/AKfycbzWezVL0Z_ncMRg36Mr7GXPYmJQmuvzlXu5kji1YHNjaWk_6j_wUKCHSb0uzy1bHL0IUw/exec';
 
 /**

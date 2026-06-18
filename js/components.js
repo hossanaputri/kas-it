@@ -12,6 +12,7 @@ const AppHeader = {
       <h1>💰 KAS IT</h1>
       <div class="header-right">
         <span v-if="loggedInName" style="font-size:12px;opacity:0.9;">👤 {{ loggedInName }}</span>
+        <button class="theme-toggle" @click="toggleTheme" :title="isDark ? 'Light mode' : 'Dark mode'">{{ isDark ? '🌙' : '☀️' }}</button>
         <button class="btn btn-logout header-logout-btn" @click="logout">🚪 Logout</button>
         <button class="hamburger-btn" @click="$emit('toggle-nav')">
           <span></span><span></span><span></span>
@@ -20,6 +21,11 @@ const AppHeader = {
     </div>
   `,
   emits: ['toggle-nav'],
+  data() {
+    return {
+      isDark: (localStorage.getItem('kas-it-theme') || 'dark') === 'dark'
+    };
+  },
   computed: {
     loggedInName() {
       return sessionStorage.getItem('kas-it-member-name') || '';
@@ -28,6 +34,16 @@ const AppHeader = {
   methods: {
     logout() {
       doLogout();
+    },
+    toggleTheme() {
+      this.isDark = !this.isDark;
+      const theme = this.isDark ? 'dark' : 'light';
+      localStorage.setItem('kas-it-theme', theme);
+      if (theme === 'light') {
+        document.body.classList.add('light');
+      } else {
+        document.body.classList.remove('light');
+      }
     }
   }
 };
