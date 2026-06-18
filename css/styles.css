@@ -627,6 +627,15 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
   grid-template-columns: 2fr 1fr;
   gap: 16px;
   margin-bottom: 16px;
+  align-items: stretch;
+}
+.card-gallery > .card-slide {
+  display: flex;
+  flex-direction: column;
+}
+.card-gallery > .card-slide > .table-section,
+.card-gallery > .card-slide > .card {
+  flex: 1;
 }
 .card-gallery-dots {
   display: none;
