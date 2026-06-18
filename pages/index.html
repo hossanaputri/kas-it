@@ -90,7 +90,7 @@
             <span v-for="(m, i) in lateMembers.slice(0, 10)" :key="m.nik">{{ m.name }}<span v-if="i < Math.min(lateMembers.length, 10) - 1">, </span></span>
             <span v-if="lateMembers.length > 10"> +{{ lateMembers.length - 10 }} lainnya</span>
           </div>
-          <div v-else style="font-size:13px;color:rgba(255,255,255,0.4);text-align:center;padding:8px 0;">
+          <div v-else class="all-paid-msg" style="font-size:13px;text-align:center;padding:8px 0;">
             ✅ Semua anggota sudah bayar bulan ini
           </div>
         </div>

@@ -1169,6 +1169,8 @@ body.light .rekap-name-cell div { color: rgba(0,0,0,0.5) !important; }
 /* Empty states & placeholders */
 body.light .empty { color: rgba(0,0,0,0.4) !important; }
 body.light .empty-state { color: rgba(0,0,0,0.4) !important; }
+body.light .all-paid-msg { color: rgba(0,0,0,0.5) !important; }
+.all-paid-msg { color: rgba(255,255,255,0.4); }
 
 /* Dropdown menu */
 body.light [style*="box-shadow:0 8px 24px rgba(0,0,0,0.4)"] {
