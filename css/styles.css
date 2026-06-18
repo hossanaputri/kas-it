@@ -1063,9 +1063,13 @@ body.light .table-section {
 }
 
 /* Table */
-body.light th { background: #f5f5f5; color: #333; }
-body.light th, body.light td { border-bottom-color: rgba(0, 0, 0, 0.06); background: rgba(255, 255, 255, 0.6); }
-body.light tr:hover td { background: rgba(76, 175, 80, 0.04); }
+body.light th { background: #e8f5e9; color: #1b5e20; font-weight: 700; }
+body.light th, body.light td { border-bottom-color: rgba(0, 0, 0, 0.08); background: #ffffff; color: #333; }
+body.light tr:hover td { background: rgba(76, 175, 80, 0.06); }
+body.light td { color: #1a1a1a; }
+body.light .rekap-name-cell { color: #1a1a1a; }
+body.light .amount-in { color: #2e7d32; }
+body.light .amount-out { color: #c62828; }
 
 /* Forms */
 body.light .form-group input,
@@ -1113,6 +1117,39 @@ body.light .chip {
   border-color: rgba(0, 0, 0, 0.08);
   color: rgba(0, 0, 0, 0.6);
 }
+
+/* Labels & text */
+body.light .label { color: rgba(0, 0, 0, 0.5); }
+body.light .card-header h2 { color: #1a2e1c; }
+body.light .table-header h2 { color: #1a2e1c; }
+
+/* Summary values - ensure dark text */
+body.light .summary-desktop div,
+body.light .summary-mobile div { color: #1a1a1a; }
+
+/* Rekap table - ensure numbers are readable */
+body.light .rekap-table td { color: #333; font-weight: 500; }
+body.light .rekap-table .rekap-name { color: #1a1a1a; }
+
+/* Badge colors stronger in light */
+body.light .badge-status { font-weight: 700; }
+body.light .badge-approved { background: rgba(46,125,50,0.12); color: #2e7d32; }
+body.light .badge-pending { background: rgba(255,152,0,0.12); color: #e65100; }
+body.light .badge-rejected { background: rgba(198,40,40,0.1); color: #c62828; }
+
+/* Pagination */
+body.light .pagination { color: rgba(0,0,0,0.5); }
+body.light .pagination button { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.08); color: #333; }
+body.light .pagination button.active { background: var(--primary-gradient); color: white; }
+
+/* Confirm buttons */
+body.light .confirm-btns .btn-no { background: rgba(0,0,0,0.04); color: #333; border-color: rgba(0,0,0,0.1); }
+
+/* Filter chip label */
+body.light .chip-label { color: rgba(0,0,0,0.6); }
+
+/* Progress bar text */
+body.light [style*="color:rgba(255,255,255"] { color: #333 !important; }
 
 /* Buttons */
 body.light .btn-cancel { background: rgba(0,0,0,0.04); color: rgba(0,0,0,0.7); border-color: rgba(0,0,0,0.1); }
