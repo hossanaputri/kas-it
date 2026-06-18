@@ -8,13 +8,65 @@
 <style>
 /* Page-specific: events.html */
 .content { max-width: 1000px; }
+
+@media (max-width: 768px) {
+  /* Event row: stack card + side actions */
+  .event-row {
+    flex-direction: column;
+    align-items: stretch !important;
+  }
+  .event-side-actions {
+    flex-direction: row !important;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 8px 12px 0 !important;
+  }
+
+  /* Event top: stack name/status and stats */
+  .event-top {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 8px;
+  }
+  .event-stats {
+    text-align: left !important;
+  }
+
+  /* Iuran chips wrap */
+  .event-iuran-grid {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .iuran-chip {
+    font-size: 11px !important;
+  }
+
+  /* Detail modal: payment grid stack */
+  .payment-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+  }
+
+  /* Detail summary boxes */
+  .detail-summary {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* Card header stack */
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 10px;
+  }
+}
 </style>
 </head>
 <body>
 
 <div id="app" v-cloak>
-  <app-header></app-header>
-  <app-nav active="events" :pending-count="pendingCount"></app-nav>
+  <app-header @toggle-nav="navOpen = !navOpen"></app-header>
+  <app-nav active="events" :pending-count="pendingCount" :open="navOpen" @close="navOpen = false"></app-nav>
 
   <div class="content">
     <div class="card">
@@ -164,6 +216,7 @@ const app = createApp({
   mixins: [authMixin],
   data() {
     return {
+      navOpen: false,
       pendingCount: 0,
       events: [],
       eventPayments: [],
