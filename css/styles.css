@@ -1148,13 +1148,45 @@ body.light .confirm-btns .btn-no { background: rgba(0,0,0,0.04); color: #333; bo
 /* Filter chip label */
 body.light .chip-label { color: rgba(0,0,0,0.6); }
 
-/* Progress bar text */
-body.light [style*="color:rgba(255,255,255"] { color: #333 !important; }
+/* Progress bar text & inline white text override */
+body.light [style*="color:rgba(255,255,255"] { color: rgba(0,0,0,0.45) !important; }
+body.light [style*="color: rgba(255, 255, 255"] { color: rgba(0,0,0,0.45) !important; }
 body.light [style*="color:var(--text-light)"] { color: rgba(0,0,0,0.6) !important; }
 body.light [style*="color:var(--text-muted)"] { color: rgba(0,0,0,0.45) !important; }
-body.light [style*="background:rgba(255,255,255,0.04)"] { background: rgba(0,0,0,0.03) !important; }
-body.light [style*="background:rgba(255,255,255,0.06)"] { background: rgba(0,0,0,0.03) !important; }
-body.light [style*="background:rgba(255,255,255,0.12)"] { background: rgba(0,0,0,0.05) !important; }
+body.light [style*="color:var(--text)"] { color: #1a2e1c !important; }
+body.light [style*="background:rgba(255,255,255,0.0"] { background: rgba(0,0,0,0.03) !important; }
+body.light [style*="background:rgba(255,255,255,0.1"] { background: rgba(0,0,0,0.04) !important; }
+body.light [style*="border:1px solid rgba(255,255,255"] { border-color: rgba(0,0,0,0.1) !important; }
+body.light [style*="border-top:1px solid rgba(255,255,255"] { border-top-color: rgba(0,0,0,0.08) !important; }
+body.light [style*="border-right:2px solid rgba(255,255,255"] { border-right-color: rgba(0,0,0,0.1) !important; }
+
+/* Rekap sticky column light bg */
+body.light .rekap-name-cell {
+  background: #f8fdf8 !important;
+}
+body.light .rekap-name-cell div { color: rgba(0,0,0,0.5) !important; }
+
+/* Empty states & placeholders */
+body.light .empty { color: rgba(0,0,0,0.4) !important; }
+body.light .empty-state { color: rgba(0,0,0,0.4) !important; }
+
+/* Dropdown menu */
+body.light [style*="box-shadow:0 8px 24px rgba(0,0,0,0.4)"] {
+  background: #ffffff !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
+  border: 1px solid rgba(0,0,0,0.08) !important;
+}
+
+/* Rekap dash symbol */
+body.light [style*="color:rgba(255,255,255,0.15)"] { color: rgba(0,0,0,0.15) !important; }
+
+/* Select dropdown in rekap */
+body.light select {
+  background: rgba(0,0,0,0.03) !important;
+  border-color: rgba(0,0,0,0.1) !important;
+  color: #333 !important;
+}
+body.light select option { background: #fff; color: #333; }
 
 /* Buttons */
 body.light .btn-cancel { background: rgba(0,0,0,0.04); color: rgba(0,0,0,0.7); border-color: rgba(0,0,0,0.1); }
