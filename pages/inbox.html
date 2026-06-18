@@ -9,13 +9,37 @@
 /* Page-specific: inbox.html */
 .content { max-width: 900px; }
 .badge { background: var(--orange-bg); color: var(--orange); }
+
+@media (max-width: 768px) {
+  /* Pending items: stack amount + actions below info */
+  .tx-item .tx-top {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 10px;
+  }
+  .tx-item .tx-top > div:last-child {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .tx-item .tx-amount {
+    font-size: 15px;
+  }
+  .tx-item .tx-actions button {
+    padding: 8px 14px;
+    font-size: 16px;
+  }
+  .tx-item .detail {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+}
 </style>
 </head>
 <body>
 
 <div id="app" v-cloak>
-  <app-header></app-header>
-  <app-nav active="inbox" :pending-count="pendingCount"></app-nav>
+  <app-header @toggle-nav="navOpen = !navOpen"></app-header>
+  <app-nav active="inbox" :pending-count="pendingCount" :open="navOpen" @close="navOpen = false"></app-nav>
 
   <div class="content">
     <div class="card">
@@ -95,6 +119,7 @@ const app = createApp({
   mixins: [authMixin],
   data() {
     return {
+      navOpen: false,
       transactions: [],
       events: [],
       loading: false,
