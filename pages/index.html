@@ -3,12 +3,184 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KAS IT Dashboard</title>
+<title>IT-Kas</title>
 <link rel="stylesheet" href="../css/styles.css">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0a1a0d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="IT-Kas">
+<link rel="apple-touch-icon" href="../icons/icon-192.png">
 <style>
 /* Page-specific: index.html — Dark Aesthetic */
 .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
 .table-header h2 { font-size: 16px; color: var(--text); }
+
+/* --- Color Variables (page-specific) --- */
+:root {
+  --saldo-green: #66bb6a;
+  --masuk-green: #81c784;
+  --keluar-red: #ef5350;
+  --amount-blue: #90caf9;
+  --pending-yellow: #ffca28;
+  --dropdown-bg: #1a2e1c;
+  --subtle-bg: rgba(255,255,255,0.04);
+  --subtle-bg-hover: rgba(255,255,255,0.06);
+  --subtle-border: rgba(255,255,255,0.06);
+  --subtle-border-med: rgba(255,255,255,0.08);
+  --subtle-border-strong: rgba(255,255,255,0.18);
+  --btn-neutral-bg: rgba(255,255,255,0.12);
+  --btn-blue-bg: rgba(66,165,245,0.25);
+  --btn-blue-border: rgba(66,165,245,0.3);
+  --btn-green-bg: rgba(102,187,106,0.25);
+  --btn-green-border: rgba(102,187,106,0.3);
+  --rekap-name-bg: rgba(10,26,13,0.95);
+  --rekap-name-border: rgba(255,255,255,0.15);
+  --table-head-bg: #ffffff;
+  --table-head-color: #333;
+  --table-head-border: rgba(0,0,0,0.1);
+}
+
+/* Light mode overrides */
+body.light {
+  --saldo-green: #2e7d32;
+  --masuk-green: #388e3c;
+  --keluar-red: #c62828;
+  --amount-blue: #1565c0;
+  --pending-yellow: #f57f17;
+  --dropdown-bg: #ffffff;
+  --subtle-bg: rgba(0,0,0,0.02);
+  --subtle-bg-hover: rgba(0,0,0,0.04);
+  --subtle-border: rgba(0,0,0,0.06);
+  --subtle-border-med: rgba(0,0,0,0.08);
+  --subtle-border-strong: rgba(0,0,0,0.12);
+  --btn-neutral-bg: rgba(0,0,0,0.06);
+  --btn-blue-bg: rgba(66,165,245,0.15);
+  --btn-blue-border: rgba(66,165,245,0.3);
+  --btn-green-bg: rgba(102,187,106,0.15);
+  --btn-green-border: rgba(102,187,106,0.3);
+  --rekap-name-bg: rgba(255,255,255,0.95);
+  --rekap-name-border: rgba(0,0,0,0.1);
+  --table-head-bg: #f5f5f5;
+  --table-head-color: #333;
+  --table-head-border: rgba(0,0,0,0.1);
+}
+
+/* --- Summary --- */
+.summary-saldo { color: var(--saldo-green); }
+.summary-masuk { color: var(--masuk-green); }
+.summary-keluar { color: var(--keluar-red); }
+
+/* --- Buttons --- */
+.btn-report { background: var(--btn-blue-bg); color: var(--amount-blue); border: 1px solid var(--btn-blue-border); }
+.btn-refresh { background: var(--btn-neutral-bg); color: var(--text-light); border: 1px solid var(--subtle-border-strong); }
+.btn-simulasi { background: var(--btn-blue-bg); color: var(--amount-blue); border: 1px solid var(--btn-blue-border); }
+.btn-edit-iuran { background: var(--btn-green-bg); color: var(--saldo-green); border: 1px solid var(--btn-green-border); }
+.btn-transaksi { background: var(--btn-green-bg); color: var(--saldo-green); border: 1px solid var(--btn-green-border); }
+.btn-copy-wa { background: var(--btn-neutral-bg); color: var(--text-light); border: 1px solid var(--subtle-border-strong); }
+
+/* --- Mobile summary card --- */
+.summary-mobile-card { background: var(--subtle-bg); }
+
+/* --- Iuran items --- */
+.iuran-item { background: var(--subtle-bg); }
+.iuran-amount { color: var(--amount-blue); }
+
+/* --- Late warning --- */
+.late-warning { color: var(--keluar-red); }
+.late-names { color: var(--text-muted); }
+
+/* --- Rekap section --- */
+.rekap-select { border: 1px solid var(--subtle-border-med); background: var(--subtle-bg-hover); color: var(--text); }
+.rekap-position { color: var(--text-muted); }
+.rekap-name-cell-bg { background: var(--rekap-name-bg); border-right: 2px solid var(--rekap-name-border); }
+
+/* --- Table header --- */
+.rekap-th { background: var(--table-head-bg); color: var(--table-head-color); }
+.rekap-th-name { background: var(--table-head-bg); color: var(--table-head-color); border-right: 2px solid var(--table-head-border); }
+
+/* --- Status in rekap --- */
+.status-pending { color: var(--pending-yellow); }
+.status-late { color: var(--keluar-red); }
+.status-empty { color: rgba(255,255,255,0.15); }
+body.light .status-empty { color: rgba(0,0,0,0.15); }
+
+/* --- Dropdown --- */
+.dropdown-menu { background: var(--dropdown-bg); border: 1px solid var(--subtle-border-med); color: var(--text); }
+.dropdown-item { color: var(--text); }
+.dropdown-item:hover { background: rgba(102,187,106,0.1); }
+
+/* --- Event cards --- */
+.event-card { background: var(--subtle-bg); border-left: 3px solid var(--amount-blue); border: 1px solid var(--subtle-border); }
+.event-id { color: var(--text-muted); }
+.event-lunas { color: var(--saldo-green); }
+.event-empty { color: var(--text-muted); }
+
+/* --- Search dropdown --- */
+.search-dropdown { background: var(--dropdown-bg); border: 1px solid var(--subtle-border-med); }
+.search-dropdown-item { border-bottom: 1px solid var(--subtle-bg); }
+.search-dropdown-item:hover { background: rgba(102,187,106,0.1); }
+.search-dropdown-empty { color: var(--text-muted); border: 1px solid var(--subtle-border-med); }
+
+/* --- Member display (selected in modal) --- */
+.member-display { border: 1px solid var(--btn-green-border); background: rgba(102,187,106,0.08); }
+.member-position-hint { color: var(--text-muted); }
+.member-change-btn { color: var(--keluar-red); }
+
+/* --- Form elements --- */
+.form-input-styled { border: 1px solid var(--subtle-border-med); background: var(--subtle-bg); color: var(--text); }
+
+/* --- Rekap bulan in submit form --- */
+.rekap-month-box { background: var(--subtle-bg); border: 1px solid var(--subtle-border); }
+.rekap-iuran-label { color: var(--amount-blue); }
+.submit-total { color: var(--saldo-green); }
+
+/* --- Simulasi --- */
+.sim-result { color: var(--amount-blue); }
+.sim-monthly { color: var(--saldo-green); }
+.sim-yearly { color: var(--amount-blue); }
+.sim-section { background: rgba(102,187,106,0.1); border: 1px solid rgba(102,187,106,0.2); }
+body.light .sim-section { background: rgba(102,187,106,0.06); border-color: rgba(102,187,106,0.15); }
+.sim-label { color: var(--text-muted); }
+
+/* --- Bulk --- */
+.bulk-total { color: var(--amount-blue); }
+.bulk-amount { color: var(--saldo-green); }
+.bulk-position { color: var(--text-muted); }
+.bulk-empty { color: var(--text-muted); }
+.bulk-border { border: 1px solid var(--subtle-border); }
+.bulk-thead { background: rgba(46,125,50,0.2); }
+body.light .bulk-thead { background: rgba(46,125,50,0.08); }
+
+/* --- Profile modal --- */
+.profile-subtitle { color: var(--text-muted); }
+.profile-total-label { color: var(--text-muted); }
+.profile-total { color: var(--saldo-green); }
+.profile-history-header { color: var(--text-light); }
+.profile-table-border { border: 1px solid var(--subtle-border); }
+.profile-thead { background: rgba(46,125,50,0.2); }
+body.light .profile-thead { background: rgba(46,125,50,0.08); }
+.profile-empty { color: var(--text-muted); }
+
+/* --- History modal --- */
+.history-table-border { border: 1px solid var(--subtle-border); }
+.history-thead { background: rgba(46,125,50,0.2); }
+body.light .history-thead { background: rgba(46,125,50,0.08); }
+.history-empty { color: var(--text-muted); }
+.history-summary { color: var(--text-muted); }
+
+/* --- Loading --- */
+.loading-text { color: var(--text-muted); }
+
+/* --- Separator --- */
+.section-separator { border-top: 1px solid var(--subtle-border); }
+
+/* --- All paid message --- */
+.all-paid-msg { color: var(--text-light); }
+body.light .all-paid-msg { color: var(--text); }
+
+/* --- Event min amount --- */
+.event-min-hint { color: var(--text-muted); }
 </style>
 </head>
 <body>
@@ -18,7 +190,7 @@
 
   <div class="content">
     <!-- Loading -->
-    <div v-if="dataLoading" style="text-align:center;padding:60px 20px;color:rgba(255,255,255,0.4);">
+    <div v-if="dataLoading" class="loading-text" style="text-align:center;padding:60px 20px;">
       <div class="spinner"></div> Memuat data...
     </div>
 
@@ -31,39 +203,39 @@
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
           <h2 style="font-size:16px;color:var(--text);">📊 Summary</h2>
           <div style="display:flex;gap:6px;">
-            <button v-if="isAdmin" class="btn" style="background:rgba(66,165,245,0.25);color:#90caf9;font-size:12px;padding:6px 12px;border:1px solid rgba(66,165,245,0.3);" @click="showReportPicker = true">📷 Laporan</button>
-            <button class="btn" style="background:rgba(255,255,255,0.12);color:var(--text-light);font-size:12px;padding:6px 12px;border:1px solid rgba(255,255,255,0.18);" @click="loadData">🔄</button>
+            <button v-if="isAdmin" class="btn btn-report" style="font-size:12px;padding:6px 12px;" @click="showReportPicker = true">📷 Laporan</button>
+            <button class="btn btn-refresh" style="font-size:12px;padding:6px 12px;" @click="loadData">🔄</button>
           </div>
         </div>
         <!-- Desktop: 3 columns -->
         <div class="summary-desktop" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center;">
           <div>
             <div class="label">💰 Total Saldo</div>
-            <div style="font-size:20px;font-weight:700;color:#66bb6a;">{{ fmt(summary.masuk - summary.keluar) }}</div>
+            <div class="summary-saldo" style="font-size:20px;font-weight:700;">{{ fmt(summary.masuk - summary.keluar) }}</div>
           </div>
           <div style="cursor:pointer;" @click="openHistory('masuk')">
             <div class="label">📥 Total Masuk</div>
-            <div style="font-size:20px;font-weight:700;color:#81c784;">{{ fmt(summary.masuk) }}</div>
+            <div class="summary-masuk" style="font-size:20px;font-weight:700;">{{ fmt(summary.masuk) }}</div>
           </div>
           <div style="cursor:pointer;" @click="openHistory('keluar')">
             <div class="label">📤 Total Keluar</div>
-            <div style="font-size:20px;font-weight:700;color:#ef5350;">{{ fmt(summary.keluar) }}</div>
+            <div class="summary-keluar" style="font-size:20px;font-weight:700;">{{ fmt(summary.keluar) }}</div>
           </div>
         </div>
         <!-- Mobile: stacked layout -->
         <div class="summary-mobile">
           <div style="text-align:center;margin-bottom:12px;">
             <div class="label">💰 Total Saldo</div>
-            <div style="font-size:26px;font-weight:700;color:#66bb6a;">{{ fmt(summary.masuk - summary.keluar) }}</div>
+            <div class="summary-saldo" style="font-size:26px;font-weight:700;">{{ fmt(summary.masuk - summary.keluar) }}</div>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center;">
-            <div style="cursor:pointer;padding:10px;background:rgba(255,255,255,0.04);border-radius:8px;" @click="openHistory('masuk')">
+            <div class="summary-mobile-card" style="cursor:pointer;padding:10px;border-radius:8px;" @click="openHistory('masuk')">
               <div class="label" style="font-size:11px;">📥 Masuk</div>
-              <div style="font-size:15px;font-weight:700;color:#81c784;">{{ fmt(summary.masuk) }}</div>
+              <div class="summary-masuk" style="font-size:15px;font-weight:700;">{{ fmt(summary.masuk) }}</div>
             </div>
-            <div style="cursor:pointer;padding:10px;background:rgba(255,255,255,0.04);border-radius:8px;" @click="openHistory('keluar')">
+            <div class="summary-mobile-card" style="cursor:pointer;padding:10px;border-radius:8px;" @click="openHistory('keluar')">
               <div class="label" style="font-size:11px;">📤 Keluar</div>
-              <div style="font-size:15px;font-weight:700;color:#ef5350;">{{ fmt(summary.keluar) }}</div>
+              <div class="summary-keluar" style="font-size:15px;font-weight:700;">{{ fmt(summary.keluar) }}</div>
             </div>
           </div>
         </div>
@@ -81,12 +253,12 @@
           </div>
         </div>
         <!-- Reminder Belum Bayar -->
-        <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);">
+        <div class="section-separator" style="margin-top:14px;padding-top:14px;">
           <div v-if="lateMembers.length" style="display:flex;justify-content:space-between;align-items:center;">
-            <span style="font-size:13px;font-weight:600;color:#ef5350;">⚠️ Belum bayar: {{ lateMembers.length }} orang</span>
-            <button v-if="isAdmin" @click="copyReminder" style="padding:5px 12px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.18);border-radius:6px;font-size:12px;cursor:pointer;font-weight:500;color:var(--text-light);">📋 Copy untuk WA</button>
+            <span class="late-warning" style="font-size:13px;font-weight:600;">⚠️ Belum bayar: {{ lateMembers.length }} orang</span>
+            <button v-if="isAdmin" @click="copyReminder" class="btn-copy-wa" style="padding:5px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:500;">📋 Copy untuk WA</button>
           </div>
-          <div v-if="lateMembers.length" style="font-size:12px;color:var(--text-muted);margin-top:6px;line-height:1.6;">
+          <div v-if="lateMembers.length" class="late-names" style="font-size:12px;margin-top:6px;line-height:1.6;">
             <span v-for="(m, i) in lateMembers.slice(0, 10)" :key="m.nik">{{ m.name }}<span v-if="i < Math.min(lateMembers.length, 10) - 1">, </span></span>
             <span v-if="lateMembers.length > 10"> +{{ lateMembers.length - 10 }} lainnya</span>
           </div>
@@ -101,13 +273,13 @@
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
           <h2 style="font-size:16px;color:var(--text);">📋 Master Iuran Bulanan</h2>
           <div style="display:flex;gap:6px;">
-            <button style="padding:5px 10px;background:rgba(66,165,245,0.25);color:#90caf9;border:1px solid rgba(66,165,245,0.3);border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;" @click="showSimModal = true">🧮 Simulasi</button>
-            <button v-if="isAdmin" style="padding:5px 10px;background:rgba(102,187,106,0.25);color:#66bb6a;border:1px solid rgba(102,187,106,0.3);border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;" @click="openEditIuran">✏️ Edit</button>
+            <button class="btn-simulasi" style="padding:5px 10px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;" @click="showSimModal = true">🧮 Simulasi</button>
+            <button v-if="isAdmin" class="btn-edit-iuran" style="padding:5px 10px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;" @click="openEditIuran">✏️ Edit</button>
           </div>
         </div>
-        <div v-for="item in masterIuran" :key="item.position" style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;margin-bottom:6px;background:rgba(255,255,255,0.04);border-radius:8px;" :style="{ borderLeft: '3px solid ' + (posColors[item.position] || '#66bb6a') }">
+        <div v-for="item in masterIuran" :key="item.position" class="iuran-item" style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;margin-bottom:6px;border-radius:8px;" :style="{ borderLeft: '3px solid ' + (posColors[item.position] || '#66bb6a') }">
           <span style="font-size:13px;font-weight:500;" :style="{ color: posColors[item.position] || 'var(--text)' }">{{ item.position }}</span>
-          <span style="font-size:14px;font-weight:700;color:#90caf9;">{{ fmt(item.amount) }}</span>
+          <span class="iuran-amount" style="font-size:14px;font-weight:700;">{{ fmt(item.amount) }}</span>
         </div>
       </div>
       </div>
@@ -123,29 +295,29 @@
       <div class="rekap-header">
         <h2 style="font-size:16px;color:var(--text);">📊 Rekap Kas per Anggota</h2>
         <div class="rekap-controls-row">
-          <select v-model="selectedYear" @change="loadData" style="padding:7px 12px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;font-size:13px;background:rgba(255,255,255,0.06);color:var(--text);">
+          <select v-model="selectedYear" @change="loadData" class="rekap-select" style="padding:7px 12px;border-radius:8px;font-size:13px;">
             <option v-for="y in yearOptions" :key="y" :value="y">{{ y }}</option>
           </select>
-          <button @click="loadData" style="background:rgba(255,255,255,0.12);color:var(--text-light);font-size:12px;padding:6px 12px;border:1px solid rgba(255,255,255,0.18);border-radius:6px;">🔄</button>
+          <button @click="loadData" class="btn-refresh" style="font-size:12px;padding:6px 12px;border-radius:6px;">🔄</button>
           <!-- Desktop only: transaksi button inline -->
-          <button v-if="isLoggedIn" class="rekap-tx-desktop" @click="showTxMenu = !showTxMenu" style="position:relative;background:rgba(102,187,106,0.25);color:#66bb6a;font-size:12px;padding:6px 12px;border:1px solid rgba(102,187,106,0.3);border-radius:6px;">➕ Transaksi
-            <div v-if="showTxMenu" style="position:absolute;right:0;top:110%;background:#1a2e1c;border:1px solid rgba(255,255,255,0.08);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.4);min-width:200px;z-index:50;overflow:hidden;color:var(--text);padding:6px;" @click.stop>
-              <div style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;openSubmitModal()"><span style="font-size:16px;">💵</span> Submit Kas</div>
-              <div v-if="isAdmin" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;showExtModal=true"><span style="font-size:16px;">📥</span> Pemasukan Lain</div>
-              <div v-if="isAdmin" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;showOutModal=true"><span style="font-size:16px;">📤</span> Pengeluaran</div>
-              <div v-if="isAdmin" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;openBulkModal()"><span style="font-size:16px;">📋</span> Bulk Input</div>
+          <button v-if="isLoggedIn" class="rekap-tx-desktop btn-transaksi" @click="showTxMenu = !showTxMenu" style="position:relative;font-size:12px;padding:6px 12px;border-radius:6px;">➕ Transaksi
+            <div v-if="showTxMenu" class="dropdown-menu" style="position:absolute;right:0;top:110%;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.4);min-width:200px;z-index:50;overflow:hidden;padding:6px;" @click.stop>
+              <div class="dropdown-item" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;openSubmitModal()"><span style="font-size:16px;">💵</span> Submit Kas</div>
+              <div v-if="isAdmin" class="dropdown-item" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;showExtModal=true"><span style="font-size:16px;">📥</span> Pemasukan Lain</div>
+              <div v-if="isAdmin" class="dropdown-item" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;showOutModal=true"><span style="font-size:16px;">📤</span> Pengeluaran</div>
+              <div v-if="isAdmin" class="dropdown-item" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;openBulkModal()"><span style="font-size:16px;">📋</span> Bulk Input</div>
             </div>
           </button>
         </div>
       </div>
       <!-- Mobile only: transaksi button on its own row -->
       <div class="rekap-actions-mobile">
-        <button v-if="isLoggedIn" @click="showTxMenu = !showTxMenu" style="position:relative;background:rgba(102,187,106,0.25);color:#66bb6a;font-size:12px;padding:6px 12px;border:1px solid rgba(102,187,106,0.3);border-radius:6px;">➕ Transaksi
-          <div v-if="showTxMenu" style="position:absolute;right:0;top:110%;background:#1a2e1c;border:1px solid rgba(255,255,255,0.08);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.4);min-width:200px;z-index:50;overflow:hidden;color:var(--text);padding:6px;" @click.stop>
-            <div style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;openSubmitModal()"><span style="font-size:16px;">💵</span> Submit Kas</div>
-            <div v-if="isAdmin" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;showExtModal=true"><span style="font-size:16px;">📥</span> Pemasukan Lain</div>
-            <div v-if="isAdmin" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;showOutModal=true"><span style="font-size:16px;">📤</span> Pengeluaran</div>
-            <div v-if="isAdmin" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;openBulkModal()"><span style="font-size:16px;">📋</span> Bulk Input</div>
+        <button v-if="isLoggedIn" @click="showTxMenu = !showTxMenu" class="btn-transaksi" style="position:relative;font-size:12px;padding:6px 12px;border-radius:6px;">➕ Transaksi
+          <div v-if="showTxMenu" class="dropdown-menu" style="position:absolute;right:0;top:110%;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.4);min-width:200px;z-index:50;overflow:hidden;padding:6px;" @click.stop>
+            <div class="dropdown-item" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;openSubmitModal()"><span style="font-size:16px;">💵</span> Submit Kas</div>
+            <div v-if="isAdmin" class="dropdown-item" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;showExtModal=true"><span style="font-size:16px;">📥</span> Pemasukan Lain</div>
+            <div v-if="isAdmin" class="dropdown-item" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;showOutModal=true"><span style="font-size:16px;">📤</span> Pengeluaran</div>
+            <div v-if="isAdmin" class="dropdown-item" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;openBulkModal()"><span style="font-size:16px;">📋</span> Bulk Input</div>
           </div>
         </button>
       </div>
@@ -153,21 +325,21 @@
         <table>
           <thead style="position:sticky;top:0;z-index:2;">
             <tr>
-              <th style="text-align:left;position:sticky;left:0;z-index:3;background:#ffffff;color:#333;border-right:2px solid rgba(0,0,0,0.1);">Nama</th>
-              <th v-for="m in months" :key="m" style="background:#ffffff;color:#333;text-align:center;font-size:11px;">{{ m }}</th>
+              <th class="rekap-th-name" style="text-align:left;position:sticky;left:0;z-index:3;">Nama</th>
+              <th v-for="m in months" :key="m" class="rekap-th" style="text-align:center;font-size:11px;">{{ m }}</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="member in sortedMembers" :key="member.nik" :class="{ inactive: !isMemberActive(member) }">
-              <td class="rekap-name-cell" style="position:sticky;left:0;z-index:1;font-weight:500;cursor:pointer;border-right:2px solid rgba(255,255,255,0.15);" :style="{ background: isMemberLate(member) ? 'rgba(239,83,80,0.12)' : 'rgba(10,26,13,0.95)' }" @click="openProfile(member)">
+              <td class="rekap-name-cell rekap-name-cell-bg" style="position:sticky;left:0;z-index:1;font-weight:500;cursor:pointer;" :style="{ background: isMemberLate(member) ? 'rgba(239,83,80,0.12)' : '' }" @click="openProfile(member)">
                 <span class="rekap-name" :style="{ color: posColors[member.position] || 'var(--text)' }">{{ member.name }}</span>
-                <div style="font-size:10px;color:rgba(255,255,255,0.4);">{{ member.position }}</div>
+                <div class="rekap-position" style="font-size:10px;">{{ member.position }}</div>
               </td>
               <td v-for="(m, i) in months" :key="i" style="text-align:center;" :style="getMemberMonthStatus(member.nik, i+1) === 'late' ? { background: 'rgba(239,83,80,0.08)' } : getMemberMonthStatus(member.nik, i+1) === 'pending' ? { background: 'rgba(255,202,40,0.08)' } : {}">
                 <span v-if="getMemberMonthStatus(member.nik, i+1) === 'approved'" class="amount-in" style="font-size:11px;">{{ Number(getMemberMonthAmount(member.nik, i+1)).toLocaleString('id-ID') }}</span>
-                <span v-else-if="getMemberMonthStatus(member.nik, i+1) === 'pending'" style="color:#ffca28;font-size:10px;font-weight:600;">PENDING</span>
-                <span v-else-if="getMemberMonthStatus(member.nik, i+1) === 'late'" style="color:#ef5350;font-size:10px;font-weight:600;">TELAT</span>
-                <span v-else style="color:rgba(255,255,255,0.15);font-size:12px;">—</span>
+                <span v-else-if="getMemberMonthStatus(member.nik, i+1) === 'pending'" class="status-pending" style="font-size:10px;font-weight:600;">PENDING</span>
+                <span v-else-if="getMemberMonthStatus(member.nik, i+1) === 'late'" class="status-late" style="font-size:10px;font-weight:600;">TELAT</span>
+                <span v-else class="status-empty" style="font-size:12px;">—</span>
               </td>
             </tr>
           </tbody>
@@ -180,15 +352,15 @@
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
         <h2 style="font-size:16px;color:var(--text);">📅 Rekap Event</h2>
       </div>
-      <div v-if="!activeEvents.length" style="text-align:center;padding:20px;color:rgba(255,255,255,0.4);font-size:13px;">Belum ada event aktif</div>
-      <div v-for="ev in activeEvents" :key="ev.id" style="background:rgba(255,255,255,0.03);border-radius:10px;padding:14px;margin-bottom:10px;border-left:3px solid #90caf9;border:1px solid rgba(255,255,255,0.06);">
+      <div v-if="!activeEvents.length" class="event-empty" style="text-align:center;padding:20px;font-size:13px;">Belum ada event aktif</div>
+      <div v-for="ev in activeEvents" :key="ev.id" class="event-card" style="border-radius:10px;padding:14px;margin-bottom:10px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
           <div>
             <span style="font-size:14px;font-weight:600;color:var(--text);">{{ ev.name }}</span>
-            <span style="font-size:11px;color:rgba(255,255,255,0.4);margin-left:8px;">{{ ev.id }}</span>
+            <span class="event-id" style="font-size:11px;margin-left:8px;">{{ ev.id }}</span>
           </div>
           <div style="display:flex;gap:8px;align-items:center;">
-            <span style="font-size:12px;font-weight:600;color:#66bb6a;">{{ getEventPaidCount(ev.id) }}/{{ activeMembers.length }} lunas</span>
+            <span class="event-lunas" style="font-size:12px;font-weight:600;">{{ getEventPaidCount(ev.id) }}/{{ activeMembers.length }} lunas</span>
             <span :style="{ fontSize:'11px', padding:'3px 8px', borderRadius:'6px', fontWeight:'600', background: ev.status==='closed'?'rgba(255,255,255,0.05)':'rgba(102,187,106,0.12)', color: ev.status==='closed'?'rgba(255,255,255,0.4)':'#66bb6a' }">{{ ev.status === 'closed' ? 'Closed' : 'Active' }}</span>
           </div>
         </div>
@@ -207,24 +379,24 @@
       <div class="form-group">
         <label>Anggota</label>
         <!-- Non-admin: auto-fill, locked -->
-        <div v-if="!isAdmin && form.memberNik" style="padding:9px 12px;border:1px solid rgba(102,187,106,0.3);border-radius:8px;background:rgba(102,187,106,0.08);">
-          <span style="font-size:14px;font-weight:600;color:var(--text);">{{ form.memberName }} <span style="font-size:11px;color:rgba(255,255,255,0.5);">({{ getMemberPosition(form.memberNik) }})</span></span>
+        <div v-if="!isAdmin && form.memberNik" class="member-display" style="padding:9px 12px;border-radius:8px;">
+          <span style="font-size:14px;font-weight:600;color:var(--text);">{{ form.memberName }} <span class="member-position-hint" style="font-size:11px;">({{ getMemberPosition(form.memberNik) }})</span></span>
         </div>
         <!-- Admin: selected member display with change button -->
-        <div v-else-if="isAdmin && form.memberNik" style="padding:9px 12px;border:1px solid rgba(102,187,106,0.3);border-radius:8px;background:rgba(102,187,106,0.08);display:flex;justify-content:space-between;align-items:center;">
-          <span style="font-size:14px;font-weight:600;color:var(--text);">{{ form.memberName }} <span style="font-size:11px;color:rgba(255,255,255,0.5);">({{ getMemberPosition(form.memberNik) }})</span></span>
-          <span @click="clearFormMember" style="cursor:pointer;font-size:12px;color:#ef5350;font-weight:500;">✕ Ganti</span>
+        <div v-else-if="isAdmin && form.memberNik" class="member-display" style="padding:9px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:14px;font-weight:600;color:var(--text);">{{ form.memberName }} <span class="member-position-hint" style="font-size:11px;">({{ getMemberPosition(form.memberNik) }})</span></span>
+          <span @click="clearFormMember" class="member-change-btn" style="cursor:pointer;font-size:12px;font-weight:500;">✕ Ganti</span>
         </div>
         <!-- Admin: search input + dropdown -->
         <div v-else-if="isAdmin">
-          <input type="text" v-model="memberSearch" placeholder="🔍 Cari nama anggota..." @focus="showMemberDropdown = true" style="width:100%;padding:9px 12px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;font-size:14px;background:rgba(255,255,255,0.05);color:var(--text);">
-          <div v-if="showMemberDropdown && filteredMembers.length" style="max-height:160px;overflow-y:auto;border:1px solid rgba(255,255,255,0.08);border-radius:8px;margin-top:4px;background:#1a2e1c;">
-            <div v-for="m in filteredMembers" :key="m.nik" @click="selectFormMember(m)" style="padding:8px 12px;cursor:pointer;font-size:13px;border-bottom:1px solid rgba(255,255,255,0.04);" @mouseover="$event.target.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.target.style.background=''">
+          <input type="text" v-model="memberSearch" placeholder="🔍 Cari nama anggota..." @focus="showMemberDropdown = true" class="form-input-styled" style="width:100%;padding:9px 12px;border-radius:8px;font-size:14px;">
+          <div v-if="showMemberDropdown && filteredMembers.length" class="search-dropdown" style="max-height:160px;overflow-y:auto;border-radius:8px;margin-top:4px;">
+            <div v-for="m in filteredMembers" :key="m.nik" @click="selectFormMember(m)" class="search-dropdown-item" style="padding:8px 12px;cursor:pointer;font-size:13px;" @mouseover="$event.target.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.target.style.background=''">
               <span :style="{ color: posColors[m.position] || 'var(--text)', fontWeight: '500' }">{{ m.name }}</span>
-              <span style="font-size:11px;color:rgba(255,255,255,0.4);margin-left:6px;">{{ m.position }}</span>
+              <span class="member-position-hint" style="font-size:11px;margin-left:6px;">{{ m.position }}</span>
             </div>
           </div>
-          <div v-if="showMemberDropdown && memberSearch && !filteredMembers.length" style="padding:12px;text-align:center;color:rgba(255,255,255,0.4);font-size:12px;border:1px solid rgba(255,255,255,0.08);border-radius:8px;margin-top:4px;">Tidak ditemukan</div>
+          <div v-if="showMemberDropdown && memberSearch && !filteredMembers.length" class="search-dropdown-empty" style="padding:12px;text-align:center;font-size:12px;border-radius:8px;margin-top:4px;">Tidak ditemukan</div>
         </div>
       </div>
       <div class="form-group">
@@ -1398,6 +1570,11 @@ const app = createApp({
 registerComponents(app);
 app.mount('#app');
 } // end initApp
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('../sw.js');
+}
 </script>
 </body>
 </html>

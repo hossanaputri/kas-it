@@ -3,8 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KAS IT - Login</title>
+<title>IT-Kas - Login</title>
 <link rel="stylesheet" href="../css/styles.css">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0a1a0d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="IT-Kas">
+<link rel="apple-touch-icon" href="../icons/icon-192.png">
 <style>
 /* Page-specific: login.html — Aesthetic Green */
 body::before, body::after { display: none !important; }
@@ -695,6 +701,11 @@ createApp({
     }
   }
 }).mount('#app');
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('../sw.js');
+}
 </script>
 </body>
 </html>
