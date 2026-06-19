@@ -1946,28 +1946,31 @@ body.light {
 .dash-grid {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 16px;
+  gap: 12px;
+  margin-bottom: 12px;
+  align-items: stretch;
 }
 
 /* --- Dashboard Cards --- */
 .dash-card {
-  padding: 16px 20px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
 }
 .dash-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 .dash-card-title {
-  font-size: var(--fs-lg);
+  font-size: var(--fs-md);
   color: var(--text);
   font-weight: 600;
 }
 .dash-card-actions {
   display: flex;
-  gap: 6px;
+  gap: 4px;
 }
 
 /* --- Summary Card --- */
@@ -1977,11 +1980,11 @@ body.light {
 .summary-desktop {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  gap: 10px;
   text-align: center;
 }
 .summary-value {
-  font-size: var(--fs-xl);
+  font-size: 18px;
   font-weight: 700;
 }
 .summary-mobile { display: none; }
@@ -2009,18 +2012,18 @@ body.light {
 
 /* --- Target Kas --- */
 .target-section {
-  margin-top: 14px;
-  padding-top: 14px;
+  margin-top: 10px;
+  padding-top: 10px;
   border-top: 1px solid var(--subtle-border);
 }
 .target-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 .target-label {
-  font-size: 13px;
+  font-size: var(--fs-sm);
   font-weight: 600;
   color: var(--text-light);
 }
@@ -2032,7 +2035,7 @@ body.light {
 .progress-track {
   position: relative;
   border-radius: var(--radius-md);
-  height: 28px;
+  height: 24px;
   overflow: hidden;
   background: var(--subtle-bg);
 }
@@ -2089,17 +2092,17 @@ body.light .all-paid-msg { color: var(--text); }
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 12px;
-  margin-bottom: 6px;
+  padding: 8px 10px;
+  margin-bottom: 4px;
   border-radius: var(--radius-md);
   background: var(--subtle-bg);
 }
 .iuran-pos {
-  font-size: 13px;
+  font-size: var(--fs-sm);
   font-weight: 500;
 }
 .iuran-amount {
-  font-size: var(--fs-md);
+  font-size: 13px;
   font-weight: 700;
   color: var(--amount-blue);
 }
@@ -2108,44 +2111,44 @@ body.light .all-paid-msg { color: var(--text); }
 .status-counts {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 12px;
+  gap: 6px;
+  margin-bottom: 10px;
 }
 .status-count-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 12px;
+  padding: 6px 10px;
   border-radius: var(--radius-md);
   background: var(--subtle-bg);
 }
 .status-count-label {
-  font-size: 13px;
+  font-size: var(--fs-sm);
   font-weight: 500;
   color: var(--text-light);
 }
 .status-count-value {
-  font-size: var(--fs-lg);
+  font-size: var(--fs-md);
   font-weight: 700;
 }
 .status-count-value.lunas { color: var(--saldo-green); }
 .status-count-value.pending { color: var(--pending-yellow); }
 .status-count-value.belum { color: var(--keluar-red); }
 .status-unpaid-list {
-  margin-top: 10px;
-  padding-top: 10px;
+  margin-top: 8px;
+  padding-top: 8px;
   border-top: 1px solid var(--subtle-border);
 }
 .status-unpaid-title {
-  font-size: var(--fs-sm);
+  font-size: var(--fs-xs);
   font-weight: 600;
   color: var(--text-muted);
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 .status-unpaid-names {
-  font-size: var(--fs-sm);
+  font-size: 11px;
   color: var(--text-light);
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 /* --- Dashboard Buttons --- */
@@ -2185,7 +2188,7 @@ body.light .all-paid-msg { color: var(--text); }
 }
 
 /* --- Rekap Section --- */
-.rekap-section { padding: 16px 20px; margin-bottom: 16px; }
+.rekap-section { padding: 14px 16px; margin-bottom: 12px; }
 .rekap-header {
   display: flex;
   justify-content: space-between;
