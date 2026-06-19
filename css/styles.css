@@ -309,7 +309,7 @@ body:not(.login-page) .nav-overlay {
 }
 
 /* --- 5. Content Container --- */
-.content { padding: 20px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+.content { padding: 20px; position: relative; z-index: 1; }
 
 /* --- 6. Buttons --- */
 /* Base */
@@ -770,7 +770,6 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
 .payment-item { padding: 3px 0; display: flex; justify-content: space-between; align-items: center; color: var(--text-light); }
 
 /* --- 22. Members Page --- */
-.members-page .content { max-width: none; }
 
 /* Stats row */
 .stats-row {
