@@ -923,7 +923,7 @@ const app = createApp({
     copyReminder() {
       const now = new Date();
       const monthName = this.monthNames[now.getMonth()];
-      const names = this.lateMembers.map(m => '• ' + m.name).join('\n');
+      const names = this.statusBulanIni.unpaidNames.map(n => '• ' + n).join('\n');
       const text = `⚠️ Reminder Iuran Kas IT - ${monthName} ${now.getFullYear()}\n\nYang belum bayar:\n${names}\n\nMohon segera disetor ya. Terima kasih 🙏\n\n📲 Submit via: <input link here>`;
       navigator.clipboard.writeText(text).then(() => { this.showToast('Berhasil di-copy! Tinggal paste ke WA'); }).catch(() => { this.showToast('Gagal copy', false); });
     },
