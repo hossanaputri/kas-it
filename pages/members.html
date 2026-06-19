@@ -122,12 +122,6 @@
 }
 .member-card-actions .btn { flex: 1; font-size: var(--fs-xs); padding: 8px 4px; }
 
-/* Action buttons */
-.detail-btn-edit { background: var(--bg-elevated); color: var(--text-light); border: 1px solid var(--border); }
-.detail-btn-reset { background: var(--orange-bg); color: var(--orange); border: 1px solid rgba(255,167,38,0.2); }
-.detail-btn-danger { background: var(--red-bg); color: var(--red); border: 1px solid rgba(239,83,80,0.2); }
-.detail-btn-success { background: var(--green-bg); color: var(--green); border: 1px solid rgba(102,187,106,0.2); }
-
 /* Badges */
 .member-badge-admin { font-size: var(--fs-xs); background: var(--blue-bg); color: var(--navy); padding: 2px 6px; border-radius: 4px; font-weight: 600; }
 .member-badge-locked { font-size: var(--fs-xs); background: var(--red-bg); color: var(--red); padding: 2px 6px; border-radius: 4px; font-weight: 600; }
@@ -180,7 +174,6 @@ body.light .stat-card { background: #ffffff; border-color: rgba(0,0,0,0.08); }
 body.light .member-card { background: #ffffff; border-color: rgba(0,0,0,0.08); }
 body.light .member-card:hover { background: #f8f8f8; border-color: rgba(76,175,80,0.2); }
 body.light .member-card-name { color: #1a1a1a; }
-body.light .detail-btn-edit { background: rgba(0,0,0,0.05); color: #333; border-color: rgba(0,0,0,0.1); }
 body.light .search-input { background: #efefef; border-color: rgba(0,0,0,0.1); color: #333; }
 body.light .search-input::placeholder { color: rgba(0,0,0,0.4); }
 </style>
@@ -256,9 +249,9 @@ body.light .search-input::placeholder { color: rgba(0,0,0,0.4); }
           </div>
         </div>
         <div v-if="isAdmin" class="member-card-actions">
-          <button class="btn btn-sm detail-btn-edit" @click.stop="editMember(m)">✏️ Edit</button>
-          <button class="btn btn-sm detail-btn-reset" @click.stop="resetPassword(m)">🔑 Reset</button>
-          <button class="btn btn-sm" :class="isActive(m) ? 'detail-btn-danger' : 'detail-btn-success'" @click.stop="toggleMember(m)">{{ isActive(m) ? '⏸ Nonaktif' : '▶ Aktifkan' }}</button>
+          <button class="btn btn-sm btn-secondary" @click.stop="editMember(m)">✏️ Edit</button>
+          <button class="btn btn-sm btn-warning" @click.stop="resetPassword(m)">🔑 Reset</button>
+          <button class="btn btn-sm" :class="isActive(m) ? 'btn-danger' : 'btn-success'" @click.stop="toggleMember(m)">{{ isActive(m) ? '⏸ Nonaktif' : '▶ Aktifkan' }}</button>
         </div>
       </div>
       <!-- Empty state -->
