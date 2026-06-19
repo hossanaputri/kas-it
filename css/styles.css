@@ -2187,6 +2187,71 @@ body.light .all-paid-msg { color: var(--text); }
   color: var(--saldo-green);
 }
 
+/* --- Activity Section (Summary Card) --- */
+.activity-section {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--subtle-border);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.activity-title {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-light);
+  margin-bottom: 8px;
+}
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.activity-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--subtle-bg);
+}
+.activity-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.activity-name {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.activity-desc {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+.activity-right {
+  text-align: right;
+  flex-shrink: 0;
+}
+.activity-amount {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  display: block;
+}
+.activity-time {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+.activity-empty {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  text-align: center;
+  padding: 12px 0;
+}
+
 /* --- Rekap Section --- */
 .rekap-section { padding: 14px 16px; margin-bottom: 12px; }
 .rekap-header {

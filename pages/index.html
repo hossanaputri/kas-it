@@ -79,6 +79,23 @@
             <div class="progress-pct">{{ targetPct }}%</div>
           </div>
         </div>
+        <!-- Aktivitas Terakhir -->
+        <div class="activity-section">
+          <div class="activity-title">🕐 Aktivitas Terakhir</div>
+          <div v-if="recentActivity.length" class="activity-list">
+            <div v-for="tx in recentActivity" :key="tx.id" class="activity-item">
+              <div class="activity-info">
+                <span class="activity-name">{{ tx.memberName || tx.note || '-' }}</span>
+                <span class="activity-desc">{{ tx.note || tx.kategori }}</span>
+              </div>
+              <div class="activity-right">
+                <span class="activity-amount" :class="tx.type === 'masuk' ? 'amount-in' : 'amount-out'">{{ tx.type === 'masuk' ? '+' : '-' }}{{ fmt(tx.amount) }}</span>
+                <span class="activity-time">{{ relativeTime(tx.submittedAt) }}</span>
+              </div>
+            </div>
+          </div>
+          <div v-else class="activity-empty">Belum ada aktivitas</div>
+        </div>
       </div>
       <!-- Card 2: Master Iuran Bulanan -->
       <div class="table-section dash-card">
@@ -753,6 +770,12 @@ const app = createApp({
     },
     historyItems() { return this.transactions.filter(t => t.type === this.historyType && t.status === 'approved').sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)).slice(0, 50); },
     historyTotal() { return this.historyItems.reduce((s, t) => s + Number(t.amount), 0); },
+    recentActivity() {
+      return this.transactions
+        .filter(t => t.status === 'approved')
+        .sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt))
+        .slice(0, 5);
+    },
     availableEvents() {
       if (!this.form.memberNik) return [];
       const member = this.members.find(m => m.nik === this.form.memberNik);
@@ -981,6 +1004,17 @@ const app = createApp({
     },
     openHistory(type) { this.historyType = type; this.showHistoryModal = true; },
     formatDate(iso) { if (!iso) return '-'; const d = new Date(iso); return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: '2-digit' }); },
+    relativeTime(iso) {
+      if (!iso) return '';
+      const now = new Date();
+      const d = new Date(iso);
+      const diff = Math.floor((now - d) / 1000);
+      if (diff < 60) return 'baru saja';
+      if (diff < 3600) return Math.floor(diff / 60) + ' menit lalu';
+      if (diff < 86400) return Math.floor(diff / 3600) + ' jam lalu';
+      if (diff < 604800) return Math.floor(diff / 86400) + ' hari lalu';
+      return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+    },
     async generateReport() {
       this.reportImage = '';
       this.showReportPreview = true;
