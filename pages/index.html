@@ -84,14 +84,10 @@
           <div class="activity-title">🕐 Aktivitas Terakhir</div>
           <div v-if="recentActivity.length" class="activity-list">
             <div v-for="tx in recentActivity" :key="tx.id" class="activity-item">
-              <div class="activity-info">
-                <span class="activity-name">{{ tx.memberName || tx.note || '-' }}</span>
-                <span class="activity-desc">{{ tx.note || tx.kategori }}</span>
-              </div>
-              <div class="activity-right">
-                <span class="activity-amount" :class="tx.type === 'masuk' ? 'amount-in' : 'amount-out'">{{ tx.type === 'masuk' ? '+' : '-' }}{{ fmt(tx.amount) }}</span>
-                <span class="activity-time">{{ relativeTime(tx.submittedAt) }}</span>
-              </div>
+              <span class="activity-name">{{ tx.memberName || tx.note || '-' }}</span>
+              <span class="activity-desc">{{ tx.note || tx.kategori }}</span>
+              <span class="activity-amount" :class="tx.type === 'masuk' ? 'amount-in' : 'amount-out'">{{ tx.type === 'masuk' ? '+' : '-' }}{{ fmt(tx.amount) }}</span>
+              <span class="activity-time">{{ relativeTime(tx.submittedAt) }}</span>
             </div>
           </div>
           <div v-else class="activity-empty">Belum ada aktivitas</div>
