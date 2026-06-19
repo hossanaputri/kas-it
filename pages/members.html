@@ -24,6 +24,7 @@
 }
 .stat-card {
   background: #1a1a1a;
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 10px;
   padding: 14px;
   text-align: center;
@@ -155,7 +156,7 @@
 }
 
 /* Light mode overrides */
-body.light .stat-card { background: #efefef; }
+body.light .stat-card { background: #ffffff; border: 1px solid rgba(0,0,0,0.08); }
 body.light .member-card { background: #ffffff; border-color: rgba(0,0,0,0.08); }
 body.light .member-card:hover { background: #f8f8f8; border-color: rgba(76,175,80,0.2); }
 body.light .member-card-name { color: #1a1a1a; }
@@ -172,28 +173,26 @@ body.light .search-input::placeholder { color: rgba(0,0,0,0.4); }
 
   <div class="content">
     <!-- Stats Row -->
-    <div class="card" style="padding:16px 20px;margin-bottom:20px;">
-      <div class="stats-row">
-        <div class="stat-card">
-          <div class="stat-icon">📊</div>
-          <div class="stat-value">{{ members.length }}</div>
-          <div class="stat-label">Total</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">✅</div>
-          <div class="stat-value" style="color:#66bb6a;">{{ members.filter(m => isActive(m)).length }}</div>
-          <div class="stat-label">Active</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">❌</div>
-          <div class="stat-value" style="color:#ef5350;">{{ members.filter(m => !isActive(m)).length }}</div>
-          <div class="stat-label">Inactive</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">🔒</div>
-          <div class="stat-value" style="color:#ffa726;">{{ members.filter(m => Number(m.retry_count) >= 3).length }}</div>
-          <div class="stat-label">Locked</div>
-        </div>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-value">{{ members.length }}</div>
+        <div class="stat-label">Total</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-value" style="color:#66bb6a;">{{ members.filter(m => isActive(m)).length }}</div>
+        <div class="stat-label">Active</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">❌</div>
+        <div class="stat-value" style="color:#ef5350;">{{ members.filter(m => !isActive(m)).length }}</div>
+        <div class="stat-label">Inactive</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔒</div>
+        <div class="stat-value" style="color:#ffa726;">{{ members.filter(m => Number(m.retry_count) >= 3).length }}</div>
+        <div class="stat-label">Locked</div>
       </div>
     </div>
 
