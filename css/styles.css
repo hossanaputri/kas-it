@@ -2109,7 +2109,9 @@ body.light .all-paid-msg { color: var(--text); }
 }
 .iuran-item:hover {
   background: var(--subtle-bg-hover);
-  border-color: var(--subtle-border-med);
+  border-color: var(--primary);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 .iuran-pos {
   font-size: var(--fs-sm);
@@ -2198,8 +2200,8 @@ body.light .all-paid-msg { color: var(--text); }
 }
 .rekap-tab:hover { color: var(--text-light); }
 .rekap-tab.active {
-  background: var(--btn-green-bg);
-  color: var(--saldo-green);
+  background: var(--primary);
+  color: #ffffff;
 }
 
 /* --- Activity Section (Summary Card) --- */
