@@ -395,7 +395,7 @@ body:not(.login-page) .nav-overlay {
 
 /* --- 7. Cards & Sections --- */
 .card, .table-section {
-  background: #111111;
+  background: #0a0a0a;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-lg);
   padding: 20px;
