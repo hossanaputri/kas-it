@@ -89,7 +89,7 @@
           </div>
         </div>
         <div class="iuran-list">
-          <div v-for="item in masterIuran" :key="item.position" class="iuran-item" :style="{ borderLeft: '3px solid ' + (posColors[item.position] || '#66bb6a') }">
+          <div v-for="item in masterIuran" :key="item.position" class="iuran-item" :style="{ border: '1.5px solid ' + (posColors[item.position] || '#66bb6a') }">
             <span class="iuran-pos" :style="{ color: posColors[item.position] || 'var(--text)' }">{{ item.position }}</span>
             <span class="iuran-amount">{{ fmt(item.amount) }}</span>
           </div>

@@ -2102,8 +2102,7 @@ body.light .all-paid-msg { color: var(--text); }
   justify-content: center;
   padding: 14px 12px;
   border-radius: var(--radius-lg);
-  background: var(--subtle-bg);
-  border: 1px solid var(--subtle-border);
+  background: #ffffff;
   text-align: center;
   transition: none;
 }
