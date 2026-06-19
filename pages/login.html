@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-title" content="IT-Kas">
 <link rel="apple-touch-icon" href="../icons/icon-192.png">
 <style>
-/* Page-specific: login.html — Aesthetic Green */
+/* Page-specific: login.html â€” Aesthetic Green */
 body::before, body::after { display: none !important; }
 html {
   overflow: hidden;
@@ -141,6 +141,10 @@ body::after {
 .logo-container span {
   font-size: 34px;
 }
+.logo-img {
+  height: 100%;
+  border-radius: 12px;
+}
 
 .login-card h1 {
   font-size: 26px;
@@ -153,6 +157,9 @@ body::after {
   font-size: 16px;
   color: rgba(255, 255, 255, 0.5);
   margin-bottom: 32px;
+}
+.login-card .change-pw-warning {
+  color: #ffb74d;
 }
 
 /* Form */
@@ -282,9 +289,13 @@ body::after {
   align-items: center;
   opacity: 0.4;
   transition: opacity 0.2s;
+  color: rgba(255, 255, 255, 0.7);
 }
 .eye-toggle:hover {
   opacity: 0.7;
+}
+.eye-toggle svg {
+  stroke: currentColor;
 }
 
 /* Divider */
@@ -301,7 +312,7 @@ body::after {
   margin-top: 24px;
 }
 
-/* Responsive — Mobile */
+/* Responsive â€” Mobile */
 @media (max-width: 480px) {
   body {
     align-items: center;
@@ -336,7 +347,7 @@ body::after {
   .divider { margin: 20px 0 14px; }
   .footer-text { font-size: 10px; margin-top: 16px; }
 
-  /* Orbs — smaller on mobile to prevent overflow */
+  /* Orbs â€” smaller on mobile to prevent overflow */
   .bg-orb-1 { width: 280px; height: 280px; top: -60px; right: -60px; }
   .bg-orb-2 { width: 220px; height: 220px; bottom: -50px; left: -50px; }
   .bg-orb-3 { width: 160px; height: 160px; }
@@ -355,7 +366,7 @@ body::after {
 }
 
 /* =========================
-   LIGHT THEME — Login
+   LIGHT THEME â€” Login
    ========================= */
 [data-theme="light"] body,
 body.light {
@@ -405,8 +416,8 @@ body.light .form-group input:focus {
   box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15), 0 0 20px rgba(76, 175, 80, 0.08);
 }
 
-body.light .eye-toggle svg {
-  stroke: rgba(0, 0, 0, 0.4);
+body.light .eye-toggle {
+  color: rgba(0, 0, 0, 0.4);
 }
 
 body.light .error-msg {
@@ -466,7 +477,7 @@ body.light .theme-toggle:hover {
 
 <!-- Theme toggle -->
 <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
-  <span id="theme-icon">🌙</span>
+  <span id="theme-icon">ðŸŒ™</span>
 </button>
 
 <!-- Background orbs -->
@@ -476,13 +487,13 @@ body.light .theme-toggle:hover {
 
 <div class="login-wrapper">
   <div class="login-card" id="app">
-    <div class="logo-container"><img src="../icons/icon-192.png" alt="IT-Kas" style="height:100%;border-radius:12px;"></div>
+    <div class="logo-container"><img src="../icons/icon-192.png" alt="IT-Kas" class="logo-img"></div>
     <h1>IT-Kas</h1>
 
     <!-- Login Form -->
     <template v-if="!showChangePassword">
       <div v-if="sessionExpired" class="session-expired-banner">
-        ⏱️ Sesi kamu sudah habis. Silakan login ulang.
+        â±ï¸ Sesi kamu sudah habis. Silakan login ulang.
       </div>
 
       <div class="form-group">
@@ -494,8 +505,8 @@ body.light .theme-toggle:hover {
         <div class="password-wrapper">
           <input :type="showPass ? 'text' : 'password'" v-model="password" placeholder="Masukkan Password" @keyup.enter="login">
           <span class="eye-toggle" @click="showPass = !showPass">
-            <svg v-if="!showPass" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            <svg v-if="!showPass" width="20" height="20" viewBox="0 0 24 24" fill="none"  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none"  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
           </span>
         </div>
       </div>
@@ -507,15 +518,15 @@ body.light .theme-toggle:hover {
 
     <!-- Change Password Form -->
     <template v-else>
-      <div class="subtitle" style="color:#ffb74d;">⚠️ Buat password baru untuk akun kamu</div>
+      <div class="subtitle change-pw-warning">âš ï¸ Buat password baru untuk akun kamu</div>
 
       <div class="form-group">
         <label>Password Baru</label>
         <div class="password-wrapper">
           <input :type="showNewPass ? 'text' : 'password'" v-model="newPassword" placeholder="Minimal 4 karakter" @keyup.enter="$refs.confirmInput.focus()">
           <span class="eye-toggle" @click="showNewPass = !showNewPass">
-            <svg v-if="!showNewPass" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            <svg v-if="!showNewPass" width="20" height="20" viewBox="0 0 24 24" fill="none"  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none"  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
           </span>
         </div>
       </div>
@@ -524,8 +535,8 @@ body.light .theme-toggle:hover {
         <div class="password-wrapper">
           <input :type="showConfirmPass ? 'text' : 'password'" v-model="confirmPassword" placeholder="Ketik ulang password" ref="confirmInput" @keyup.enter="changePassword">
           <span class="eye-toggle" @click="showConfirmPass = !showConfirmPass">
-            <svg v-if="!showConfirmPass" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            <svg v-if="!showConfirmPass" width="20" height="20" viewBox="0 0 24 24" fill="none"  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none"  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
           </span>
         </div>
       </div>
@@ -538,7 +549,7 @@ body.light .theme-toggle:hover {
     <div class="error-msg" :class="{ show: errorMsg }">{{ errorMsg }}</div>
 
     <div class="divider"></div>
-    <div class="footer-text">KAS IT Dashboard &copy; 2026</div>
+    <div class="footer-text">IT-Kas &copy; 2026</div>
   </div>
 </div>
 
@@ -557,7 +568,7 @@ function applyTheme(theme) {
     document.body.classList.remove('light');
   }
   const icon = document.getElementById('theme-icon');
-  if (icon) icon.textContent = theme === 'light' ? '☀️' : '🌙';
+  if (icon) icon.textContent = theme === 'light' ? 'â˜€ï¸' : 'ðŸŒ™';
 }
 function toggleTheme() {
   const current = localStorage.getItem('kas-it-theme') || 'dark';
