@@ -1374,8 +1374,14 @@ body.light .theme-toggle:hover {
 html:has(.login-page) {
   overflow: hidden;
   height: 100%;
-  position: fixed;
-  width: 100%;
+}
+@media (max-width: 480px) {
+  html:has(.login-page) {
+    overflow: auto;
+    height: auto;
+    position: static;
+    width: auto;
+  }
 }
 
 .login-page::before,
@@ -1667,17 +1673,20 @@ html:has(.login-page) {
 /* --- Login Responsive — Mobile --- */
 @media (max-width: 480px) {
   .login-page {
-    align-items: center;
-    padding: 0;
-    height: 100vh;
-    height: 100dvh;
-    overflow: hidden;
+    align-items: flex-start;
+    padding: 60px 0 0;
+    height: auto;
+    min-height: 100vh;
+    position: relative;
+    overflow-y: auto;
+    touch-action: auto;
+    overscroll-behavior: auto;
   }
   .login-wrapper {
     width: 92%;
-    max-height: 100vh;
-    max-height: 100dvh;
-    overflow: hidden;
+    max-height: none;
+    overflow: visible;
+    margin: 0 auto;
   }
   .login-card {
     padding: 32px 24px 28px;
