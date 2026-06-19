@@ -79,20 +79,6 @@
             <div class="progress-pct">{{ targetPct }}%</div>
           </div>
         </div>
-        <!-- Reminder Belum Bayar -->
-        <div class="reminder-section">
-          <div v-if="lateMembers.length" class="reminder-header">
-            <span class="late-warning">⚠️ Belum bayar: {{ lateMembers.length }} orang</span>
-            <button v-if="isAdmin" @click="copyReminder" class="btn-copy-wa">📋 Copy untuk WA</button>
-          </div>
-          <div v-if="lateMembers.length" class="late-names">
-            <span v-for="(m, i) in lateMembers.slice(0, 10)" :key="m.nik">{{ m.name }}<span v-if="i < Math.min(lateMembers.length, 10) - 1">, </span></span>
-            <span v-if="lateMembers.length > 10"> +{{ lateMembers.length - 10 }} lainnya</span>
-          </div>
-          <div v-else class="all-paid-msg">
-            ✅ Semua anggota sudah bayar bulan ini
-          </div>
-        </div>
       </div>
       <!-- Card 2: Master Iuran Bulanan -->
       <div class="table-section dash-card">
@@ -134,6 +120,7 @@
             <span v-for="(name, i) in statusBulanIni.unpaidNames.slice(0, 8)" :key="i">{{ name }}<span v-if="i < Math.min(statusBulanIni.unpaidNames.length, 8) - 1">, </span></span>
             <span v-if="statusBulanIni.unpaidNames.length > 8"> +{{ statusBulanIni.unpaidNames.length - 8 }} lainnya</span>
           </div>
+          <button v-if="isAdmin" @click="copyReminder" class="btn-copy-wa" style="margin-top:10px;">📋 Copy untuk WA</button>
         </div>
         <div v-else class="all-paid-msg">🎉 Semua lunas!</div>
       </div>
