@@ -2088,12 +2088,17 @@ body.light {
 body.light .all-paid-msg { color: var(--text); }
 
 /* --- Master Iuran Card --- */
+.dash-card .iuran-list {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
 .iuran-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 10px;
-  margin-bottom: 4px;
+  padding: 10px 12px;
   border-radius: var(--radius-md);
   background: var(--subtle-bg);
 }
