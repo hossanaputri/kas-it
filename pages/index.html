@@ -33,7 +33,6 @@
           <h2 class="dash-card-title">📊 Summary</h2>
           <div class="dash-card-actions">
             <button v-if="isAdmin" class="btn btn-sm btn-report" @click="showReportPicker = true">📷 Laporan</button>
-            <button class="btn btn-sm btn-refresh" @click="loadData">🔄</button>
           </div>
         </div>
         <!-- Desktop: 3 columns -->
@@ -161,7 +160,6 @@
             <select v-model="selectedYear" @change="loadData" class="rekap-select">
               <option v-for="y in yearOptions" :key="y" :value="y">{{ y }}</option>
             </select>
-            <button @click="loadData" class="btn btn-sm btn-refresh">🔄</button>
             <!-- Desktop only: transaksi button -->
             <div v-if="isLoggedIn" class="rekap-tx-desktop" style="position:relative;">
               <button class="btn btn-sm btn-transaksi" @click="showTxMenu = !showTxMenu">➕ Transaksi</button>
