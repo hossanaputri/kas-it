@@ -9,7 +9,7 @@
 const AppHeader = {
   template: `
     <div class="header">
-      <h1>💰 KAS IT</h1>
+      <h1><img src="../icons/icon-192.png" alt="IT-Kas" style="height:28px;vertical-align:middle;margin-right:6px;">IT-Kas</h1>
       <div class="header-right">
         <span v-if="loggedInName" style="font-size:12px;opacity:0.9;">👤 {{ loggedInName }}</span>
         <button class="theme-toggle" @click="toggleTheme" :title="isDark ? 'Light mode' : 'Dark mode'">{{ isDark ? '🌙' : '☀️' }}</button>
@@ -66,8 +66,8 @@ const AppNav = {
     <div class="nav-overlay" :class="{ open: open }" @click="$emit('close')"></div>
     <nav :class="{ open: open }">
       <div class="nav-drawer-header">
-        <div class="nav-drawer-logo">💰</div>
-        <div class="nav-drawer-title">KAS IT</div>
+        <div class="nav-drawer-logo"><img src="../icons/icon-192.png" alt="IT-Kas" style="height:36px;"></div>
+        <div class="nav-drawer-title">IT-Kas</div>
         <button class="nav-close-btn" @click="$emit('close')">✕</button>
       </div>
       <div class="nav-drawer-user" v-if="userName">
