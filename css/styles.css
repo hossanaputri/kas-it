@@ -1,9 +1,45 @@
 /* ============================================
-   KAS IT Dashboard v2 - Master Stylesheet
+   IT-Kas — Master Stylesheet
    Dark Green Aesthetic Theme
+   
+   TABLE OF CONTENTS:
+   1. CSS Variables
+   2. Reset & Base
+   3. Header
+   4. Navigation (Desktop)
+   5. Content Container
+   6. Buttons
+   7. Cards & Sections
+   8. Tables
+   9. Labels & Colors
+   10. Controls (Select, Input)
+   11. Modals
+   12. Forms
+   13. Badges & Status
+   14. Loading & Spinner
+   15. Toast & Confirm
+   16. Month Checkbox (Submit Form)
+   17. Filter Chips (Transactions)
+   18. Empty State
+   19. Inbox Page
+   20. Events Page
+   21. Events Detail Modal
+   22. Members Page
+   23. Pagination
+   24. Mobile Responsive (≤768px)
+       - Hamburger & Nav Drawer
+       - Card Gallery (Dashboard)
+       - Rekap Table
+       - Modals & Content
+   25. Light Theme
+   26. Login Page
+       - Layout & Orbs
+       - Card & Form
+       - Responsive
+       - Light Theme
    ============================================ */
 
-/* --- CSS Variables --- */
+/* --- 1. CSS Variables --- */
 :root {
   --primary: #66bb6a;
   --primary-dark: #43a047;
@@ -46,7 +82,7 @@
   --pos-coordinator: #66bb6a;
 }
 
-/* --- Reset & Base --- */
+/* --- 2. Reset & Base --- */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 [v-cloak] { display: none !important; }
 body {
@@ -79,7 +115,7 @@ body::after {
   z-index: 0;
 }
 
-/* --- Header --- */
+/* --- 3. Header --- */
 .header {
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(20px);
@@ -97,7 +133,7 @@ body::after {
 .header-right { display: flex; align-items: center; gap: 12px; }
 .header-right span { font-size: 15px; color: rgba(255,255,255,0.7); }
 
-/* --- Navigation --- */
+/* --- 4. Navigation (Desktop) --- */
 nav {
   background: rgba(255, 255, 255, 0.02);
   backdrop-filter: blur(10px);
@@ -130,10 +166,10 @@ nav a.active {
   border-bottom: 2px solid var(--primary);
 }
 
-/* --- Content Container --- */
+/* --- 5. Content Container --- */
 .content { padding: 20px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
 
-/* --- Buttons --- */
+/* --- 6. Buttons --- */
 .btn {
   padding: 8px 16px;
   border: none;
@@ -163,7 +199,7 @@ nav a.active {
 }
 .btn-add:hover { box-shadow: 0 4px 16px rgba(46,125,50,0.4); }
 
-/* --- Card / Section --- */
+/* --- 7. Cards & Sections --- */
 .card, .table-section {
   background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(10px);
@@ -184,7 +220,7 @@ nav a.active {
 }
 .card-header h2 { font-size: 18px; color: var(--text); }
 
-/* --- Table --- */
+/* --- 8. Tables --- */
 table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 15px; }
 th, td { padding: 11px 12px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.08); }
 th {
@@ -213,14 +249,14 @@ tr:hover td { background: rgba(255, 255, 255, 0.14); }
 tr.inactive td { background: rgba(0,0,0,0.2); color: rgba(255,255,255,0.3); }
 tr.inactive:hover td { background: rgba(255,255,255,0.03); }
 
-/* --- Amount Colors --- */
+/* --- 9. Amount Colors --- */
 .amount-in { color: var(--green); font-weight: 600; }
 .amount-out { color: var(--red); font-weight: 600; }
 
-/* --- Labels --- */
+/* --- 9b. Labels --- */
 .label { font-size: 15px; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
 
-/* --- Controls --- */
+/* --- 10. Controls (Select, Input) --- */
 .controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .controls select, .controls input {
   padding: 7px 12px;
@@ -243,7 +279,7 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
 }
 .controls button:hover { box-shadow: 0 4px 12px rgba(46,125,50,0.3); }
 
-/* --- Modal --- */
+/* --- 11. Modals --- */
 .modal-overlay {
   display: none;
   position: fixed;
@@ -269,7 +305,7 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
 }
 .modal h2 { margin-bottom: 18px; color: var(--primary); font-size: 20px; }
 
-/* --- Form --- */
+/* --- 12. Forms --- */
 .form-group { margin-bottom: 12px; }
 .form-group label {
   display: block;
@@ -300,7 +336,7 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
 .form-actions .btn-save { background: var(--primary-gradient); color: white; padding: 8px 16px; border: none; border-radius: var(--radius-md); cursor: pointer; font-size: 15px; font-weight: 600; }
 .form-actions .btn-cancel { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.7); padding: 8px 16px; border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-md); cursor: pointer; font-size: 15px; font-weight: 600; }
 
-/* --- Badges --- */
+/* --- 13. Badges & Status --- */
 .badge { padding: 3px 8px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; }
 .badge-active { background: var(--green-bg); color: var(--green); }
 .badge-inactive { background: var(--red-bg); color: var(--red); }
@@ -309,13 +345,13 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
 .badge-pending { background: var(--orange-bg); color: var(--orange); }
 .badge-rejected { background: var(--red-bg); color: var(--red); }
 
-/* --- Kategori Badges --- */
+/* --- 13b. Kategori Badges --- */
 .kat-badge { padding: 2px 8px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; }
 .kat-iuran, .badge-kat-iuran { background: var(--blue-bg); color: var(--blue); }
 .kat-event, .badge-kat-event { background: var(--orange-bg); color: var(--orange); }
 .kat-lainnya, .badge-kat-lainnya { background: var(--purple-bg); color: var(--purple); }
 
-/* --- Loading / Spinner --- */
+/* --- 14. Loading & Spinner --- */
 .table-loading { text-align: center; padding: 30px; color: var(--text-muted); }
 .spinner {
   width: 28px;
@@ -330,7 +366,7 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* --- Toast --- */
+/* --- 15. Toast --- */
 .toast-overlay {
   position: fixed;
   inset: 0;
@@ -373,7 +409,7 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
 .toast-btn:hover { box-shadow: 0 4px 12px rgba(46,125,50,0.4); }
 .toast-btn.error { background: linear-gradient(135deg, #c62828, #e53935); }
 
-/* --- Confirm Buttons --- */
+/* --- 15b. Confirm Buttons --- */
 .confirm-btns { display: flex; gap: 8px; justify-content: center; margin-top: 18px; }
 .confirm-btns .btn-yes {
   padding: 10px 24px;
@@ -396,7 +432,7 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
   cursor: pointer;
 }
 
-/* --- Month Checkbox (Submit form) --- */
+/* --- 16. Month Checkbox (Submit Form) --- */
 .month-cb {
   font-size: 15px;
   padding: 8px;
@@ -417,7 +453,7 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
   border-color: var(--primary);
 }
 
-/* --- Filter Chips (Transactions) --- */
+/* --- 17. Filter Chips (Transactions) --- */
 .filter-chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .chip-label { font-size: 14px; font-weight: 600; color: var(--text-light); }
 .chip-divider { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
@@ -441,13 +477,13 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
 .chip-item input:checked + .chip.st-pending { background: var(--orange-bg); color: var(--orange); }
 .chip-item input:checked + .chip.st-rejected { background: var(--red-bg); color: var(--red); }
 
-/* --- Empty State --- */
+/* --- 18. Empty State --- */
 .empty { text-align: center; padding: 40px; color: rgba(255,255,255,0.4); font-size: 14px; }
 .empty-state { text-align: center; padding: 50px 20px; color: rgba(255,255,255,0.4); }
 .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
 .empty-state .text { font-size: 14px; }
 
-/* --- Inbox specific --- */
+/* --- 19. Inbox Page --- */
 .tx-item { padding: 14px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; background: var(--bg-card); }
 .tx-top { display: flex; justify-content: space-between; align-items: center; }
 .tx-info .name { font-weight: 600; font-size: 16px; color: var(--text); }
@@ -468,7 +504,7 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
 .btn-reject { background: var(--red-bg); color: var(--red); }
 .btn-reject:hover { background: rgba(239,83,80,0.2); }
 
-/* --- Events specific --- */
+/* --- 20. Events Page --- */
 .event-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
 .event-item {
   flex: 1;
@@ -524,7 +560,7 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
 .btn-delete { background: var(--red-bg); color: var(--red); }
 .btn-delete:hover { background: rgba(239,83,80,0.2); }
 
-/* --- Events Detail --- */
+/* --- 21. Events Detail Modal --- */
 .detail-summary { display: flex; gap: 10px; margin-bottom: 16px; }
 .detail-box { flex: 1; text-align: center; padding: 12px; border-radius: 10px; }
 .detail-box.green { background: var(--green-bg); }
@@ -542,19 +578,19 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
 .payment-list h4 { margin-bottom: 6px; font-size: 14px; color: var(--text-light); }
 .payment-item { padding: 3px 0; display: flex; justify-content: space-between; align-items: center; color: var(--text-light); }
 
-/* --- Members actions --- */
+/* --- 22. Members Page --- */
 .actions button { padding: 5px 10px; font-size: 13px; border: none; border-radius: var(--radius-sm); cursor: pointer; margin-right: 4px; }
 .btn-toggle { background: var(--orange-bg); color: var(--orange); }
 .btn-edit { background: var(--blue-bg); color: var(--blue); }
 
-/* --- Pagination --- */
+/* --- 23. Pagination --- */
 .pagination { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 15px; color: var(--text-muted); }
 .pagination button { padding: 4px 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-sm); cursor: pointer; font-size: 14px; margin: 0 2px; color: var(--text-light); }
 .pagination button:hover { background: rgba(255,255,255,0.1); }
 .pagination button.active { background: var(--primary-gradient); color: white; border-color: transparent; }
 
 /* ============================================
-   MOBILE RESPONSIVE (≤ 768px)
+   24. MOBILE RESPONSIVE (≤ 768px)
    ============================================ */
 
 /* --- Hamburger Button (hidden on desktop) --- */
@@ -998,7 +1034,7 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
 }
 
 /* ============================================
-   LIGHT THEME
+   25. LIGHT THEME
    ============================================ */
 body.light {
   --bg: #f0f7f0;
@@ -1275,7 +1311,7 @@ body.light .theme-toggle:hover {
 }
 
 /* ============================================
-   LOGIN PAGE
+   26. LOGIN PAGE
    ============================================ */
 html:has(.login-page) {
   overflow: hidden;
