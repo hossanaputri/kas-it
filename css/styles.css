@@ -137,15 +137,17 @@ body::after {
 
 /* Desktop sidebar layout */
 body:not(.login-page) {
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  grid-template-rows: 1fr;
-  min-height: 100vh;
+  display: block;
 }
 
 /* Hide header on desktop */
 body:not(.login-page) .header {
   display: none;
+}
+
+/* Content shifts right on desktop to avoid sidebar overlap */
+body:not(.login-page) .content {
+  margin-left: 240px;
 }
 
 .sidebar {
@@ -293,11 +295,6 @@ body:not(.login-page) .header {
 /* Nav overlay — hidden on desktop */
 body:not(.login-page) .nav-overlay {
   display: none;
-}
-
-/* Content shifts right on desktop */
-body:not(.login-page) .content {
-  grid-column: 2;
 }
 
 /* --- 5. Content Container --- */
@@ -861,10 +858,9 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
 }
 
 @media (max-width: 768px) {
-  /* --- Reset grid to single column --- */
-  body:not(.login-page) {
-    display: block;
-    grid-template-columns: none;
+  /* --- Reset layout for mobile --- */
+  body:not(.login-page) .content {
+    margin-left: 0;
   }
 
   /* --- Show header on mobile --- */
