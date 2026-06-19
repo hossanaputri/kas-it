@@ -357,6 +357,9 @@ body:not(.login-page) .nav-overlay {
   padding: 0;
   border-radius: 50%;
   font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Shimmer effect (primary block buttons) */
@@ -527,6 +530,9 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
 .form-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; }
 .form-actions .btn-save { background: var(--primary-gradient); color: white; padding: 8px 16px; border: none; border-radius: var(--radius-md); cursor: pointer; font-size: 15px; font-weight: 600; }
 .form-actions .btn-cancel { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.7); padding: 8px 16px; border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-md); cursor: pointer; font-size: 15px; font-weight: 600; }
+.form-checkbox { display: flex; align-items: center; gap: 8px; }
+.form-checkbox input { width: auto; }
+.form-checkbox label { margin: 0; cursor: pointer; }
 
 /* --- 13. Badges & Status --- */
 .badge { padding: 3px 8px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; }
@@ -732,19 +738,6 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
 .iuran-chip .pos { color: var(--text-light); font-weight: 500; }
 .iuran-chip .amt { color: var(--navy); font-weight: 700; }
 .event-side-actions { display: flex; flex-direction: column; gap: 6px; }
-.btn-circle {
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.btn-circle:hover { transform: translateY(-1px); }
 .btn-close-ev { background: var(--orange-bg); color: var(--orange); }
 .btn-close-ev:hover { background: rgba(255,167,38,0.2); }
 .btn-reopen { background: var(--green-bg); color: var(--green); }
