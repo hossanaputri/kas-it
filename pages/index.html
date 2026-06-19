@@ -11,177 +11,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="IT-Kas">
 <link rel="apple-touch-icon" href="../icons/icon-192.png">
-<style>
-/* Page-specific: index.html — Dark Aesthetic */
-.table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-.table-header h2 { font-size: 16px; color: var(--text); }
-
-/* --- Color Variables (page-specific) --- */
-:root {
-  --saldo-green: #66bb6a;
-  --masuk-green: #81c784;
-  --keluar-red: #ef5350;
-  --amount-blue: #90caf9;
-  --pending-yellow: #ffca28;
-  --dropdown-bg: #1a2e1c;
-  --subtle-bg: rgba(255,255,255,0.04);
-  --subtle-bg-hover: rgba(255,255,255,0.06);
-  --subtle-border: rgba(255,255,255,0.06);
-  --subtle-border-med: rgba(255,255,255,0.08);
-  --subtle-border-strong: rgba(255,255,255,0.18);
-  --btn-neutral-bg: rgba(255,255,255,0.12);
-  --btn-blue-bg: rgba(66,165,245,0.25);
-  --btn-blue-border: rgba(66,165,245,0.3);
-  --btn-green-bg: rgba(102,187,106,0.25);
-  --btn-green-border: rgba(102,187,106,0.3);
-  --rekap-name-bg: rgba(10,26,13,0.95);
-  --rekap-name-border: rgba(255,255,255,0.15);
-  --table-head-bg: #ffffff;
-  --table-head-color: #333;
-  --table-head-border: rgba(0,0,0,0.1);
-}
-
-/* Light mode overrides */
-body.light {
-  --saldo-green: #2e7d32;
-  --masuk-green: #388e3c;
-  --keluar-red: #c62828;
-  --amount-blue: #1565c0;
-  --pending-yellow: #f57f17;
-  --dropdown-bg: #ffffff;
-  --subtle-bg: rgba(0,0,0,0.02);
-  --subtle-bg-hover: rgba(0,0,0,0.04);
-  --subtle-border: rgba(0,0,0,0.06);
-  --subtle-border-med: rgba(0,0,0,0.08);
-  --subtle-border-strong: rgba(0,0,0,0.12);
-  --btn-neutral-bg: rgba(0,0,0,0.06);
-  --btn-blue-bg: rgba(66,165,245,0.15);
-  --btn-blue-border: rgba(66,165,245,0.3);
-  --btn-green-bg: rgba(102,187,106,0.15);
-  --btn-green-border: rgba(102,187,106,0.3);
-  --rekap-name-bg: rgba(255,255,255,0.95);
-  --rekap-name-border: rgba(0,0,0,0.1);
-  --table-head-bg: #f5f5f5;
-  --table-head-color: #333;
-  --table-head-border: rgba(0,0,0,0.1);
-}
-
-/* --- Summary --- */
-.summary-saldo { color: var(--saldo-green); }
-.summary-masuk { color: var(--masuk-green); }
-.summary-keluar { color: var(--keluar-red); }
-
-/* --- Buttons --- */
-.btn-report { background: var(--btn-blue-bg); color: var(--amount-blue); border: 1px solid var(--btn-blue-border); }
-.btn-refresh { background: var(--btn-neutral-bg); color: var(--text-light); border: 1px solid var(--subtle-border-strong); }
-.btn-simulasi { background: var(--btn-blue-bg); color: var(--amount-blue); border: 1px solid var(--btn-blue-border); }
-.btn-edit-iuran { background: var(--btn-green-bg); color: var(--saldo-green); border: 1px solid var(--btn-green-border); }
-.btn-transaksi { background: var(--btn-green-bg); color: var(--saldo-green); border: 1px solid var(--btn-green-border); }
-.btn-copy-wa { background: var(--btn-neutral-bg); color: var(--text-light); border: 1px solid var(--subtle-border-strong); }
-
-/* --- Mobile summary card --- */
-.summary-mobile-card { background: var(--subtle-bg); }
-
-/* --- Iuran items --- */
-.iuran-item { background: var(--subtle-bg); }
-.iuran-amount { color: var(--amount-blue); }
-
-/* --- Late warning --- */
-.late-warning { color: var(--keluar-red); }
-.late-names { color: var(--text-muted); }
-
-/* --- Rekap section --- */
-.rekap-select { border: 1px solid var(--subtle-border-med); background: var(--subtle-bg-hover); color: var(--text); }
-.rekap-position { color: var(--text-muted); }
-.rekap-name-cell-bg { background: var(--rekap-name-bg); border-right: 2px solid var(--rekap-name-border); }
-
-/* --- Table header --- */
-.rekap-th { background: var(--table-head-bg); color: var(--table-head-color); }
-.rekap-th-name { background: var(--table-head-bg); color: var(--table-head-color); border-right: 2px solid var(--table-head-border); }
-
-/* --- Status in rekap --- */
-.status-pending { color: var(--pending-yellow); }
-.status-late { color: var(--keluar-red); }
-.status-empty { color: rgba(255,255,255,0.15); }
-body.light .status-empty { color: rgba(0,0,0,0.15); }
-
-/* --- Dropdown --- */
-.dropdown-menu { background: var(--dropdown-bg); border: 1px solid var(--subtle-border-med); color: var(--text); }
-.dropdown-item { color: var(--text); }
-.dropdown-item:hover { background: rgba(102,187,106,0.1); }
-
-/* --- Event cards --- */
-.event-card { background: var(--subtle-bg); border-left: 3px solid var(--amount-blue); border: 1px solid var(--subtle-border); }
-.event-id { color: var(--text-muted); }
-.event-lunas { color: var(--saldo-green); }
-.event-empty { color: var(--text-muted); }
-
-/* --- Search dropdown --- */
-.search-dropdown { background: var(--dropdown-bg); border: 1px solid var(--subtle-border-med); }
-.search-dropdown-item { border-bottom: 1px solid var(--subtle-bg); }
-.search-dropdown-item:hover { background: rgba(102,187,106,0.1); }
-.search-dropdown-empty { color: var(--text-muted); border: 1px solid var(--subtle-border-med); }
-
-/* --- Member display (selected in modal) --- */
-.member-display { border: 1px solid var(--btn-green-border); background: rgba(102,187,106,0.08); }
-.member-position-hint { color: var(--text-muted); }
-.member-change-btn { color: var(--keluar-red); }
-
-/* --- Form elements --- */
-.form-input-styled { border: 1px solid var(--subtle-border-med); background: var(--subtle-bg); color: var(--text); }
-
-/* --- Rekap bulan in submit form --- */
-.rekap-month-box { background: var(--subtle-bg); border: 1px solid var(--subtle-border); }
-.rekap-iuran-label { color: var(--amount-blue); }
-.submit-total { color: var(--saldo-green); }
-
-/* --- Simulasi --- */
-.sim-result { color: var(--amount-blue); }
-.sim-monthly { color: var(--saldo-green); }
-.sim-yearly { color: var(--amount-blue); }
-.sim-section { background: rgba(102,187,106,0.1); border: 1px solid rgba(102,187,106,0.2); }
-body.light .sim-section { background: rgba(102,187,106,0.06); border-color: rgba(102,187,106,0.15); }
-.sim-label { color: var(--text-muted); }
-
-/* --- Bulk --- */
-.bulk-total { color: var(--amount-blue); }
-.bulk-amount { color: var(--saldo-green); }
-.bulk-position { color: var(--text-muted); }
-.bulk-empty { color: var(--text-muted); }
-.bulk-border { border: 1px solid var(--subtle-border); }
-.bulk-thead { background: rgba(46,125,50,0.2); }
-body.light .bulk-thead { background: rgba(46,125,50,0.08); }
-
-/* --- Profile modal --- */
-.profile-subtitle { color: var(--text-muted); }
-.profile-total-label { color: var(--text-muted); }
-.profile-total { color: var(--saldo-green); }
-.profile-history-header { color: var(--text-light); }
-.profile-table-border { border: 1px solid var(--subtle-border); }
-.profile-thead { background: rgba(46,125,50,0.2); }
-body.light .profile-thead { background: rgba(46,125,50,0.08); }
-.profile-empty { color: var(--text-muted); }
-
-/* --- History modal --- */
-.history-table-border { border: 1px solid var(--subtle-border); }
-.history-thead { background: rgba(46,125,50,0.2); }
-body.light .history-thead { background: rgba(46,125,50,0.08); }
-.history-empty { color: var(--text-muted); }
-.history-summary { color: var(--text-muted); }
-
-/* --- Loading --- */
-.loading-text { color: var(--text-muted); }
-
-/* --- Separator --- */
-.section-separator { border-top: 1px solid var(--subtle-border); }
-
-/* --- All paid message --- */
-.all-paid-msg { color: var(--text-light); }
-body.light .all-paid-msg { color: var(--text); }
-
-/* --- Event min amount --- */
-.event-min-hint { color: var(--text-muted); }
-</style>
 </head>
 <body>
 <div id="app" v-cloak>
@@ -190,187 +19,221 @@ body.light .all-paid-msg { color: var(--text); }
 
   <div class="content">
     <!-- Loading -->
-    <div v-if="dataLoading" class="loading-text" style="text-align:center;padding:60px 20px;">
+    <div v-if="dataLoading" class="loading-text">
       <div class="spinner"></div> Memuat data...
     </div>
 
     <template v-else>
-    <!-- Summary + Master Iuran -->
-    <!-- Summary + Master Iuran (Gallery on mobile) -->
-    <div class="card-gallery" ref="cardGallery" @scroll="onGalleryScroll">
-      <div class="card-slide">
-      <div class="table-section" style="padding:16px 20px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-          <h2 style="font-size:16px;color:var(--text);">📊 Summary</h2>
-          <div style="display:flex;gap:6px;">
-            <button v-if="isAdmin" class="btn btn-report" style="font-size:12px;padding:6px 12px;" @click="showReportPicker = true">📷 Laporan</button>
-            <button class="btn btn-refresh" style="font-size:12px;padding:6px 12px;" @click="loadData">🔄</button>
+    <!-- 3-Column Grid: Summary | Master Iuran | Status Bulan Ini -->
+    <div class="dash-grid" ref="dashGrid" @scroll="onGalleryScroll">
+
+      <!-- Card 1: Summary -->
+      <div class="table-section dash-card">
+        <div class="dash-card-header">
+          <h2 class="dash-card-title">📊 Summary</h2>
+          <div class="dash-card-actions">
+            <button v-if="isAdmin" class="btn btn-sm btn-report" @click="showReportPicker = true">📷 Laporan</button>
+            <button class="btn btn-sm btn-refresh" @click="loadData">🔄</button>
           </div>
         </div>
         <!-- Desktop: 3 columns -->
-        <div class="summary-desktop" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center;">
+        <div class="summary-desktop">
           <div>
             <div class="label">💰 Total Saldo</div>
-            <div class="summary-saldo" style="font-size:20px;font-weight:700;">{{ fmt(summary.masuk - summary.keluar) }}</div>
+            <div class="summary-value summary-saldo">{{ fmt(summary.masuk - summary.keluar) }}</div>
           </div>
           <div style="cursor:pointer;" @click="openHistory('masuk')">
             <div class="label">📥 Total Masuk</div>
-            <div class="summary-masuk" style="font-size:20px;font-weight:700;">{{ fmt(summary.masuk) }}</div>
+            <div class="summary-value summary-masuk">{{ fmt(summary.masuk) }}</div>
           </div>
           <div style="cursor:pointer;" @click="openHistory('keluar')">
             <div class="label">📤 Total Keluar</div>
-            <div class="summary-keluar" style="font-size:20px;font-weight:700;">{{ fmt(summary.keluar) }}</div>
+            <div class="summary-value summary-keluar">{{ fmt(summary.keluar) }}</div>
           </div>
         </div>
         <!-- Mobile: stacked layout -->
         <div class="summary-mobile">
-          <div style="text-align:center;margin-bottom:12px;">
+          <div class="summary-mobile-saldo">
             <div class="label">💰 Total Saldo</div>
-            <div class="summary-saldo" style="font-size:26px;font-weight:700;">{{ fmt(summary.masuk - summary.keluar) }}</div>
+            <div class="summary-value summary-saldo">{{ fmt(summary.masuk - summary.keluar) }}</div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center;">
-            <div class="summary-mobile-card" style="cursor:pointer;padding:10px;border-radius:8px;" @click="openHistory('masuk')">
-              <div class="label" style="font-size:11px;">📥 Masuk</div>
-              <div class="summary-masuk" style="font-size:15px;font-weight:700;">{{ fmt(summary.masuk) }}</div>
+          <div class="summary-mobile-grid">
+            <div class="summary-mobile-card" @click="openHistory('masuk')">
+              <div class="label">📥 Masuk</div>
+              <div class="summary-value summary-masuk">{{ fmt(summary.masuk) }}</div>
             </div>
-            <div class="summary-mobile-card" style="cursor:pointer;padding:10px;border-radius:8px;" @click="openHistory('keluar')">
-              <div class="label" style="font-size:11px;">📤 Keluar</div>
-              <div class="summary-keluar" style="font-size:15px;font-weight:700;">{{ fmt(summary.keluar) }}</div>
+            <div class="summary-mobile-card" @click="openHistory('keluar')">
+              <div class="label">📤 Keluar</div>
+              <div class="summary-value summary-keluar">{{ fmt(summary.keluar) }}</div>
             </div>
           </div>
         </div>
         <!-- Target Kas Tahunan -->
-        <div class="target-section" style="margin-top:14px;padding-top:14px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;color:var(--text-light);">🎯 Target Kas Tahunan</span>
-            <span style="font-size:12px;font-weight:600;color:var(--text-light);">{{ fmt(targetKas) }}</span>
+        <div class="target-section">
+          <div class="target-header">
+            <span class="target-label">🎯 Target Kas Tahunan</span>
+            <span class="target-amount">{{ fmt(targetKas) }}</span>
           </div>
-          <div class="progress-track" style="position:relative;border-radius:8px;height:28px;overflow:hidden;">
-            <div :style="{ width: targetPct + '%', height: '100%', borderRadius: '8px', background: 'linear-gradient(90deg,#2e7d32,#66bb6a)', transition: 'width 0.5s' }"></div>
-            <div style="position:absolute;inset:0;display:flex;justify-content:flex-end;align-items:center;padding:0 12px;">
-              <span class="progress-pct" style="font-size:12px;font-weight:600;">{{ targetPct }}%</span>
-            </div>
+          <div class="progress-track">
+            <div class="progress-bar" :style="{ width: targetPct + '%' }"></div>
+            <div class="progress-pct">{{ targetPct }}%</div>
           </div>
         </div>
         <!-- Reminder Belum Bayar -->
-        <div class="section-separator" style="margin-top:14px;padding-top:14px;">
-          <div v-if="lateMembers.length" style="display:flex;justify-content:space-between;align-items:center;">
-            <span class="late-warning" style="font-size:13px;font-weight:600;">⚠️ Belum bayar: {{ lateMembers.length }} orang</span>
-            <button v-if="isAdmin" @click="copyReminder" class="btn-copy-wa" style="padding:5px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:500;">📋 Copy untuk WA</button>
+        <div class="reminder-section">
+          <div v-if="lateMembers.length" class="reminder-header">
+            <span class="late-warning">⚠️ Belum bayar: {{ lateMembers.length }} orang</span>
+            <button v-if="isAdmin" @click="copyReminder" class="btn-copy-wa">📋 Copy untuk WA</button>
           </div>
-          <div v-if="lateMembers.length" class="late-names" style="font-size:12px;margin-top:6px;line-height:1.6;">
+          <div v-if="lateMembers.length" class="late-names">
             <span v-for="(m, i) in lateMembers.slice(0, 10)" :key="m.nik">{{ m.name }}<span v-if="i < Math.min(lateMembers.length, 10) - 1">, </span></span>
             <span v-if="lateMembers.length > 10"> +{{ lateMembers.length - 10 }} lainnya</span>
           </div>
-          <div v-else class="all-paid-msg" style="font-size:13px;text-align:center;padding:8px 0;">
+          <div v-else class="all-paid-msg">
             ✅ Semua anggota sudah bayar bulan ini
           </div>
         </div>
       </div>
-      </div>
-      <div class="card-slide">
-      <div class="table-section" style="padding:16px 20px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-          <h2 style="font-size:16px;color:var(--text);">📋 Master Iuran Bulanan</h2>
-          <div style="display:flex;gap:6px;">
-            <button class="btn-simulasi" style="padding:5px 10px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;" @click="showSimModal = true">🧮 Simulasi</button>
-            <button v-if="isAdmin" class="btn-edit-iuran" style="padding:5px 10px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;" @click="openEditIuran">✏️ Edit</button>
+      <!-- Card 2: Master Iuran Bulanan -->
+      <div class="table-section dash-card">
+        <div class="dash-card-header">
+          <h2 class="dash-card-title">📋 Master Iuran</h2>
+          <div class="dash-card-actions">
+            <button class="btn btn-sm btn-simulasi" @click="showSimModal = true">🧮 Simulasi</button>
+            <button v-if="isAdmin" class="btn btn-sm btn-edit-iuran" @click="openEditIuran">✏️ Edit</button>
           </div>
         </div>
-        <div v-for="item in masterIuran" :key="item.position" class="iuran-item" style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;margin-bottom:6px;border-radius:8px;" :style="{ borderLeft: '3px solid ' + (posColors[item.position] || '#66bb6a') }">
-          <span style="font-size:13px;font-weight:500;" :style="{ color: posColors[item.position] || 'var(--text)' }">{{ item.position }}</span>
-          <span class="iuran-amount" style="font-size:14px;font-weight:700;">{{ fmt(item.amount) }}</span>
+        <div v-for="item in masterIuran" :key="item.position" class="iuran-item" :style="{ borderLeft: '3px solid ' + (posColors[item.position] || '#66bb6a') }">
+          <span class="iuran-pos" :style="{ color: posColors[item.position] || 'var(--text)' }">{{ item.position }}</span>
+          <span class="iuran-amount">{{ fmt(item.amount) }}</span>
         </div>
       </div>
+
+      <!-- Card 3: Status Bulan Ini -->
+      <div class="table-section dash-card">
+        <div class="dash-card-header">
+          <h2 class="dash-card-title">📅 Status Bulan Ini</h2>
+        </div>
+        <div class="status-counts">
+          <div class="status-count-item">
+            <span class="status-count-label">✅ Lunas</span>
+            <span class="status-count-value lunas">{{ statusBulanIni.lunas }}</span>
+          </div>
+          <div class="status-count-item">
+            <span class="status-count-label">⏳ Pending</span>
+            <span class="status-count-value pending">{{ statusBulanIni.pending }}</span>
+          </div>
+          <div class="status-count-item">
+            <span class="status-count-label">❌ Belum Bayar</span>
+            <span class="status-count-value belum">{{ statusBulanIni.belum }}</span>
+          </div>
+        </div>
+        <div v-if="statusBulanIni.unpaidNames.length" class="status-unpaid-list">
+          <div class="status-unpaid-title">Belum bayar:</div>
+          <div class="status-unpaid-names">
+            <span v-for="(name, i) in statusBulanIni.unpaidNames.slice(0, 8)" :key="i">{{ name }}<span v-if="i < Math.min(statusBulanIni.unpaidNames.length, 8) - 1">, </span></span>
+            <span v-if="statusBulanIni.unpaidNames.length > 8"> +{{ statusBulanIni.unpaidNames.length - 8 }} lainnya</span>
+          </div>
+        </div>
+        <div v-else class="all-paid-msg">🎉 Semua lunas!</div>
       </div>
+
     </div>
-    <!-- Gallery dots -->
-    <div class="card-gallery-dots">
+    <!-- Gallery dots (mobile) -->
+    <div class="dash-gallery-dots">
       <span class="dot" :class="{ active: galleryIdx === 0 }" @click="scrollGallery(0)"></span>
       <span class="dot" :class="{ active: galleryIdx === 1 }" @click="scrollGallery(1)"></span>
+      <span class="dot" :class="{ active: galleryIdx === 2 }" @click="scrollGallery(2)"></span>
     </div>
+    <!-- Rekap Section (Full Width) with Tabs -->
+    <div class="table-section rekap-section">
+      <!-- Tab Switcher -->
+      <div class="rekap-tabs">
+        <button class="rekap-tab" :class="{ active: rekapTab === 'iuran' }" @click="rekapTab = 'iuran'">📊 Rekap Iuran</button>
+        <button class="rekap-tab" :class="{ active: rekapTab === 'event' }" @click="rekapTab = 'event'">📅 Rekap Event</button>
+      </div>
 
-    <!-- Rekap Kas per Anggota (full width) -->
-    <div class="table-section rekap-section" style="padding:16px 20px;margin-bottom:16px;">
-      <div class="rekap-header">
-        <h2 style="font-size:16px;color:var(--text);">📊 Rekap Kas per Anggota</h2>
-        <div class="rekap-controls-row">
-          <select v-model="selectedYear" @change="loadData" class="rekap-select" style="padding:7px 12px;border-radius:8px;font-size:13px;">
-            <option v-for="y in yearOptions" :key="y" :value="y">{{ y }}</option>
-          </select>
-          <button @click="loadData" class="btn-refresh" style="font-size:12px;padding:6px 12px;border-radius:6px;">🔄</button>
-          <!-- Desktop only: transaksi button inline -->
-          <button v-if="isLoggedIn" class="rekap-tx-desktop btn-transaksi" @click="showTxMenu = !showTxMenu" style="position:relative;font-size:12px;padding:6px 12px;border-radius:6px;">➕ Transaksi
-            <div v-if="showTxMenu" class="dropdown-menu" style="position:absolute;right:0;top:110%;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.4);min-width:200px;z-index:50;overflow:hidden;padding:6px;" @click.stop>
-              <div class="dropdown-item" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;openSubmitModal()"><span style="font-size:16px;">💵</span> Submit Kas</div>
-              <div v-if="isAdmin" class="dropdown-item" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;showExtModal=true"><span style="font-size:16px;">📥</span> Pemasukan Lain</div>
-              <div v-if="isAdmin" class="dropdown-item" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;showOutModal=true"><span style="font-size:16px;">📤</span> Pengeluaran</div>
-              <div v-if="isAdmin" class="dropdown-item" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;openBulkModal()"><span style="font-size:16px;">📋</span> Bulk Input</div>
+      <!-- Tab: Rekap Iuran -->
+      <div v-show="rekapTab === 'iuran'">
+        <div class="rekap-header">
+          <h2 class="dash-card-title">📊 Rekap Kas per Anggota</h2>
+          <div class="rekap-controls-row">
+            <select v-model="selectedYear" @change="loadData" class="rekap-select">
+              <option v-for="y in yearOptions" :key="y" :value="y">{{ y }}</option>
+            </select>
+            <button @click="loadData" class="btn btn-sm btn-refresh">🔄</button>
+            <!-- Desktop only: transaksi button -->
+            <div v-if="isLoggedIn" class="rekap-tx-desktop" style="position:relative;">
+              <button class="btn btn-sm btn-transaksi" @click="showTxMenu = !showTxMenu">➕ Transaksi</button>
+              <div v-if="showTxMenu" class="dropdown-menu" @click.stop>
+                <div class="dropdown-item" @click="showTxMenu=false;openSubmitModal()"><span class="dropdown-icon">💵</span> Submit Kas</div>
+                <div v-if="isAdmin" class="dropdown-item" @click="showTxMenu=false;showExtModal=true"><span class="dropdown-icon">📥</span> Pemasukan Lain</div>
+                <div v-if="isAdmin" class="dropdown-item" @click="showTxMenu=false;showOutModal=true"><span class="dropdown-icon">📤</span> Pengeluaran</div>
+                <div v-if="isAdmin" class="dropdown-item" @click="showTxMenu=false;openBulkModal()"><span class="dropdown-icon">📋</span> Bulk Input</div>
+              </div>
             </div>
-          </button>
+          </div>
+        </div>
+        <!-- Mobile only: transaksi button -->
+        <div class="rekap-actions-mobile">
+          <div v-if="isLoggedIn" style="position:relative;">
+            <button class="btn btn-sm btn-transaksi" @click="showTxMenu = !showTxMenu">➕ Transaksi</button>
+            <div v-if="showTxMenu" class="dropdown-menu" @click.stop>
+              <div class="dropdown-item" @click="showTxMenu=false;openSubmitModal()"><span class="dropdown-icon">💵</span> Submit Kas</div>
+              <div v-if="isAdmin" class="dropdown-item" @click="showTxMenu=false;showExtModal=true"><span class="dropdown-icon">📥</span> Pemasukan Lain</div>
+              <div v-if="isAdmin" class="dropdown-item" @click="showTxMenu=false;showOutModal=true"><span class="dropdown-icon">📤</span> Pengeluaran</div>
+              <div v-if="isAdmin" class="dropdown-item" @click="showTxMenu=false;openBulkModal()"><span class="dropdown-icon">📋</span> Bulk Input</div>
+            </div>
+          </div>
+        </div>
+        <div class="table-wrapper rekap-table">
+          <table>
+            <thead style="position:sticky;top:0;z-index:2;">
+              <tr>
+                <th class="rekap-th-name" style="position:sticky;left:0;z-index:3;">Nama</th>
+                <th v-for="m in months" :key="m" class="rekap-th">{{ m }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="member in sortedMembers" :key="member.nik" :class="{ inactive: !isMemberActive(member) }">
+                <td class="rekap-name-cell rekap-name-cell-bg" style="position:sticky;left:0;z-index:1;" :style="{ background: isMemberLate(member) ? 'rgba(239,83,80,0.12)' : '' }" @click="openProfile(member)">
+                  <span class="rekap-name" :style="{ color: posColors[member.position] || 'var(--text)' }">{{ member.name }}</span>
+                  <div class="rekap-position">{{ member.position }}</div>
+                </td>
+                <td v-for="(m, i) in months" :key="i" style="text-align:center;" :style="getMemberMonthStatus(member.nik, i+1) === 'late' ? { background: 'rgba(239,83,80,0.08)' } : getMemberMonthStatus(member.nik, i+1) === 'pending' ? { background: 'rgba(255,202,40,0.08)' } : {}">
+                  <span v-if="getMemberMonthStatus(member.nik, i+1) === 'approved'" class="amount-in" style="font-size:11px;">{{ Number(getMemberMonthAmount(member.nik, i+1)).toLocaleString('id-ID') }}</span>
+                  <span v-else-if="getMemberMonthStatus(member.nik, i+1) === 'pending'" class="status-pending">PENDING</span>
+                  <span v-else-if="getMemberMonthStatus(member.nik, i+1) === 'late'" class="status-late">TELAT</span>
+                  <span v-else class="status-empty">—</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-      <!-- Mobile only: transaksi button on its own row -->
-      <div class="rekap-actions-mobile">
-        <button v-if="isLoggedIn" @click="showTxMenu = !showTxMenu" class="btn-transaksi" style="position:relative;font-size:12px;padding:6px 12px;border-radius:6px;">➕ Transaksi
-          <div v-if="showTxMenu" class="dropdown-menu" style="position:absolute;right:0;top:110%;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.4);min-width:200px;z-index:50;overflow:hidden;padding:6px;" @click.stop>
-            <div class="dropdown-item" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;openSubmitModal()"><span style="font-size:16px;">💵</span> Submit Kas</div>
-            <div v-if="isAdmin" class="dropdown-item" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;showExtModal=true"><span style="font-size:16px;">📥</span> Pemasukan Lain</div>
-            <div v-if="isAdmin" class="dropdown-item" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;showOutModal=true"><span style="font-size:16px;">📤</span> Pengeluaran</div>
-            <div v-if="isAdmin" class="dropdown-item" style="padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:8px;" @mouseover="$event.currentTarget.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.currentTarget.style.background=''" @click="showTxMenu=false;openBulkModal()"><span style="font-size:16px;">📋</span> Bulk Input</div>
-          </div>
-        </button>
-      </div>
-      <div class="table-wrapper rekap-table">
-        <table>
-          <thead style="position:sticky;top:0;z-index:2;">
-            <tr>
-              <th class="rekap-th-name" style="text-align:left;position:sticky;left:0;z-index:3;">Nama</th>
-              <th v-for="m in months" :key="m" class="rekap-th" style="text-align:center;font-size:11px;">{{ m }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="member in sortedMembers" :key="member.nik" :class="{ inactive: !isMemberActive(member) }">
-              <td class="rekap-name-cell rekap-name-cell-bg" style="position:sticky;left:0;z-index:1;font-weight:500;cursor:pointer;" :style="{ background: isMemberLate(member) ? 'rgba(239,83,80,0.12)' : '' }" @click="openProfile(member)">
-                <span class="rekap-name" :style="{ color: posColors[member.position] || 'var(--text)' }">{{ member.name }}</span>
-                <div class="rekap-position" style="font-size:10px;">{{ member.position }}</div>
-              </td>
-              <td v-for="(m, i) in months" :key="i" style="text-align:center;" :style="getMemberMonthStatus(member.nik, i+1) === 'late' ? { background: 'rgba(239,83,80,0.08)' } : getMemberMonthStatus(member.nik, i+1) === 'pending' ? { background: 'rgba(255,202,40,0.08)' } : {}">
-                <span v-if="getMemberMonthStatus(member.nik, i+1) === 'approved'" class="amount-in" style="font-size:11px;">{{ Number(getMemberMonthAmount(member.nik, i+1)).toLocaleString('id-ID') }}</span>
-                <span v-else-if="getMemberMonthStatus(member.nik, i+1) === 'pending'" class="status-pending" style="font-size:10px;font-weight:600;">PENDING</span>
-                <span v-else-if="getMemberMonthStatus(member.nik, i+1) === 'late'" class="status-late" style="font-size:10px;font-weight:600;">TELAT</span>
-                <span v-else class="status-empty" style="font-size:12px;">—</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
 
-    <!-- Rekap Event -->
-    <div class="table-section" style="padding:16px 20px;margin-bottom:16px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-        <h2 style="font-size:16px;color:var(--text);">📅 Rekap Event</h2>
-      </div>
-      <div v-if="!activeEvents.length" class="event-empty" style="text-align:center;padding:20px;font-size:13px;">Belum ada event aktif</div>
-      <div v-for="ev in activeEvents" :key="ev.id" class="event-card" style="border-radius:10px;padding:14px;margin-bottom:10px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <div>
-            <span style="font-size:14px;font-weight:600;color:var(--text);">{{ ev.name }}</span>
-            <span class="event-id" style="font-size:11px;margin-left:8px;">{{ ev.id }}</span>
+      <!-- Tab: Rekap Event -->
+      <div v-show="rekapTab === 'event'">
+        <div v-if="!activeEvents.length" class="dash-event-empty">Belum ada event aktif</div>
+        <div v-for="ev in activeEvents" :key="ev.id" class="dash-event-card">
+          <div class="dash-event-header">
+            <div>
+              <span class="dash-event-name">{{ ev.name }}</span>
+              <span class="dash-event-id">{{ ev.id }}</span>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <span class="dash-event-lunas">{{ getEventPaidCount(ev.id) }}/{{ activeMembers.length }} lunas</span>
+              <span class="dash-event-badge" :class="ev.status === 'closed' ? 'closed' : 'active'">{{ ev.status === 'closed' ? 'Closed' : 'Active' }}</span>
+            </div>
           </div>
-          <div style="display:flex;gap:8px;align-items:center;">
-            <span class="event-lunas" style="font-size:12px;font-weight:600;">{{ getEventPaidCount(ev.id) }}/{{ activeMembers.length }} lunas</span>
-            <span :style="{ fontSize:'11px', padding:'3px 8px', borderRadius:'6px', fontWeight:'600', background: ev.status==='closed'?'rgba(255,255,255,0.05)':'rgba(102,187,106,0.12)', color: ev.status==='closed'?'rgba(255,255,255,0.4)':'#66bb6a' }">{{ ev.status === 'closed' ? 'Closed' : 'Active' }}</span>
+          <div class="dash-event-members">
+            <span v-for="m in activeMembers" :key="m.nik" class="dash-event-member" :style="getEventMemberStyle(ev.id, m.nik)">{{ m.name.split(' ')[0] }}</span>
           </div>
-        </div>
-        <div style="display:flex;flex-wrap:wrap;gap:4px;">
-          <span v-for="m in activeMembers" :key="m.nik" style="font-size:11px;padding:3px 8px;border-radius:6px;font-weight:500;" :style="getEventMemberStyle(ev.id, m.nik)">{{ m.name.split(' ')[0] }}</span>
         </div>
       </div>
     </div>
-  </div>
     </template>
+  </div>
 
   <!-- Submit Modal -->
   <div class="modal-overlay" :class="{ active: showSubmitModal }" @click.self="showSubmitModal = false">
@@ -379,24 +242,24 @@ body.light .all-paid-msg { color: var(--text); }
       <div class="form-group">
         <label>Anggota</label>
         <!-- Non-admin: auto-fill, locked -->
-        <div v-if="!isAdmin && form.memberNik" class="member-display" style="padding:9px 12px;border-radius:8px;">
-          <span style="font-size:14px;font-weight:600;color:var(--text);">{{ form.memberName }} <span class="member-position-hint" style="font-size:11px;">({{ getMemberPosition(form.memberNik) }})</span></span>
+        <div v-if="!isAdmin && form.memberNik" class="member-display">
+          <span class="member-name-display">{{ form.memberName }} <span class="member-position-hint">({{ getMemberPosition(form.memberNik) }})</span></span>
         </div>
         <!-- Admin: selected member display with change button -->
-        <div v-else-if="isAdmin && form.memberNik" class="member-display" style="padding:9px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;">
-          <span style="font-size:14px;font-weight:600;color:var(--text);">{{ form.memberName }} <span class="member-position-hint" style="font-size:11px;">({{ getMemberPosition(form.memberNik) }})</span></span>
-          <span @click="clearFormMember" class="member-change-btn" style="cursor:pointer;font-size:12px;font-weight:500;">✕ Ganti</span>
+        <div v-else-if="isAdmin && form.memberNik" class="member-display member-display-inner">
+          <span class="member-name-display">{{ form.memberName }} <span class="member-position-hint">({{ getMemberPosition(form.memberNik) }})</span></span>
+          <span @click="clearFormMember" class="member-change-btn">✕ Ganti</span>
         </div>
         <!-- Admin: search input + dropdown -->
         <div v-else-if="isAdmin">
-          <input type="text" v-model="memberSearch" placeholder="🔍 Cari nama anggota..." @focus="showMemberDropdown = true" class="form-input-styled" style="width:100%;padding:9px 12px;border-radius:8px;font-size:14px;">
-          <div v-if="showMemberDropdown && filteredMembers.length" class="search-dropdown" style="max-height:160px;overflow-y:auto;border-radius:8px;margin-top:4px;">
-            <div v-for="m in filteredMembers" :key="m.nik" @click="selectFormMember(m)" class="search-dropdown-item" style="padding:8px 12px;cursor:pointer;font-size:13px;" @mouseover="$event.target.style.background='rgba(102,187,106,0.1)'" @mouseout="$event.target.style.background=''">
+          <input type="text" v-model="memberSearch" placeholder="🔍 Cari nama anggota..." @focus="showMemberDropdown = true" class="form-input-styled">
+          <div v-if="showMemberDropdown && filteredMembers.length" class="search-dropdown">
+            <div v-for="m in filteredMembers" :key="m.nik" @click="selectFormMember(m)" class="search-dropdown-item">
               <span :style="{ color: posColors[m.position] || 'var(--text)', fontWeight: '500' }">{{ m.name }}</span>
-              <span class="member-position-hint" style="font-size:11px;margin-left:6px;">{{ m.position }}</span>
+              <span class="member-position-hint" style="margin-left:6px;">{{ m.position }}</span>
             </div>
           </div>
-          <div v-if="showMemberDropdown && memberSearch && !filteredMembers.length" class="search-dropdown-empty" style="padding:12px;text-align:center;font-size:12px;border-radius:8px;margin-top:4px;">Tidak ditemukan</div>
+          <div v-if="showMemberDropdown && memberSearch && !filteredMembers.length" class="search-dropdown-empty">Tidak ditemukan</div>
         </div>
       </div>
       <div class="form-group">
@@ -410,20 +273,18 @@ body.light .all-paid-msg { color: var(--text); }
 
       <!-- Iuran Section -->
       <template v-if="form.txType === 'iuran' && form.memberNik">
-        <!-- Year selector (admin only) -->
         <div v-if="isAdmin" class="form-group">
           <label>Tahun</label>
           <select v-model.number="form.year">
             <option v-for="y in yearOptions" :key="y" :value="y">{{ y }}</option>
           </select>
         </div>
-        <!-- Rekap bulan member -->
-        <div style="background:rgba(255,255,255,0.04);border-radius:8px;padding:10px;margin-bottom:12px;border:1px solid rgba(255,255,255,0.06);">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-            <span style="font-size:12px;font-weight:600;color:var(--text-light);">📊 Rekap {{ form.year }}:</span>
-            <span style="font-size:12px;font-weight:600;color:#90caf9;">💰 Iuran: {{ fmt(form.amount) }}/bln</span>
+        <div class="rekap-month-box">
+          <div class="rekap-month-header">
+            <span class="rekap-month-title">📊 Rekap {{ form.year }}:</span>
+            <span class="rekap-iuran-label">💰 Iuran: {{ fmt(form.amount) }}/bln</span>
           </div>
-          <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:4px;font-size:11px;text-align:center;">
+          <div class="rekap-month-grid">
             <div v-for="(m, i) in monthNames" :key="i" style="padding:4px;border-radius:4px;" :style="getFormRekapStyle(form.memberNik, i+1)">
               {{ m }}<br>{{ getFormRekapLabel(form.memberNik, i+1) }}
             </div>
@@ -435,7 +296,7 @@ body.light .all-paid-msg { color: var(--text); }
             <div v-for="(m, i) in monthNames" :key="i" class="month-cb" :class="{ selected: form.months.includes(i+1) }" :style="{ opacity: isFormMonthDisabled(form.memberNik, i+1) ? 0.4 : 1, pointerEvents: isFormMonthDisabled(form.memberNik, i+1) ? 'none' : '' }" @click="toggleMonth(i+1)">{{ m }}</div>
           </div>
         </div>
-        <div style="font-size:16px;font-weight:700;color:#66bb6a;padding:8px 0;">Total: {{ fmt(form.amount * form.months.length) }}</div>
+        <div class="submit-total">Total: {{ fmt(form.amount * form.months.length) }}</div>
       </template>
 
       <!-- Event Section -->
@@ -451,9 +312,7 @@ body.light .all-paid-msg { color: var(--text); }
           <label>Nominal</label>
           <input type="text" :value="fmtInput(form.eventAmount)" @input="form.eventAmount = parseRibuan($event.target.value); $event.target.value = fmtInput(form.eventAmount)" placeholder="0" inputmode="numeric">
         </div>
-        <div v-if="form.eventId" style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:-8px;margin-bottom:12px;">
-          Minimal: {{ fmt(getEventMin()) }}
-        </div>
+        <div v-if="form.eventId" class="event-min-hint">Minimal: {{ fmt(getEventMin()) }}</div>
       </template>
 
       <div class="form-actions">
@@ -467,17 +326,17 @@ body.light .all-paid-msg { color: var(--text); }
   <div class="modal-overlay" :class="{ active: showSimModal }" @click.self="showSimModal = false">
     <div class="modal" style="max-width:500px;">
       <h2>🧮 Simulasi Iuran</h2>
-      <div v-for="pos in positionList" :key="pos" style="display:grid;grid-template-columns:1fr auto 1fr auto;gap:8px;align-items:center;margin-bottom:10px;font-size:13px;">
-        <div><strong :style="{ color: posColors[pos] }">{{ pos }}</strong><br><span style="color:rgba(255,255,255,0.4);">{{ getPosMemberCount(pos) }} anggota</span></div>
-        <span style="color:rgba(255,255,255,0.4);">×</span>
-        <input type="text" :value="fmtInput(simValues[pos])" @input="simValues[pos] = parseRibuan($event.target.value); $event.target.value = fmtInput(simValues[pos])" style="padding:8px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;font-size:14px;background:rgba(255,255,255,0.05);color:var(--text);" inputmode="numeric">
-        <span style="font-weight:600;color:#90caf9;min-width:100px;text-align:right;">{{ fmt(simValues[pos] * getPosMemberCount(pos)) }}</span>
+      <div v-for="pos in positionList" :key="pos" class="sim-row">
+        <div class="sim-pos-info"><strong :style="{ color: posColors[pos] }">{{ pos }}</strong><br><span>{{ getPosMemberCount(pos) }} anggota</span></div>
+        <span class="sim-multiply">×</span>
+        <input type="text" class="sim-input" :value="fmtInput(simValues[pos])" @input="simValues[pos] = parseRibuan($event.target.value); $event.target.value = fmtInput(simValues[pos])" inputmode="numeric">
+        <span class="sim-subtotal">{{ fmt(simValues[pos] * getPosMemberCount(pos)) }}</span>
       </div>
-      <div style="margin-top:16px;padding:14px;background:rgba(102,187,106,0.1);border:1px solid rgba(102,187,106,0.2);border-radius:10px;text-align:center;">
-        <div style="font-size:13px;color:var(--text-light);">Total Estimasi per Bulan</div>
-        <div style="font-size:24px;font-weight:700;color:#66bb6a;margin-top:4px;">{{ fmt(simTotal) }}</div>
-        <div style="margin-top:10px;font-size:13px;color:var(--text-light);">Estimasi 1 Tahun (×12)</div>
-        <div style="font-size:20px;font-weight:700;color:#90caf9;margin-top:4px;">{{ fmt(simTotal * 12) }}</div>
+      <div class="sim-section">
+        <div class="sim-label">Total Estimasi per Bulan</div>
+        <div class="sim-monthly">{{ fmt(simTotal) }}</div>
+        <div class="sim-yearly-label">Estimasi 1 Tahun (×12)</div>
+        <div class="sim-yearly">{{ fmt(simTotal * 12) }}</div>
       </div>
       <div class="form-actions">
         <button v-if="isAdmin" class="btn btn-save" @click="applySimulasi" :disabled="simSaving">{{ simSaving ? 'Menyimpan...' : '✅ Terapkan' }}</button>
@@ -506,18 +365,18 @@ body.light .all-paid-msg { color: var(--text); }
     <div class="modal" style="max-width:700px;max-height:85vh;display:flex;flex-direction:column;">
       <h2>📋 Bulk Input Kas</h2>
       <div style="margin-bottom:12px;">
-        <label style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.6);">Bulan (klik untuk pilih)</label>
+        <label class="form-group label">Bulan (klik untuk pilih)</label>
         <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:6px;">
           <div v-for="(m, i) in monthNames" :key="i" class="month-cb" :class="{ selected: bulkMonths.includes(i+1) }" @click="toggleBulkMonth(i+1)" style="font-size:11px;padding:6px;">{{ m }}</div>
         </div>
       </div>
       <div style="margin-bottom:8px;">
-        <input type="text" v-model="bulkSearch" placeholder="🔍 Cari nama..." style="width:100%;padding:8px 12px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;font-size:13px;background:rgba(255,255,255,0.05);color:var(--text);">
+        <input type="text" v-model="bulkSearch" placeholder="🔍 Cari nama..." class="bulk-search">
       </div>
-      <div v-if="!bulkMonths.length" style="text-align:center;padding:20px;color:rgba(255,255,255,0.4);font-size:13px;">Pilih bulan dulu</div>
-      <div v-else style="flex:1;overflow-y:auto;border:1px solid rgba(255,255,255,0.06);border-radius:8px;">
+      <div v-if="!bulkMonths.length" class="bulk-empty">Pilih bulan dulu</div>
+      <div v-else class="bulk-table-wrap">
         <table style="width:100%;border-collapse:collapse;font-size:13px;">
-          <thead style="position:sticky;top:0;background:rgba(46,125,50,0.2);">
+          <thead class="bulk-thead" style="position:sticky;top:0;">
             <tr>
               <th style="padding:8px;width:30px;"><input type="checkbox" v-model="bulkSelectAll" @change="onBulkSelectAll"></th>
               <th style="padding:8px;text-align:left;">Nama</th>
@@ -526,20 +385,18 @@ body.light .all-paid-msg { color: var(--text); }
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(row, idx) in bulkRows" :key="row.nik">
+            <tr v-for="row in bulkRows" :key="row.nik">
               <td style="padding:8px;"><input type="checkbox" :checked="isBulkChecked(row.nik)" @change="toggleBulkCheck(row.nik)"></td>
-              <td style="padding:8px;font-weight:500;">{{ row.name }}<br><span style="font-size:10px;color:rgba(255,255,255,0.4);">{{ row.position }}</span></td>
+              <td style="padding:8px;font-weight:500;">{{ row.name }}<br><span class="bulk-position">{{ row.position }}</span></td>
               <td style="padding:8px;text-align:center;font-size:11px;color:var(--text-light);">{{ row.unpaidMonths.map(m => monthNames[m-1]).join(', ') }}</td>
-              <td style="padding:8px;text-align:right;font-weight:600;color:#66bb6a;">{{ fmt(row.total) }}</td>
+              <td style="padding:8px;text-align:right;" class="bulk-amount">{{ fmt(row.total) }}</td>
             </tr>
-            <tr v-if="!bulkRows.length">
-              <td colspan="4" style="padding:20px;text-align:center;color:rgba(255,255,255,0.4);">Semua sudah bayar 🎉</td>
-            </tr>
+            <tr v-if="!bulkRows.length"><td colspan="4" class="bulk-empty">Semua sudah bayar 🎉</td></tr>
           </tbody>
         </table>
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;">
-        <div style="font-size:14px;font-weight:700;color:#90caf9;">{{ bulkSummary }}</div>
+      <div class="bulk-footer">
+        <div class="bulk-total">{{ bulkSummary }}</div>
         <div style="display:flex;gap:8px;">
           <button class="btn btn-cancel" @click="showBulkModal = false">Batal</button>
           <button class="btn btn-save" @click="saveBulk" :disabled="bulkSaving || !bulkCheckedRows.length">{{ bulkSaving ? 'Menyimpan...' : 'Simpan Semua' }}</button>
@@ -551,25 +408,25 @@ body.light .all-paid-msg { color: var(--text); }
   <!-- Profil Anggota Modal -->
   <div class="modal-overlay" :class="{ active: showProfileModal }" @click.self="showProfileModal = false">
     <div class="modal" style="max-width:520px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <div class="profile-header">
         <div>
           <h2 style="margin-bottom:2px;" :style="{ color: posColors[profileMember.position] || 'var(--text)' }">{{ profileMember.name }}</h2>
-          <span style="font-size:12px;color:rgba(255,255,255,0.4);">{{ profileMember.position }} • NIK: {{ profileMember.nik }}</span>
+          <span class="profile-subtitle">{{ profileMember.position }} • NIK: {{ profileMember.nik }}</span>
         </div>
         <div style="text-align:right;">
-          <div style="font-size:12px;color:rgba(255,255,255,0.4);">Total Iuran {{ selectedYear }}</div>
-          <div style="font-size:18px;font-weight:700;color:#66bb6a;">{{ fmt(getProfileTotal()) }}</div>
+          <div class="profile-total-label">Total Iuran {{ selectedYear }}</div>
+          <div class="profile-total">{{ fmt(getProfileTotal()) }}</div>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:4px;font-size:11px;text-align:center;margin-bottom:14px;">
+      <div class="profile-rekap-grid">
         <div v-for="(m, i) in monthNames" :key="i" style="padding:6px 4px;border-radius:6px;" :style="getRekapStyle(profileMember.nik, i+1)">
           {{ m }}<br>{{ getRekapLabel(profileMember.nik, i+1) }}
         </div>
       </div>
-      <div style="font-size:13px;font-weight:600;color:var(--text-light);margin-bottom:8px;">📜 Riwayat (10 terakhir)</div>
-      <div style="max-height:240px;overflow-y:auto;border-radius:8px;border:1px solid rgba(255,255,255,0.06);">
+      <div class="profile-history-header">📜 Riwayat (10 terakhir)</div>
+      <div class="profile-table-wrap">
         <table style="width:100%;border-collapse:collapse;font-size:12px;">
-          <thead><tr style="background:rgba(46,125,50,0.2);"><th style="padding:8px;text-align:center;">Tanggal</th><th style="padding:8px;text-align:center;">Keterangan</th><th style="padding:8px;text-align:center;">Status</th><th style="padding:8px;text-align:right;">Nominal</th></tr></thead>
+          <thead class="profile-thead"><tr><th style="padding:8px;text-align:center;">Tanggal</th><th style="padding:8px;text-align:center;">Keterangan</th><th style="padding:8px;text-align:center;">Status</th><th style="padding:8px;text-align:right;">Nominal</th></tr></thead>
           <tbody>
             <tr v-for="tx in profileHistory" :key="tx.id">
               <td style="padding:6px 8px;text-align:center;font-size:11px;color:var(--text-light);">{{ formatDate(tx.submittedAt) }}</td>
@@ -577,7 +434,7 @@ body.light .all-paid-msg { color: var(--text); }
               <td style="padding:6px 8px;text-align:center;"><span :style="{ color: tx.status==='approved'?'#66bb6a':tx.status==='pending'?'#ffca28':'#ef5350', fontWeight:'600', fontSize:'11px' }">{{ tx.status }}</span></td>
               <td style="padding:6px 8px;text-align:right;font-weight:600;" :class="tx.type==='masuk'?'amount-in':'amount-out'">{{ fmt(tx.amount) }}</td>
             </tr>
-            <tr v-if="!profileHistory.length"><td colspan="4" style="padding:16px;text-align:center;color:rgba(255,255,255,0.4);">Belum ada transaksi</td></tr>
+            <tr v-if="!profileHistory.length"><td colspan="4" class="profile-empty">Belum ada transaksi</td></tr>
           </tbody>
         </table>
       </div>
@@ -585,13 +442,13 @@ body.light .all-paid-msg { color: var(--text); }
     </div>
   </div>
 
-  <!-- History Modal (Summary detail) -->
+  <!-- History Modal -->
   <div class="modal-overlay" :class="{ active: showHistoryModal }" @click.self="showHistoryModal = false">
     <div class="modal" style="max-width:600px;">
       <h2>{{ historyType === 'masuk' ? '📥 Detail Pemasukan' : '📤 Detail Pengeluaran' }}</h2>
-      <div style="max-height:400px;overflow-y:auto;border:1px solid rgba(255,255,255,0.06);border-radius:8px;">
+      <div class="history-table-wrap">
         <table style="width:100%;border-collapse:collapse;font-size:13px;">
-          <thead style="position:sticky;top:0;background:rgba(46,125,50,0.2);"><tr><th style="padding:8px;text-align:left;">Keterangan</th><th style="padding:8px;text-align:center;">Kategori</th><th style="padding:8px;text-align:center;">Tanggal</th><th style="padding:8px;text-align:right;">Jumlah</th></tr></thead>
+          <thead class="history-thead" style="position:sticky;top:0;"><tr><th style="padding:8px;text-align:left;">Keterangan</th><th style="padding:8px;text-align:center;">Kategori</th><th style="padding:8px;text-align:center;">Tanggal</th><th style="padding:8px;text-align:right;">Jumlah</th></tr></thead>
           <tbody>
             <tr v-for="tx in historyItems" :key="tx.id">
               <td style="padding:6px 8px;text-align:left;color:var(--text-light);">{{ tx.note || tx.memberName || '-' }}</td>
@@ -599,18 +456,18 @@ body.light .all-paid-msg { color: var(--text); }
               <td style="padding:6px 8px;text-align:center;font-size:11px;color:var(--text-light);">{{ formatDate(tx.submittedAt) }}</td>
               <td style="padding:6px 8px;text-align:right;font-weight:600;" :class="tx.type==='masuk'?'amount-in':'amount-out'">{{ fmt(tx.amount) }}</td>
             </tr>
-            <tr v-if="!historyItems.length"><td colspan="4" style="padding:16px;text-align:center;color:rgba(255,255,255,0.4);">Tidak ada data</td></tr>
+            <tr v-if="!historyItems.length"><td colspan="4" class="history-empty">Tidak ada data</td></tr>
           </tbody>
         </table>
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;">
-        <span style="font-size:12px;color:rgba(255,255,255,0.4);">{{ historyItems.length }} transaksi • Total: {{ fmt(historyTotal) }}</span>
+      <div class="history-footer">
+        <span class="history-summary">{{ historyItems.length }} transaksi • Total: {{ fmt(historyTotal) }}</span>
         <button class="btn btn-cancel" @click="showHistoryModal = false">Tutup</button>
       </div>
     </div>
   </div>
 
-  <!-- Pemasukan Lain Modal (Admin) -->
+  <!-- Pemasukan Lain Modal -->
   <div class="modal-overlay" :class="{ active: showExtModal }" @click.self="showExtModal = false">
     <div class="modal">
       <h2>📥 Pemasukan Lain</h2>
@@ -623,7 +480,7 @@ body.light .all-paid-msg { color: var(--text); }
     </div>
   </div>
 
-  <!-- Pengeluaran Modal (Admin) -->
+  <!-- Pengeluaran Modal -->
   <div class="modal-overlay" :class="{ active: showOutModal }" @click.self="showOutModal = false">
     <div class="modal">
       <h2>📤 Pengeluaran</h2>
@@ -643,13 +500,13 @@ body.light .all-paid-msg { color: var(--text); }
       <div style="display:flex;gap:10px;justify-content:center;margin-bottom:16px;">
         <div class="form-group" style="margin:0;flex:1;">
           <label>Bulan</label>
-          <select v-model.number="reportMonth" style="width:100%;padding:9px 12px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;font-size:14px;background:rgba(255,255,255,0.05);color:var(--text);">
+          <select v-model.number="reportMonth">
             <option v-for="(m, i) in monthNames" :key="i" :value="i+1">{{ m }}</option>
           </select>
         </div>
         <div class="form-group" style="margin:0;flex:1;">
           <label>Tahun</label>
-          <select v-model.number="reportYear" style="width:100%;padding:9px 12px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;font-size:14px;background:rgba(255,255,255,0.05);color:var(--text);">
+          <select v-model.number="reportYear">
             <option v-for="y in yearOptions" :key="y" :value="y">{{ y }}</option>
           </select>
         </div>
@@ -750,6 +607,7 @@ const app = createApp({
     return {
       navOpen: false,
       galleryIdx: 0,
+      rekapTab: 'iuran',
       dataLoading: true,
       members: [],
       transactions: [],
@@ -766,14 +624,12 @@ const app = createApp({
       toast: { show: false, message: '', success: true },
       posColors: { 'Direktur': '#ef5350', 'Senior Manager': '#42a5f5', 'Junior Manager': '#ffca28', 'Coordinator': '#66bb6a' },
       posOrder: { 'Direktur': 0, 'Senior Manager': 1, 'Junior Manager': 2, 'Coordinator': 3 },
-      // Bulk
       showBulkModal: false,
       bulkMonths: [],
       bulkSearch: '',
       bulkSelectAll: false,
       bulkSaving: false,
       bulkMemberData: [],
-      // Simulasi & Edit Iuran
       showSimModal: false,
       simValues: { 'Direktur': 0, 'Senior Manager': 0, 'Junior Manager': 0, 'Coordinator': 0 },
       simSaving: false,
@@ -781,22 +637,17 @@ const app = createApp({
       editIuranValues: { 'Direktur': 0, 'Senior Manager': 0, 'Junior Manager': 0, 'Coordinator': 0 },
       editIuranSaving: false,
       positionList: ['Direktur', 'Senior Manager', 'Junior Manager', 'Coordinator'],
-      // Pemasukan Lain & Pengeluaran
       showExtModal: false,
       extForm: { note: '', amount: 0 },
       extSaving: false,
       showOutModal: false,
       outForm: { note: '', amount: 0 },
       outSaving: false,
-      // Profil Anggota
       showProfileModal: false,
       profileMember: { nik: '', name: '', position: '' },
-      // History
       showHistoryModal: false,
       historyType: 'masuk',
-      // Year selector
       selectedYear: new Date().getFullYear(),
-      // Report
       showReportPreview: false,
       showReportPicker: false,
       reportMonth: new Date().getMonth() + 1,
@@ -829,58 +680,58 @@ const app = createApp({
       const keluar = approved.filter(t => t.type === 'keluar').reduce((s, t) => s + Number(t.amount), 0);
       return { masuk, keluar };
     },
+    statusBulanIni() {
+      const now = new Date();
+      const month = now.getMonth() + 1;
+      const year = now.getFullYear();
+      let lunas = 0, pending = 0, belum = 0;
+      const unpaidNames = [];
+      this.activeMembers.forEach(m => {
+        let startMonth = 1;
+        if (m.activeFrom) {
+          const parts = m.activeFrom.split('-');
+          if (parseInt(parts[0]) === year) startMonth = parseInt(parts[1]);
+          if (parseInt(parts[0]) > year) return;
+        }
+        if (month < startMonth) return;
+        const tx = this.transactions.find(t => t.memberNik === m.nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status !== 'rejected');
+        if (tx && tx.status === 'approved') lunas++;
+        else if (tx && tx.status === 'pending') pending++;
+        else { belum++; unpaidNames.push(m.name); }
+      });
+      return { lunas, pending, belum, unpaidNames };
+    },
     bulkRows() {
       if (!this.bulkMonths.length) return [];
       const year = new Date().getFullYear();
       const search = this.bulkSearch.toLowerCase();
       const rows = [];
       this.activeMembers.filter(m => m.name.toLowerCase().includes(search)).forEach(m => {
-        // Get member start month
         let startMonth = 1;
         if (m.activeFrom) {
           const parts = m.activeFrom.split('-');
           if (parseInt(parts[0]) === year) startMonth = parseInt(parts[1]);
-          if (parseInt(parts[0]) > year) return; // not active this year
+          if (parseInt(parts[0]) > year) return;
         }
         const mTx = this.transactions.filter(t => t.memberNik === m.nik && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status !== 'rejected');
         const unpaidMonths = this.bulkMonths.filter(mo => mo >= startMonth && !mTx.some(t => Number(t.month) === mo));
         if (unpaidMonths.length) {
           const iuran = this.getMemberIuran(m.position);
-          rows.push({
-            nik: m.nik,
-            name: m.name,
-            position: m.position,
-            unpaidMonths,
-            total: unpaidMonths.length * iuran,
-            iuran,
-            checked: this.bulkMemberData.find(x => x.nik === m.nik)?.checked || false
-          });
+          rows.push({ nik: m.nik, name: m.name, position: m.position, unpaidMonths, total: unpaidMonths.length * iuran, iuran, checked: this.bulkMemberData.find(x => x.nik === m.nik)?.checked || false });
         }
       });
       return rows;
     },
-    bulkCheckedRows() {
-      return this.bulkMemberData.filter(x => x.checked);
-    },
+    bulkCheckedRows() { return this.bulkMemberData.filter(x => x.checked); },
     bulkSummary() {
       const checked = this.bulkMemberData.filter(x => x.checked);
       if (!checked.length) return '';
-      const total = checked.reduce((s, x) => {
-        const row = this.bulkRows.find(r => r.nik === x.nik);
-        return s + (row ? row.total : 0);
-      }, 0);
+      const total = checked.reduce((s, x) => { const row = this.bulkRows.find(r => r.nik === x.nik); return s + (row ? row.total : 0); }, 0);
       return checked.length + ' orang • ' + this.fmt(total);
     },
-    targetKas() {
-      return this.activeMembers.reduce((sum, m) => sum + this.getMemberIuran(m.position), 0) * 12;
-    },
-    simTotal() {
-      return this.positionList.reduce((sum, pos) => sum + (this.simValues[pos] || 0) * this.getPosMemberCount(pos), 0);
-    },
-    targetPct() {
-      if (!this.targetKas) return 0;
-      return Math.min(100, Math.round((this.summary.masuk / this.targetKas) * 100));
-    },
+    targetKas() { return this.activeMembers.reduce((sum, m) => sum + this.getMemberIuran(m.position), 0) * 12; },
+    simTotal() { return this.positionList.reduce((sum, pos) => sum + (this.simValues[pos] || 0) * this.getPosMemberCount(pos), 0); },
+    targetPct() { if (!this.targetKas) return 0; return Math.min(100, Math.round((this.summary.masuk / this.targetKas) * 100)); },
     lateMembers() {
       const now = new Date();
       const year = now.getFullYear();
@@ -899,112 +750,44 @@ const app = createApp({
         return false;
       });
     },
-    activeEvents() {
-      return this.events.filter(ev => ev.status !== 'closed').concat(
-        this.events.filter(ev => ev.status === 'closed').slice(0, 3)
-      );
-    },
-    yearOptions() {
-      const current = new Date().getFullYear();
-      const years = [];
-      for (let y = current; y >= 2024; y--) years.push(y);
-      return years;
-    },
-    pendingCount() {
-      return this.transactions.filter(t => t.status === 'pending').length;
-    },
-    reportPeriod() {
-      return this.monthNames[this.reportMonth - 1] + ' ' + this.reportYear;
-    },
-    reportMasukBulan() {
-      const m = this.reportMonth;
-      const y = this.reportYear;
-      return this.transactions.filter(t => t.status === 'approved' && t.type === 'masuk' && Number(t.month) === m && Number(t.year) === y).reduce((s, t) => s + Number(t.amount), 0);
-    },
-    reportKeluarBulan() {
-      const m = this.reportMonth;
-      const y = this.reportYear;
-      return this.transactions.filter(t => t.status === 'approved' && t.type === 'keluar' && Number(t.month) === m && Number(t.year) === y).reduce((s, t) => s + Number(t.amount), 0);
-    },
-    reportPaidCount() {
-      const m = this.reportMonth;
-      const y = this.reportYear;
-      return this.activeMembers.filter(mem => this.transactions.some(t => t.memberNik === mem.nik && t.kategori === 'iuran' && t.type === 'masuk' && Number(t.month) === m && Number(t.year) === y && t.status !== 'rejected')).length;
-    },
-    reportUnpaidCount() {
-      return this.activeMembers.length - this.reportPaidCount;
-    },
-    reportUnpaidNames() {
-      const m = this.reportMonth;
-      const y = this.reportYear;
-      return this.activeMembers.filter(mem => !this.transactions.some(t => t.memberNik === mem.nik && t.kategori === 'iuran' && t.type === 'masuk' && Number(t.month) === m && Number(t.year) === y && t.status !== 'rejected')).map(m => m.name);
-    },
-    reportExpenses() {
-      const m = this.reportMonth;
-      const y = this.reportYear;
-      return this.transactions.filter(t => t.status === 'approved' && t.type === 'keluar' && Number(t.month) === m && Number(t.year) === y);
-    },
+    activeEvents() { return this.events.filter(ev => ev.status !== 'closed').concat(this.events.filter(ev => ev.status === 'closed').slice(0, 3)); },
+    yearOptions() { const current = new Date().getFullYear(); const years = []; for (let y = current; y >= 2024; y--) years.push(y); return years; },
+    pendingCount() { return this.transactions.filter(t => t.status === 'pending').length; },
+    reportPeriod() { return this.monthNames[this.reportMonth - 1] + ' ' + this.reportYear; },
+    reportMasukBulan() { return this.transactions.filter(t => t.status === 'approved' && t.type === 'masuk' && Number(t.month) === this.reportMonth && Number(t.year) === this.reportYear).reduce((s, t) => s + Number(t.amount), 0); },
+    reportKeluarBulan() { return this.transactions.filter(t => t.status === 'approved' && t.type === 'keluar' && Number(t.month) === this.reportMonth && Number(t.year) === this.reportYear).reduce((s, t) => s + Number(t.amount), 0); },
+    reportPaidCount() { return this.activeMembers.filter(mem => this.transactions.some(t => t.memberNik === mem.nik && t.kategori === 'iuran' && t.type === 'masuk' && Number(t.month) === this.reportMonth && Number(t.year) === this.reportYear && t.status !== 'rejected')).length; },
+    reportUnpaidCount() { return this.activeMembers.length - this.reportPaidCount; },
+    reportUnpaidNames() { return this.activeMembers.filter(mem => !this.transactions.some(t => t.memberNik === mem.nik && t.kategori === 'iuran' && t.type === 'masuk' && Number(t.month) === this.reportMonth && Number(t.year) === this.reportYear && t.status !== 'rejected')).map(m => m.name); },
+    reportExpenses() { return this.transactions.filter(t => t.status === 'approved' && t.type === 'keluar' && Number(t.month) === this.reportMonth && Number(t.year) === this.reportYear); },
     profileHistory() {
       if (!this.profileMember.nik) return [];
-      return this.transactions
-        .filter(t => t.memberNik === this.profileMember.nik && t.status !== 'rejected')
-        .sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt))
-        .slice(0, 10);
+      return this.transactions.filter(t => t.memberNik === this.profileMember.nik && t.status !== 'rejected').sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)).slice(0, 10);
     },
-    historyItems() {
-      return this.transactions
-        .filter(t => t.type === this.historyType && t.status === 'approved')
-        .sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt))
-        .slice(0, 50);
-    },
-    historyTotal() {
-      return this.historyItems.reduce((s, t) => s + Number(t.amount), 0);
-    },
+    historyItems() { return this.transactions.filter(t => t.type === this.historyType && t.status === 'approved').sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)).slice(0, 50); },
+    historyTotal() { return this.historyItems.reduce((s, t) => s + Number(t.amount), 0); },
     availableEvents() {
       if (!this.form.memberNik) return [];
       const member = this.members.find(m => m.nik === this.form.memberNik);
       if (!member) return [];
-      return this.events
-        .filter(ev => ev.status !== 'closed')
-        .filter(ev => !this.transactions.some(t => t.kategori === 'event' && t.eventId === ev.id && t.memberNik === this.form.memberNik && t.status !== 'rejected'))
-        .map(ev => {
-          const posKey = 'iuran' + member.position.replace(/\s/g, '');
-          const minAmount = Number(ev[posKey]) || 0;
-          return { ...ev, minAmount };
-        });
+      return this.events.filter(ev => ev.status !== 'closed').filter(ev => !this.transactions.some(t => t.kategori === 'event' && t.eventId === ev.id && t.memberNik === this.form.memberNik && t.status !== 'rejected')).map(ev => { const posKey = 'iuran' + member.position.replace(/\s/g, ''); return { ...ev, minAmount: Number(ev[posKey]) || 0 }; });
     }
   },
   watch: {
-    'form.year'() {
-      this.form.months = [];
-    },
-    bulkRows(newRows) {
-      this.bulkMemberData = newRows.map(r => ({
-        nik: r.nik,
-        checked: this.bulkMemberData.find(x => x.nik === r.nik)?.checked || false
-      }));
-    },
-    masterIuran(val) {
-      if (val && val.length) {
-        this.positionList.forEach(pos => {
-          const item = val.find(x => x.position === pos);
-          this.simValues[pos] = item ? Number(item.amount) : 0;
-        });
-      }
-    }
+    'form.year'() { this.form.months = []; },
+    bulkRows(newRows) { this.bulkMemberData = newRows.map(r => ({ nik: r.nik, checked: this.bulkMemberData.find(x => x.nik === r.nik)?.checked || false })); },
+    masterIuran(val) { if (val && val.length) { this.positionList.forEach(pos => { const item = val.find(x => x.position === pos); this.simValues[pos] = item ? Number(item.amount) : 0; }); } }
   },
-  mounted() {
-    this.loadData();
-  },
+  mounted() { this.loadData(); },
   methods: {
     onGalleryScroll() {
-      const el = this.$refs.cardGallery;
+      const el = this.$refs.dashGrid;
       if (!el) return;
       const idx = Math.round(el.scrollLeft / el.offsetWidth);
       this.galleryIdx = idx;
     },
     scrollGallery(idx) {
-      const el = this.$refs.cardGallery;
+      const el = this.$refs.dashGrid;
       if (!el) return;
       el.scrollTo({ left: idx * el.offsetWidth, behavior: 'smooth' });
       this.galleryIdx = idx;
@@ -1025,33 +808,21 @@ const app = createApp({
       } catch (err) { console.error(err); }
       this.dataLoading = false;
     },
-    getMemberMonth(nik, month) {
-      const year = this.selectedYear;
-      return this.transactions.some(t => t.memberNik === nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.status === 'approved' && t.type === 'masuk');
-    },
     getMemberMonthStatus(nik, month) {
       const year = this.selectedYear;
-      // Check activeFrom — don't mark late for months before member joined
       const member = this.members.find(m => m.nik === nik);
       if (member && member.activeFrom) {
         const parts = member.activeFrom.split('-');
         const afYear = parseInt(parts[0]);
         const afMonth = parseInt(parts[1]);
-        if (year < afYear || (year === afYear && month < afMonth)) {
-          return 'none'; // belum aktif bulan ini
-        }
+        if (year < afYear || (year === afYear && month < afMonth)) return 'none';
       }
       const tx = this.transactions.find(t => t.memberNik === nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status !== 'rejected');
-      if (tx) return tx.status; // 'approved' or 'pending'
-      // Late logic: if today > 28, current month counts as late. Otherwise only previous months.
+      if (tx) return tx.status;
       const now = new Date();
-      const lateMonth = now.getDate() > 28 ? now.getMonth() + 1 : now.getMonth(); // 1-based
-      if (year === now.getFullYear() && month <= lateMonth) {
-        return 'late';
-      }
-      if (year < now.getFullYear()) {
-        return 'late';
-      }
+      const lateMonth = now.getDate() > 28 ? now.getMonth() + 1 : now.getMonth();
+      if (year === now.getFullYear() && month <= lateMonth) return 'late';
+      if (year < now.getFullYear()) return 'late';
       return 'none';
     },
     getMemberMonthAmount(nik, month) {
@@ -1059,82 +830,32 @@ const app = createApp({
       const tx = this.transactions.find(t => t.memberNik === nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status === 'approved');
       return tx ? Number(tx.amount) : 0;
     },
-    fmtShort(n) {
-      if (n >= 1000000) return (n / 1000000).toFixed(n % 1000000 === 0 ? 0 : 1) + 'jt';
-      if (n >= 1000) return (n / 1000) + 'rb';
-      return String(n);
-    },
-    isMemberActive(m) {
-      return m.isActive === true || m.isActive === 'TRUE';
-    },
-    isMemberLate(member) {
-      if (!this.isMemberActive(member)) return false;
-      return this.lateMembers.some(m => m.nik === member.nik);
-    },
-    getMemberTotal(nik) {
-      const year = this.selectedYear;
-      return this.transactions.filter(t => t.memberNik === nik && Number(t.year) === year && t.kategori === 'iuran' && t.status === 'approved' && t.type === 'masuk').reduce((s, t) => s + Number(t.amount), 0);
-    },
+    isMemberActive(m) { return m.isActive === true || m.isActive === 'TRUE'; },
+    isMemberLate(member) { if (!this.isMemberActive(member)) return false; return this.lateMembers.some(m => m.nik === member.nik); },
     onMemberChange() {
       const m = this.members.find(x => x.nik === this.form.memberNik);
       this.form.memberName = m ? m.name : '';
       this.form.months = [];
       this.form.eventId = '';
       this.form.eventAmount = 0;
-      if (m) {
-        const iuran = this.masterIuran.find(x => x.position === m.position);
-        if (iuran) this.form.amount = Number(iuran.amount);
-      }
+      if (m) { const iuran = this.masterIuran.find(x => x.position === m.position); if (iuran) this.form.amount = Number(iuran.amount); }
     },
-    selectFormMember(m) {
-      this.form.memberNik = m.nik;
-      this.memberSearch = '';
-      this.showMemberDropdown = false;
-      this.onMemberChange();
-    },
+    selectFormMember(m) { this.form.memberNik = m.nik; this.memberSearch = ''; this.showMemberDropdown = false; this.onMemberChange(); },
     openSubmitModal() {
       this.showSubmitModal = true;
-      // Non-admin: auto-fill with logged-in user
       if (!this.isAdmin) {
         const nik = sessionStorage.getItem('kas-it-member-nik') || '';
         const name = sessionStorage.getItem('kas-it-member-name') || '';
-        if (nik) {
-          this.form.memberNik = nik;
-          this.form.memberName = name;
-          this.onMemberChange();
-        }
+        if (nik) { this.form.memberNik = nik; this.form.memberName = name; this.onMemberChange(); }
       }
     },
-    clearFormMember() {
-      this.form.memberNik = '';
-      this.form.memberName = '';
-      this.form.months = [];
-      this.form.eventId = '';
-      this.form.eventAmount = 0;
-      this.memberSearch = '';
-      this.showMemberDropdown = false;
-    },
-    getMemberPosition(nik) {
-      const m = this.members.find(x => x.nik === nik);
-      return m ? m.position : '';
-    },
-    onEventSelect() {
-      const ev = this.availableEvents.find(e => e.id === this.form.eventId);
-      if (ev) this.form.eventAmount = ev.minAmount;
-    },
-    getEventMin() {
-      const ev = this.availableEvents.find(e => e.id === this.form.eventId);
-      return ev ? ev.minAmount : 0;
-    },
-    isMonthDisabled(nik, month) {
-      if (!nik) return false;
-      const year = new Date().getFullYear();
-      return this.transactions.some(t => t.memberNik === nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && (t.status === 'approved' || t.status === 'pending'));
-    },
+    clearFormMember() { this.form.memberNik = ''; this.form.memberName = ''; this.form.months = []; this.form.eventId = ''; this.form.eventAmount = 0; this.memberSearch = ''; this.showMemberDropdown = false; },
+    getMemberPosition(nik) { const m = this.members.find(x => x.nik === nik); return m ? m.position : ''; },
+    onEventSelect() { const ev = this.availableEvents.find(e => e.id === this.form.eventId); if (ev) this.form.eventAmount = ev.minAmount; },
+    getEventMin() { const ev = this.availableEvents.find(e => e.id === this.form.eventId); return ev ? ev.minAmount : 0; },
     isFormMonthDisabled(nik, month) {
       if (!nik) return false;
       const year = this.form.year;
-      // Disable months before activeFrom
       const member = this.members.find(m => m.nik === nik);
       if (member && member.activeFrom) {
         const parts = member.activeFrom.split('-');
@@ -1147,12 +868,7 @@ const app = createApp({
     getFormMonthStatus(nik, month) {
       const year = this.form.year;
       const member = this.members.find(m => m.nik === nik);
-      if (member && member.activeFrom) {
-        const parts = member.activeFrom.split('-');
-        const afYear = parseInt(parts[0]);
-        const afMonth = parseInt(parts[1]);
-        if (year < afYear || (year === afYear && month < afMonth)) return 'none';
-      }
+      if (member && member.activeFrom) { const parts = member.activeFrom.split('-'); if (year < parseInt(parts[0]) || (year === parseInt(parts[0]) && month < parseInt(parts[1]))) return 'none'; }
       const tx = this.transactions.find(t => t.memberNik === nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status !== 'rejected');
       if (tx) return tx.status;
       const now = new Date();
@@ -1170,10 +886,7 @@ const app = createApp({
     },
     getFormRekapLabel(nik, month) {
       const status = this.getFormMonthStatus(nik, month);
-      if (status === 'approved') return '✅';
-      if (status === 'pending') return 'PEND';
-      if (status === 'late') return 'TELAT';
-      return '-';
+      if (status === 'approved') return '✅'; if (status === 'pending') return 'PEND'; if (status === 'late') return 'TELAT'; return '-';
     },
     getRekapStyle(nik, month) {
       const status = this.getMemberMonthStatus(nik, month);
@@ -1184,384 +897,139 @@ const app = createApp({
     },
     getRekapLabel(nik, month) {
       const status = this.getMemberMonthStatus(nik, month);
-      if (status === 'approved') return '✅';
-      if (status === 'pending') return 'PEND';
-      if (status === 'late') return 'TELAT';
-      return '-';
+      if (status === 'approved') return '✅'; if (status === 'pending') return 'PEND'; if (status === 'late') return 'TELAT'; return '-';
     },
-    toggleMonth(m) {
-      const idx = this.form.months.indexOf(m);
-      if (idx >= 0) this.form.months.splice(idx, 1);
-      else this.form.months.push(m);
-    },
+    toggleMonth(m) { const idx = this.form.months.indexOf(m); if (idx >= 0) this.form.months.splice(idx, 1); else this.form.months.push(m); },
     async submitKas() {
-      if (!this.form.memberNik || !this.form.txType) {
-        this.showToast('Pilih anggota dan tipe', false); return;
-      }
-
-      // Event payment
+      if (!this.form.memberNik || !this.form.txType) { this.showToast('Pilih anggota dan tipe', false); return; }
       if (this.form.txType === 'event') {
-        if (!this.form.eventId || !this.form.eventAmount) {
-          this.showToast('Pilih event dan isi nominal', false); return;
-        }
+        if (!this.form.eventId || !this.form.eventAmount) { this.showToast('Pilih event dan isi nominal', false); return; }
         const minAmount = this.getEventMin();
-        if (this.form.eventAmount < minAmount) {
-          this.showToast('Nominal minimal ' + this.fmt(minAmount), false); return;
-        }
+        if (this.form.eventAmount < minAmount) { this.showToast('Nominal minimal ' + this.fmt(minAmount), false); return; }
         this.submitting = true;
         const isAdmin = this.isAdmin;
         try {
-          const res = await fetch(API_URL, {
-            method: 'POST',
-            body: JSON.stringify({
-              action: 'addTransaction',
-              kategori: 'event',
-              type: 'masuk',
-              amount: this.form.eventAmount,
-              status: isAdmin ? 'approved' : 'pending',
-              memberNik: this.form.memberNik,
-              memberName: this.form.memberName,
-              note: 'Event payment',
-              month: new Date().getMonth() + 1,
-              year: new Date().getFullYear(),
-              eventId: this.form.eventId,
-              submittedAt: new Date().toISOString(),
-              approvedAt: isAdmin ? new Date().toISOString() : '',
-              approvedBy: isAdmin ? 'admin' : '',
-              createdBy: sessionStorage.getItem('kas-it-member-nik') || ''
-            })
-          });
+          const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'addTransaction', kategori: 'event', type: 'masuk', amount: this.form.eventAmount, status: isAdmin ? 'approved' : 'pending', memberNik: this.form.memberNik, memberName: this.form.memberName, note: 'Event payment', month: new Date().getMonth() + 1, year: new Date().getFullYear(), eventId: this.form.eventId, submittedAt: new Date().toISOString(), approvedAt: isAdmin ? new Date().toISOString() : '', approvedBy: isAdmin ? 'admin' : '', createdBy: sessionStorage.getItem('kas-it-member-nik') || '' }) });
           const result = await res.json();
-          if (result.ok !== false) {
-            this.showToast('Pembayaran event berhasil!');
-            this.showSubmitModal = false;
-            this.form = { memberNik: '', memberName: '', type: 'masuk', txType: '', months: [], amount: 0, note: '', eventId: '', eventAmount: 0, year: new Date().getFullYear() };
-            this.loadData();
-          } else {
-            this.showToast(result.error || 'Gagal', false);
-          }
+          if (result.ok !== false) { this.showToast('Pembayaran event berhasil!'); this.showSubmitModal = false; this.form = { memberNik: '', memberName: '', type: 'masuk', txType: '', months: [], amount: 0, note: '', eventId: '', eventAmount: 0, year: new Date().getFullYear() }; this.loadData(); }
+          else { this.showToast(result.error || 'Gagal', false); }
         } catch (err) { this.showToast('Gagal: koneksi error', false); }
-        this.submitting = false;
-        return;
+        this.submitting = false; return;
       }
-
-      // Iuran bulanan
-      if (!this.form.months.length || !this.form.amount) {
-        this.showToast('Pilih minimal 1 bulan', false); return;
-      }
+      if (!this.form.months.length || !this.form.amount) { this.showToast('Pilih minimal 1 bulan', false); return; }
       this.submitting = true;
       const year = this.form.year;
       const isAdmin = this.isAdmin;
-      const txs = this.form.months.map(month => ({
-        kategori: 'iuran',
-        memberNik: this.form.memberNik,
-        memberName: this.form.memberName,
-        month,
-        year,
-        type: 'masuk',
-        amount: this.form.amount,
-        note: 'Iuran ' + this.monthNames[month - 1] + ' ' + year,
-        submittedAt: new Date().toISOString(),
-        status: isAdmin ? 'approved' : 'pending',
-        eventId: '',
-        approvedAt: isAdmin ? new Date().toISOString() : '',
-        approvedBy: isAdmin ? 'admin' : '',
-        createdBy: sessionStorage.getItem('kas-it-member-nik') || ''
-      }));
+      const txs = this.form.months.map(month => ({ kategori: 'iuran', memberNik: this.form.memberNik, memberName: this.form.memberName, month, year, type: 'masuk', amount: this.form.amount, note: 'Iuran ' + this.monthNames[month - 1] + ' ' + year, submittedAt: new Date().toISOString(), status: isAdmin ? 'approved' : 'pending', eventId: '', approvedAt: isAdmin ? new Date().toISOString() : '', approvedBy: isAdmin ? 'admin' : '', createdBy: sessionStorage.getItem('kas-it-member-nik') || '' }));
       try {
         const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'bulkAddTransactions', transactions: txs }) });
         const result = await res.json();
-        if (result.ok !== false) {
-          this.showToast(txs.length + ' transaksi berhasil disimpan!');
-          this.showSubmitModal = false;
-          this.form = { memberNik: '', memberName: '', type: 'masuk', txType: '', months: [], amount: 0, note: '', eventId: '', eventAmount: 0, year: new Date().getFullYear() };
-          this.loadData();
-        } else { this.showToast('Gagal menyimpan', false); }
+        if (result.ok !== false) { this.showToast(txs.length + ' transaksi berhasil disimpan!'); this.showSubmitModal = false; this.form = { memberNik: '', memberName: '', type: 'masuk', txType: '', months: [], amount: 0, note: '', eventId: '', eventAmount: 0, year: new Date().getFullYear() }; this.loadData(); }
+        else { this.showToast('Gagal menyimpan', false); }
       } catch (err) { this.showToast('Gagal: koneksi error', false); }
       this.submitting = false;
     },
-    showToast(message, success = true) {
-      this.toast = { show: true, message, success };
-    },
+    showToast(message, success = true) { this.toast = { show: true, message, success }; },
     fmt(n) { return 'Rp ' + Number(n || 0).toLocaleString('id-ID'); },
-    fmtInput(n) {
-      if (!n && n !== 0) return '';
-      return Number(n).toLocaleString('id-ID');
-    },
-    parseRibuan(str) {
-      return Number(String(str).replace(/\D/g, '')) || 0;
-    },
-    // Bulk methods
-    // Reminder
+    fmtInput(n) { if (!n && n !== 0) return ''; return Number(n).toLocaleString('id-ID'); },
+    parseRibuan(str) { return Number(String(str).replace(/\D/g, '')) || 0; },
     copyReminder() {
       const now = new Date();
       const monthName = this.monthNames[now.getMonth()];
       const names = this.lateMembers.map(m => '• ' + m.name).join('\n');
       const text = `⚠️ Reminder Iuran Kas IT - ${monthName} ${now.getFullYear()}\n\nYang belum bayar:\n${names}\n\nMohon segera disetor ya. Terima kasih 🙏\n\n📲 Submit via: <input link here>`;
-      navigator.clipboard.writeText(text).then(() => {
-        this.showToast('Berhasil di-copy! Tinggal paste ke WA');
-      }).catch(() => {
-        this.showToast('Gagal copy', false);
-      });
+      navigator.clipboard.writeText(text).then(() => { this.showToast('Berhasil di-copy! Tinggal paste ke WA'); }).catch(() => { this.showToast('Gagal copy', false); });
     },
-    // Simulasi & Edit Iuran
-    getPosMemberCount(pos) {
-      return this.activeMembers.filter(m => m.position === pos).length;
-    },
-    openEditIuran() {
-      this.positionList.forEach(pos => {
-        const item = this.masterIuran.find(x => x.position === pos);
-        this.editIuranValues[pos] = item ? Number(item.amount) : 0;
-      });
-      this.showEditIuranModal = true;
-    },
+    getPosMemberCount(pos) { return this.activeMembers.filter(m => m.position === pos).length; },
+    openEditIuran() { this.positionList.forEach(pos => { const item = this.masterIuran.find(x => x.position === pos); this.editIuranValues[pos] = item ? Number(item.amount) : 0; }); this.showEditIuranModal = true; },
     async saveEditIuran() {
       this.editIuranSaving = true;
-      try {
-        for (const pos of this.positionList) {
-          await fetch(API_URL, {
-            method: 'POST',
-            body: JSON.stringify({ action: 'updateMasterIuran', position: pos, amount: this.editIuranValues[pos] })
-          });
-        }
-        this.showToast('Master iuran berhasil diupdate');
-        this.showEditIuranModal = false;
-        this.loadData();
-      } catch (err) {
-        this.showToast('Gagal menyimpan', false);
-      }
+      try { for (const pos of this.positionList) { await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'updateMasterIuran', position: pos, amount: this.editIuranValues[pos] }) }); } this.showToast('Master iuran berhasil diupdate'); this.showEditIuranModal = false; this.loadData(); }
+      catch (err) { this.showToast('Gagal menyimpan', false); }
       this.editIuranSaving = false;
     },
     async applySimulasi() {
       this.simSaving = true;
-      try {
-        for (const pos of this.positionList) {
-          await fetch(API_URL, {
-            method: 'POST',
-            body: JSON.stringify({ action: 'updateMasterIuran', position: pos, amount: this.simValues[pos] })
-          });
-        }
-        this.showToast('Simulasi diterapkan!');
-        this.showSimModal = false;
-        this.loadData();
-      } catch (err) {
-        this.showToast('Gagal menyimpan', false);
-      }
+      try { for (const pos of this.positionList) { await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'updateMasterIuran', position: pos, amount: this.simValues[pos] }) }); } this.showToast('Simulasi diterapkan!'); this.showSimModal = false; this.loadData(); }
+      catch (err) { this.showToast('Gagal menyimpan', false); }
       this.simSaving = false;
     },
-    // Bulk methods
-    getMemberIuran(position) {
-      const item = this.masterIuran.find(x => x.position === position);
-      return item ? Number(item.amount) : 0;
-    },
-    openBulkModal() {
-      this.bulkMonths = [];
-      this.bulkSearch = '';
-      this.bulkSelectAll = false;
-      this.bulkMemberData = [];
-      this.showBulkModal = true;
-    },
-    toggleBulkMonth(mo) {
-      const idx = this.bulkMonths.indexOf(mo);
-      if (idx >= 0) this.bulkMonths.splice(idx, 1);
-      else this.bulkMonths.push(mo);
-      this.refreshBulkData();
-    },
-    refreshBulkData() {
-      this.$nextTick(() => {
-        this.bulkMemberData = this.bulkRows.map(r => ({
-          nik: r.nik,
-          checked: this.bulkMemberData.find(x => x.nik === r.nik)?.checked || false
-        }));
-      });
-    },
-    onBulkSelectAll() {
-      this.bulkMemberData.forEach(x => x.checked = this.bulkSelectAll);
-    },
-    isBulkChecked(nik) {
-      const item = this.bulkMemberData.find(x => x.nik === nik);
-      return item ? item.checked : false;
-    },
-    toggleBulkCheck(nik) {
-      const item = this.bulkMemberData.find(x => x.nik === nik);
-      if (item) item.checked = !item.checked;
-    },
+    getMemberIuran(position) { const item = this.masterIuran.find(x => x.position === position); return item ? Number(item.amount) : 0; },
+    openBulkModal() { this.bulkMonths = []; this.bulkSearch = ''; this.bulkSelectAll = false; this.bulkMemberData = []; this.showBulkModal = true; },
+    toggleBulkMonth(mo) { const idx = this.bulkMonths.indexOf(mo); if (idx >= 0) this.bulkMonths.splice(idx, 1); else this.bulkMonths.push(mo); this.refreshBulkData(); },
+    refreshBulkData() { this.$nextTick(() => { this.bulkMemberData = this.bulkRows.map(r => ({ nik: r.nik, checked: this.bulkMemberData.find(x => x.nik === r.nik)?.checked || false })); }); },
+    onBulkSelectAll() { this.bulkMemberData.forEach(x => x.checked = this.bulkSelectAll); },
+    isBulkChecked(nik) { const item = this.bulkMemberData.find(x => x.nik === nik); return item ? item.checked : false; },
+    toggleBulkCheck(nik) { const item = this.bulkMemberData.find(x => x.nik === nik); if (item) item.checked = !item.checked; },
     async saveBulk() {
       const year = new Date().getFullYear();
       const checkedNiks = this.bulkMemberData.filter(x => x.checked).map(x => x.nik);
       const txs = [];
       this.bulkRows.filter(r => checkedNiks.includes(r.nik)).forEach(row => {
         row.unpaidMonths.forEach(month => {
-          txs.push({
-            kategori: 'iuran',
-            memberNik: row.nik,
-            memberName: row.name,
-            month,
-            year,
-            type: 'masuk',
-            amount: row.iuran,
-            note: 'Iuran ' + this.monthNames[month - 1] + ' ' + year,
-            submittedAt: new Date().toISOString(),
-            status: 'approved',
-            eventId: '',
-            approvedAt: new Date().toISOString(),
-            approvedBy: sessionStorage.getItem('kas-it-member-nik') || '',
-            createdBy: sessionStorage.getItem('kas-it-member-nik') || ''
-          });
+          txs.push({ kategori: 'iuran', memberNik: row.nik, memberName: row.name, month, year, type: 'masuk', amount: row.iuran, note: 'Iuran ' + this.monthNames[month - 1] + ' ' + year, submittedAt: new Date().toISOString(), status: 'approved', eventId: '', approvedAt: new Date().toISOString(), approvedBy: sessionStorage.getItem('kas-it-member-nik') || '', createdBy: sessionStorage.getItem('kas-it-member-nik') || '' });
         });
       });
       if (!txs.length) return;
       this.bulkSaving = true;
       try {
-        const res = await fetch(API_URL, {
-          method: 'POST',
-          body: JSON.stringify({ action: 'bulkAddTransactions', transactions: txs })
-        });
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'bulkAddTransactions', transactions: txs }) });
         const result = await res.json();
-        if (result.ok !== false) {
-          this.showToast(txs.length + ' transaksi berhasil disimpan!');
-          this.showBulkModal = false;
-          this.loadData();
-        } else {
-          this.showToast('Gagal menyimpan', false);
-        }
-      } catch (err) {
-        this.showToast('Gagal: koneksi error', false);
-      }
+        if (result.ok !== false) { this.showToast(txs.length + ' transaksi berhasil disimpan!'); this.showBulkModal = false; this.loadData(); }
+        else { this.showToast('Gagal menyimpan', false); }
+      } catch (err) { this.showToast('Gagal: koneksi error', false); }
       this.bulkSaving = false;
     },
-    // Event Rekap
-    getEventPaidCount(eventId) {
-      return this.transactions.filter(t => t.kategori === 'event' && t.eventId === eventId && t.status === 'approved').length;
-    },
+    getEventPaidCount(eventId) { return this.transactions.filter(t => t.kategori === 'event' && t.eventId === eventId && t.status === 'approved').length; },
     getEventMemberStyle(eventId, nik) {
       const tx = this.transactions.find(t => t.kategori === 'event' && t.eventId === eventId && t.memberNik === nik && t.status !== 'rejected');
       if (tx && tx.status === 'approved') return { background: 'rgba(102,187,106,0.12)', color: '#66bb6a' };
       if (tx && tx.status === 'pending') return { background: 'rgba(255,202,40,0.12)', color: '#ffca28' };
       return { background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.25)' };
     },
-    // Profil Anggota
-    openProfile(member) {
-      this.profileMember = member;
-      this.showProfileModal = true;
-    },
+    openProfile(member) { this.profileMember = member; this.showProfileModal = true; },
     getProfileTotal() {
       if (!this.profileMember.nik) return 0;
-      const year = this.selectedYear;
-      return this.transactions
-        .filter(t => t.memberNik === this.profileMember.nik && Number(t.year) === year && t.status === 'approved' && t.type === 'masuk')
-        .reduce((s, t) => s + Number(t.amount), 0);
+      return this.transactions.filter(t => t.memberNik === this.profileMember.nik && Number(t.year) === this.selectedYear && t.status === 'approved' && t.type === 'masuk').reduce((s, t) => s + Number(t.amount), 0);
     },
-    // History
-    openHistory(type) {
-      this.historyType = type;
-      this.showHistoryModal = true;
-    },
-    formatDate(iso) {
-      if (!iso) return '-';
-      const d = new Date(iso);
-      return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: '2-digit' });
-    },
-    // Report Generator
+    openHistory(type) { this.historyType = type; this.showHistoryModal = true; },
+    formatDate(iso) { if (!iso) return '-'; const d = new Date(iso); return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: '2-digit' }); },
     async generateReport() {
       this.reportImage = '';
       this.showReportPreview = true;
       await this.$nextTick();
-      // Wait for Vue to fully render template + bindings
       await new Promise(r => setTimeout(r, 300));
       try {
         const el = this.$refs.reportTemplate;
         if (!el) { this.showToast('Template tidak ditemukan', false); this.showReportPreview = false; return; }
         const canvas = await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false });
         this.reportImage = canvas.toDataURL('image/png');
-      } catch (err) {
-        console.error(err);
-        this.showToast('Gagal generate report', false);
-        this.showReportPreview = false;
-      }
+      } catch (err) { console.error(err); this.showToast('Gagal generate report', false); this.showReportPreview = false; }
     },
     async copyReportImage() {
       if (!this.reportImage) return;
-      try {
-        const res = await fetch(this.reportImage);
-        const blob = await res.blob();
-        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-        this.showToast('Gambar berhasil di-copy! Tinggal paste.');
-      } catch (err) {
-        this.showToast('Gagal copy gambar. Coba screenshot manual.', false);
-      }
+      try { const res = await fetch(this.reportImage); const blob = await res.blob(); await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]); this.showToast('Gambar berhasil di-copy! Tinggal paste.'); }
+      catch (err) { this.showToast('Gagal copy gambar. Coba screenshot manual.', false); }
     },
-    // Pemasukan Lain
     async saveExternal() {
-      if (!this.extForm.note || !this.extForm.amount) {
-        this.showToast('Isi keterangan dan jumlah', false); return;
-      }
+      if (!this.extForm.note || !this.extForm.amount) { this.showToast('Isi keterangan dan jumlah', false); return; }
       this.extSaving = true;
       try {
-        const res = await fetch(API_URL, {
-          method: 'POST',
-          body: JSON.stringify({
-            action: 'addTransaction',
-            kategori: 'lainnya',
-            type: 'masuk',
-            amount: this.extForm.amount,
-            status: 'approved',
-            memberNik: '',
-            memberName: '',
-            note: this.extForm.note,
-            month: new Date().getMonth() + 1,
-            year: new Date().getFullYear(),
-            eventId: '',
-            submittedAt: new Date().toISOString(),
-            approvedAt: new Date().toISOString(),
-            approvedBy: sessionStorage.getItem('kas-it-member-nik') || '',
-            createdBy: sessionStorage.getItem('kas-it-member-nik') || ''
-          })
-        });
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'addTransaction', kategori: 'lainnya', type: 'masuk', amount: this.extForm.amount, status: 'approved', memberNik: '', memberName: '', note: this.extForm.note, month: new Date().getMonth() + 1, year: new Date().getFullYear(), eventId: '', submittedAt: new Date().toISOString(), approvedAt: new Date().toISOString(), approvedBy: sessionStorage.getItem('kas-it-member-nik') || '', createdBy: sessionStorage.getItem('kas-it-member-nik') || '' }) });
         const result = await res.json();
-        if (result.ok !== false) {
-          this.showToast('Pemasukan berhasil dicatat!');
-          this.showExtModal = false;
-          this.extForm = { note: '', amount: 0 };
-          this.loadData();
-        } else { this.showToast(result.error || 'Gagal', false); }
+        if (result.ok !== false) { this.showToast('Pemasukan berhasil dicatat!'); this.showExtModal = false; this.extForm = { note: '', amount: 0 }; this.loadData(); }
+        else { this.showToast(result.error || 'Gagal', false); }
       } catch (err) { this.showToast('Gagal: koneksi error', false); }
       this.extSaving = false;
     },
-    // Pengeluaran
     async saveOut() {
-      if (!this.outForm.note || !this.outForm.amount) {
-        this.showToast('Isi keterangan dan jumlah', false); return;
-      }
+      if (!this.outForm.note || !this.outForm.amount) { this.showToast('Isi keterangan dan jumlah', false); return; }
       this.outSaving = true;
       try {
-        const res = await fetch(API_URL, {
-          method: 'POST',
-          body: JSON.stringify({
-            action: 'addTransaction',
-            kategori: 'lainnya',
-            type: 'keluar',
-            amount: this.outForm.amount,
-            status: 'approved',
-            memberNik: '',
-            memberName: '',
-            note: this.outForm.note,
-            month: new Date().getMonth() + 1,
-            year: new Date().getFullYear(),
-            eventId: '',
-            submittedAt: new Date().toISOString(),
-            approvedAt: new Date().toISOString(),
-            approvedBy: sessionStorage.getItem('kas-it-member-nik') || '',
-            createdBy: sessionStorage.getItem('kas-it-member-nik') || ''
-          })
-        });
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'addTransaction', kategori: 'lainnya', type: 'keluar', amount: this.outForm.amount, status: 'approved', memberNik: '', memberName: '', note: this.outForm.note, month: new Date().getMonth() + 1, year: new Date().getFullYear(), eventId: '', submittedAt: new Date().toISOString(), approvedAt: new Date().toISOString(), approvedBy: sessionStorage.getItem('kas-it-member-nik') || '', createdBy: sessionStorage.getItem('kas-it-member-nik') || '' }) });
         const result = await res.json();
-        if (result.ok !== false) {
-          this.showToast('Pengeluaran berhasil dicatat!');
-          this.showOutModal = false;
-          this.outForm = { note: '', amount: 0 };
-          this.loadData();
-        } else { this.showToast(result.error || 'Gagal', false); }
+        if (result.ok !== false) { this.showToast('Pengeluaran berhasil dicatat!'); this.showOutModal = false; this.outForm = { note: '', amount: 0 }; this.loadData(); }
+        else { this.showToast(result.error || 'Gagal', false); }
       } catch (err) { this.showToast('Gagal: koneksi error', false); }
       this.outSaving = false;
     }
