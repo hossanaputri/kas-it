@@ -134,24 +134,24 @@
 @media (max-width: 768px) {
   .stats-row { grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .stat-card { padding: 12px; }
-  .stat-card .stat-value { font-size: 20px; }
+  .stat-card .stat-value { font-size: var(--fs-xl); }
   .members-grid { grid-template-columns: 1fr; }
   .members-toolbar { flex-direction: column; align-items: stretch; }
   .members-toolbar .toolbar-right { flex-wrap: wrap; }
   .search-input { width: 100%; }
 
   .detail-actions {
-    flex-direction: column !important;
-    gap: 6px !important;
+    flex-direction: column;
+    gap: 6px;
   }
-  .detail-actions button {
-    padding: 12px !important;
-    font-size: 13px !important;
+  .detail-actions .btn {
+    padding: 12px;
+    font-size: var(--fs-sm);
   }
 }
 
 @media (max-width: 360px) {
-  .stat-card .stat-value { font-size: 18px; }
+  .stat-card .stat-value { font-size: var(--fs-lg); }
   .member-card { padding: 14px; }
 }
 
@@ -163,6 +163,65 @@ body.light .member-card-name { color: #1a1a1a; }
 body.light .member-card-nik { color: rgba(0,0,0,0.4); }
 body.light .search-input { background: #efefef; border-color: rgba(0,0,0,0.1); color: #333; }
 body.light .search-input::placeholder { color: rgba(0,0,0,0.4); }
+
+/* Detail Modal */
+.detail-modal { max-width: 420px; position: relative; }
+.detail-close {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  font-size: var(--fs-xl);
+  cursor: pointer;
+  color: var(--text-muted);
+  font-weight: 300;
+  background: none;
+  border: none;
+}
+.detail-header { text-align: center; margin-bottom: 20px; }
+.detail-icon { font-size: 36px; margin-bottom: 8px; }
+.detail-header h2 { margin-bottom: 4px; color: var(--text); }
+.detail-nik { font-size: var(--fs-sm); color: var(--text-muted); }
+.detail-meta { margin-top: 8px; }
+.detail-position { font-size: var(--fs-sm); font-weight: 600; }
+.detail-badge-admin { font-size: var(--fs-xs); background: rgba(66,165,245,0.15); color: #90caf9; padding: 2px 8px; border-radius: 4px; margin-left: 6px; font-weight: 600; }
+.detail-badge-locked { font-size: var(--fs-xs); background: rgba(239,83,80,0.12); color: #ef5350; padding: 2px 8px; border-radius: 4px; margin-left: 6px; font-weight: 600; }
+.detail-since { font-size: var(--fs-sm); color: var(--text-muted); margin-top: 6px; }
+.detail-actions { display: flex; gap: 8px; }
+.detail-actions .btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  cursor: pointer;
+}
+.detail-btn-edit { background: rgba(255,255,255,0.1); color: var(--text-light); border: 1px solid rgba(255,255,255,0.15); }
+.detail-btn-reset { background: rgba(255,167,38,0.12); color: #ffa726; border: 1px solid rgba(255,167,38,0.2); }
+.detail-btn-danger { background: rgba(239,83,80,0.12); color: #ef5350; border: 1px solid rgba(239,83,80,0.2); }
+.detail-btn-success { background: rgba(102,187,106,0.12); color: #66bb6a; border: 1px solid rgba(102,187,106,0.2); }
+
+/* Edit Modal form checkbox */
+.form-checkbox { display: flex; align-items: center; gap: 8px; }
+.form-checkbox input { width: auto; }
+.form-checkbox label { margin: 0; cursor: pointer; }
+
+/* Empty state grid span */
+.empty-full { grid-column: 1 / -1; }
+
+/* Stat value colors */
+.stat-active { color: #66bb6a; }
+.stat-inactive { color: #ef5350; }
+.stat-locked { color: #ffa726; }
+
+/* Member card badges */
+.member-badge-admin { font-size: var(--fs-xs); background: rgba(66,165,245,0.15); color: #90caf9; padding: 2px 6px; border-radius: 4px; font-weight: 600; }
+.member-badge-locked { font-size: var(--fs-xs); background: rgba(239,83,80,0.12); color: #ef5350; padding: 2px 6px; border-radius: 4px; font-weight: 600; }
+
+/* Member card info wrapper */
+.member-card-info { min-width: 0; flex: 1; }
+
+/* Detail badge status spacing */
+.detail-badge-status { margin-left: 8px; }
 </style>
 </head>
 <body>
@@ -181,17 +240,17 @@ body.light .search-input::placeholder { color: rgba(0,0,0,0.4); }
       </div>
       <div class="stat-card">
         <div class="stat-icon">✅</div>
-        <div class="stat-value" style="color:#66bb6a;">{{ members.filter(m => isActive(m)).length }}</div>
+        <div class="stat-value stat-active">{{ members.filter(m => isActive(m)).length }}</div>
         <div class="stat-label">Active</div>
       </div>
       <div class="stat-card">
         <div class="stat-icon">❌</div>
-        <div class="stat-value" style="color:#ef5350;">{{ members.filter(m => !isActive(m)).length }}</div>
+        <div class="stat-value stat-inactive">{{ members.filter(m => !isActive(m)).length }}</div>
         <div class="stat-label">Inactive</div>
       </div>
       <div class="stat-card">
         <div class="stat-icon">🔒</div>
-        <div class="stat-value" style="color:#ffa726;">{{ members.filter(m => Number(m.retry_count) >= 3).length }}</div>
+        <div class="stat-value stat-locked">{{ members.filter(m => Number(m.retry_count) >= 3).length }}</div>
         <div class="stat-label">Locked</div>
       </div>
     </div>
@@ -216,7 +275,7 @@ body.light .search-input::placeholder { color: rgba(0,0,0,0.4); }
       <div v-for="m in filteredMembers" :key="m.nik" @click="openDetail(m)" class="member-card" :class="{ inactive: !isActive(m) }">
         <div class="member-card-top">
           <div class="member-avatar" :style="{ background: posColors[m.position] || '#66bb6a' }">{{ getInitials(m.name) }}</div>
-          <div style="min-width:0;flex:1;">
+          <div class="member-card-info">
             <div class="member-card-name">{{ m.name }}</div>
             <div class="member-card-position" :style="{ color: posColors[m.position] || 'var(--text-light)' }">{{ m.position }}</div>
           </div>
@@ -224,14 +283,14 @@ body.light .search-input::placeholder { color: rgba(0,0,0,0.4); }
         <div class="member-card-bottom">
           <span class="member-card-nik">{{ m.nik }}</span>
           <div class="member-card-badges">
-            <span v-if="m.isAdmin === true || m.isAdmin === 'TRUE'" style="font-size:var(--fs-xs);background:rgba(66,165,245,0.15);color:#90caf9;padding:2px 6px;border-radius:4px;font-weight:600;">ADMIN</span>
-            <span v-if="Number(m.retry_count) >= 3" style="font-size:var(--fs-xs);background:rgba(239,83,80,0.12);color:#ef5350;padding:2px 6px;border-radius:4px;font-weight:600;">🔒</span>
+            <span v-if="m.isAdmin === true || m.isAdmin === 'TRUE'" class="member-badge-admin">ADMIN</span>
+            <span v-if="Number(m.retry_count) >= 3" class="member-badge-locked">🔒</span>
             <span class="member-card-status" :style="{ background: isActive(m) ? 'rgba(102,187,106,0.12)' : 'rgba(239,83,80,0.12)', color: isActive(m) ? '#66bb6a' : '#ef5350' }">{{ isActive(m) ? 'Active' : 'Inactive' }}</span>
           </div>
         </div>
       </div>
       <!-- Empty state -->
-      <div v-if="filteredMembers.length === 0 && !loading" class="empty-state" style="grid-column:1/-1;">
+      <div v-if="filteredMembers.length === 0 && !loading" class="empty-state empty-full">
         <div class="icon">🔍</div>
         <div class="text">Tidak ada anggota ditemukan</div>
       </div>
@@ -239,24 +298,24 @@ body.light .search-input::placeholder { color: rgba(0,0,0,0.4); }
 
   <!-- Detail Modal -->
   <div class="modal-overlay" :class="{ active: showDetailModal }" @click.self="showDetailModal = false">
-    <div class="modal" style="max-width:420px;position:relative;">
-      <span @click="showDetailModal = false" style="position:absolute;top:14px;right:18px;font-size:20px;cursor:pointer;color:rgba(255,255,255,0.4);font-weight:300;">✕</span>
-      <div v-if="detailMember" style="text-align:center;margin-bottom:20px;">
-        <div style="font-size:36px;margin-bottom:8px;">👤</div>
-        <h2 style="margin-bottom:4px;color:var(--text);">{{ detailMember.name }}</h2>
-        <div style="font-size:13px;color:rgba(255,255,255,0.4);">NIK: {{ detailMember.nik }}</div>
-        <div style="margin-top:8px;">
-          <span :style="{ fontSize:'12px', fontWeight:'600', color: posColors[detailMember.position] || 'var(--text-light)' }">{{ detailMember.position }}</span>
-          <span class="badge" :class="isActive(detailMember) ? 'badge-active' : 'badge-inactive'" style="margin-left:8px;">{{ isActive(detailMember) ? 'Active' : 'Inactive' }}</span>
-          <span v-if="detailMember.isAdmin === true || detailMember.isAdmin === 'TRUE'" style="font-size:10px;background:rgba(66,165,245,0.15);color:#90caf9;padding:2px 8px;border-radius:4px;margin-left:6px;font-weight:600;">ADMIN</span>
-          <span v-if="Number(detailMember.retry_count) >= 3" style="font-size:10px;background:rgba(239,83,80,0.12);color:#ef5350;padding:2px 8px;border-radius:4px;margin-left:6px;font-weight:600;">LOCKED</span>
+    <div class="modal detail-modal">
+      <button class="detail-close" @click="showDetailModal = false">✕</button>
+      <div v-if="detailMember" class="detail-header">
+        <div class="detail-icon">👤</div>
+        <h2>{{ detailMember.name }}</h2>
+        <div class="detail-nik">NIK: {{ detailMember.nik }}</div>
+        <div class="detail-meta">
+          <span class="detail-position" :style="{ color: posColors[detailMember.position] || 'var(--text-light)' }">{{ detailMember.position }}</span>
+          <span class="badge detail-badge-status" :class="isActive(detailMember) ? 'badge-active' : 'badge-inactive'">{{ isActive(detailMember) ? 'Active' : 'Inactive' }}</span>
+          <span v-if="detailMember.isAdmin === true || detailMember.isAdmin === 'TRUE'" class="detail-badge-admin">ADMIN</span>
+          <span v-if="Number(detailMember.retry_count) >= 3" class="detail-badge-locked">LOCKED</span>
         </div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:6px;">Aktif sejak: {{ formatActiveFrom(detailMember.activeFrom) }}</div>
+        <div class="detail-since">Aktif sejak: {{ formatActiveFrom(detailMember.activeFrom) }}</div>
       </div>
-      <div v-if="detailMember" class="detail-actions" style="display:flex;gap:8px;">
-        <button style="flex:1;padding:10px;background:rgba(255,255,255,0.1);color:var(--text-light);border:1px solid rgba(255,255,255,0.15);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;" @click="showDetailModal=false;editMember(detailMember)">✏️ Edit</button>
-        <button style="flex:1;padding:10px;background:rgba(255,167,38,0.12);color:#ffa726;border:1px solid rgba(255,167,38,0.2);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;" @click="resetPassword(detailMember)">🔑 Reset</button>
-        <button style="flex:1;padding:10px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;" :style="{ background: isActive(detailMember) ? 'rgba(239,83,80,0.12)' : 'rgba(102,187,106,0.12)', color: isActive(detailMember) ? '#ef5350' : '#66bb6a', border: '1px solid ' + (isActive(detailMember) ? 'rgba(239,83,80,0.2)' : 'rgba(102,187,106,0.2)') }" @click="toggleMember(detailMember)">{{ isActive(detailMember) ? '⏸ Nonaktif' : '▶ Aktifkan' }}</button>
+      <div v-if="detailMember" class="detail-actions">
+        <button class="btn detail-btn-edit" @click="showDetailModal=false;editMember(detailMember)">✏️ Edit</button>
+        <button class="btn detail-btn-reset" @click="resetPassword(detailMember)">🔑 Reset</button>
+        <button class="btn" :class="isActive(detailMember) ? 'detail-btn-danger' : 'detail-btn-success'" @click="toggleMember(detailMember)">{{ isActive(detailMember) ? '⏸ Nonaktif' : '▶ Aktifkan' }}</button>
       </div>
     </div>
   </div>
@@ -277,9 +336,9 @@ body.light .search-input::placeholder { color: rgba(0,0,0,0.4); }
         </select>
       </div>
       <div class="form-group"><label>Aktif Mulai</label><input type="month" v-model="form.activeFrom"></div>
-      <div class="form-group" style="display:flex;align-items:center;gap:8px;">
-        <input type="checkbox" id="isAdminCb" v-model="form.isAdmin" style="width:auto;">
-        <label for="isAdminCb" style="margin:0;cursor:pointer;">Admin</label>
+      <div class="form-group form-checkbox">
+        <input type="checkbox" id="isAdminCb" v-model="form.isAdmin">
+        <label for="isAdminCb">Admin</label>
       </div>
       <div class="form-actions">
         <button class="btn-cancel" @click="closeModal">Batal</button>
