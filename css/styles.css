@@ -2105,13 +2105,7 @@ body.light .all-paid-msg { color: var(--text); }
   background: var(--subtle-bg);
   border: 1px solid var(--subtle-border);
   text-align: center;
-  transition: all 0.2s;
-}
-.iuran-item:hover {
-  background: var(--subtle-bg-hover);
-  border-color: var(--primary);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: none;
 }
 .iuran-pos {
   font-size: var(--fs-sm);
