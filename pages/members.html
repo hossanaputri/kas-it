@@ -29,8 +29,8 @@
   padding: 14px;
   text-align: center;
 }
-.stat-card .stat-icon { font-size: 20px; margin-bottom: 6px; }
-.stat-card .stat-value { font-size: 24px; font-weight: 800; color: var(--text); }
+.stat-card .stat-icon { font-size: var(--fs-xl); margin-bottom: 6px; }
+.stat-card .stat-value { font-size: var(--fs-2xl); font-weight: 800; color: var(--text); }
 .stat-card .stat-label { font-size: var(--fs-sm); color: var(--text-muted); margin-top: 2px; }
 
 /* Toolbar */
@@ -42,7 +42,7 @@
   gap: 12px;
   flex-wrap: wrap;
 }
-.members-toolbar h2 { font-size: var(--fs-lg); color: var(--text); font-weight: 700; }
+.members-toolbar h2 { font-size: var(--fs-xl); color: var(--text); font-weight: 700; }
 .members-toolbar .toolbar-right { display: flex; gap: 8px; align-items: center; }
 .search-input {
   padding: 8px 14px;
@@ -224,8 +224,8 @@ body.light .search-input::placeholder { color: rgba(0,0,0,0.4); }
         <div class="member-card-bottom">
           <span class="member-card-nik">{{ m.nik }}</span>
           <div class="member-card-badges">
-            <span v-if="m.isAdmin === true || m.isAdmin === 'TRUE'" style="font-size:10px;background:rgba(66,165,245,0.15);color:#90caf9;padding:2px 6px;border-radius:4px;font-weight:600;">ADMIN</span>
-            <span v-if="Number(m.retry_count) >= 3" style="font-size:10px;background:rgba(239,83,80,0.12);color:#ef5350;padding:2px 6px;border-radius:4px;font-weight:600;">🔒</span>
+            <span v-if="m.isAdmin === true || m.isAdmin === 'TRUE'" style="font-size:var(--fs-xs);background:rgba(66,165,245,0.15);color:#90caf9;padding:2px 6px;border-radius:4px;font-weight:600;">ADMIN</span>
+            <span v-if="Number(m.retry_count) >= 3" style="font-size:var(--fs-xs);background:rgba(239,83,80,0.12);color:#ef5350;padding:2px 6px;border-radius:4px;font-weight:600;">🔒</span>
             <span class="member-card-status" :style="{ background: isActive(m) ? 'rgba(102,187,106,0.12)' : 'rgba(239,83,80,0.12)', color: isActive(m) ? '#66bb6a' : '#ef5350' }">{{ isActive(m) ? 'Active' : 'Inactive' }}</span>
           </div>
         </div>

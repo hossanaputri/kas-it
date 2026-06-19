@@ -62,9 +62,12 @@
   --radius-lg: 12px;
   --radius-xl: 16px;
   /* Font sizes */
-  --fs-lg: 16px;
-  --fs-md: 14px;
+  --fs-xs: 10px;
   --fs-sm: 12px;
+  --fs-md: 14px;
+  --fs-lg: 16px;
+  --fs-xl: 20px;
+  --fs-2xl: 24px;
   /* Status colors */
   --green: #66bb6a;
   --green-bg: rgba(102, 187, 106, 0.12);
