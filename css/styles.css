@@ -170,6 +170,7 @@ nav a.active {
 .content { padding: 20px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
 
 /* --- 6. Buttons --- */
+/* Base */
 .btn {
   padding: 8px 16px;
   border: none;
@@ -179,8 +180,65 @@ nav a.active {
   font-weight: 600;
   transition: all 0.2s;
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* Variants */
+.btn-primary { background: var(--primary-gradient); color: white; }
+.btn-primary:hover { box-shadow: 0 4px 16px rgba(46,125,50,0.4); }
+
+.btn-secondary { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.18); }
+.btn-secondary:hover { background: rgba(255,255,255,0.18); }
+
+.btn-danger { background: var(--red-bg); color: var(--red); }
+.btn-danger:hover { background: rgba(239,83,80,0.2); }
+
+.btn-danger-solid { background: linear-gradient(135deg, #c62828, #e53935); color: white; }
+.btn-danger-solid:hover { box-shadow: 0 4px 16px rgba(198,40,40,0.4); }
+
+.btn-warning { background: var(--orange-bg); color: var(--orange); }
+.btn-warning:hover { background: rgba(255,167,38,0.2); }
+
+.btn-info { background: var(--blue-bg); color: var(--blue); }
+.btn-info:hover { background: rgba(66,165,245,0.2); }
+
+.btn-success { background: var(--green-bg); color: var(--green); }
+.btn-success:hover { background: rgba(102,187,106,0.2); }
+
+/* Sizes */
+.btn-sm { padding: 6px 14px; font-size: 12px; }
+.btn-block { width: 100%; }
+
+/* Shapes */
+.btn-circle {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 16px;
+}
+
+/* Shimmer effect (primary block buttons) */
+.btn-shimmer { position: relative; overflow: hidden; }
+.btn-shimmer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transition: left 0.5s ease;
+}
+.btn-shimmer:hover::before { left: 100%; }
+.btn-shimmer:disabled::before { display: none; }
+
+/* Legacy aliases (backward compat — remove later) */
 .btn-save { background: var(--primary-gradient); color: white; }
 .btn-save:hover { box-shadow: 0 4px 16px rgba(46,125,50,0.4); }
 .btn-cancel { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.18); }
@@ -1497,50 +1555,19 @@ html:has(.login-page) {
 }
 
 /* Login Button */
-.btn-login {
-  width: 100%;
+.login-card .btn {
+  margin-top: 10px;
   padding: 14px;
-  background: linear-gradient(135deg, #2e7d32, #43a047);
-  color: white;
-  border: none;
   border-radius: 12px;
   font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 10px;
   letter-spacing: 0.3px;
-  position: relative;
-  overflow: hidden;
 }
-.btn-login::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-  transition: left 0.5s ease;
-}
-.btn-login:hover::before {
-  left: 100%;
-}
-.btn-login:hover {
+.login-card .btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 30px rgba(46, 125, 50, 0.5);
 }
-.btn-login:active {
+.login-card .btn:active {
   transform: translateY(0);
-}
-.btn-login:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-.btn-login:disabled::before {
-  display: none;
 }
 
 /* Error */
@@ -1666,7 +1693,7 @@ html:has(.login-page) {
   .login-card .subtitle { font-size: 13px; margin-bottom: 22px; }
   .login-card .form-group { margin-bottom: 14px; }
   .login-card .form-group input { padding: 12px 14px; font-size: 16px; }
-  .btn-login { padding: 13px; font-size: 15px; }
+  .login-card .btn { padding: 13px; font-size: 15px; }
   .eye-toggle { right: 12px; padding: 4px; }
   .login-card .divider { margin: 20px 0 14px; }
   .login-card .footer-text { font-size: 10px; margin-top: 16px; }
@@ -1684,7 +1711,7 @@ html:has(.login-page) {
   .login-card .subtitle { margin-bottom: 18px; }
   .login-card .form-group { margin-bottom: 12px; }
   .login-card .form-group input { padding: 11px 12px; }
-  .btn-login { padding: 12px; }
+  .login-card .btn { padding: 12px; }
   .login-card .divider { margin: 16px 0 12px; }
 }
 

@@ -50,7 +50,7 @@
         </div>
       </div>
 
-      <button class="btn-login" @click="login" :disabled="loading">
+      <button class="btn btn-primary btn-block btn-shimmer" @click="login" :disabled="loading">
         {{ loading ? 'Memproses...' : 'Masuk' }}
       </button>
     </template>
@@ -80,7 +80,7 @@
         </div>
       </div>
 
-      <button class="btn-login" @click="changePassword" :disabled="loading">
+      <button class="btn btn-primary btn-block btn-shimmer" @click="changePassword" :disabled="loading">
         {{ loading ? 'Menyimpan...' : 'Simpan Password' }}
       </button>
     </template>
