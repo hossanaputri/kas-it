@@ -771,9 +771,137 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
 .payment-item { padding: 3px 0; display: flex; justify-content: space-between; align-items: center; color: var(--text-light); }
 
 /* --- 22. Members Page --- */
-.actions button { padding: 5px 10px; font-size: 13px; border: none; border-radius: var(--radius-sm); cursor: pointer; margin-right: 4px; }
-.btn-toggle { background: var(--orange-bg); color: var(--orange); }
-.btn-edit { background: var(--blue-bg); color: var(--blue); }
+.members-page .content { max-width: none; }
+
+/* Stats row */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  background: #0a0a0a;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  text-align: center;
+}
+.stat-card .stat-icon { font-size: var(--fs-xl); margin-bottom: 6px; }
+.stat-card .stat-value { font-size: var(--fs-2xl); font-weight: 800; color: var(--text); }
+.stat-card .stat-label { font-size: var(--fs-sm); color: var(--text-muted); margin-top: 2px; }
+
+/* Toolbar */
+.members-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.members-toolbar h2 { font-size: var(--fs-xl); color: var(--text); font-weight: 700; }
+.members-toolbar .toolbar-right { display: flex; gap: 8px; align-items: center; }
+.search-input {
+  padding: 8px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: var(--fs-md);
+  color: var(--text);
+  outline: none;
+  width: 200px;
+  transition: border-color 0.2s;
+}
+.search-input::placeholder { color: var(--text-muted); }
+.search-input:focus { border-color: var(--primary); }
+
+/* Member grid */
+.members-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.member-card {
+  background: #0a0a0a;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 18px;
+  transition: all 0.2s;
+}
+.member-card:hover {
+  background: #1a1a1a;
+  border-color: rgba(102,187,106,0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+.member-card.inactive { opacity: 0.5; }
+.member-card-top { display: flex; align-items: flex-start; gap: 12px; }
+.member-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: var(--fs-lg);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.member-card-info { min-width: 0; flex: 1; }
+.member-card-row1 { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 2px; }
+.member-card-name { font-size: var(--fs-lg); font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.member-card-badges { display: flex; gap: 4px; align-items: center; flex-shrink: 0; }
+.member-card-row2 { font-size: var(--fs-sm); color: var(--text-muted); margin-bottom: 2px; }
+.member-card-dot { margin: 0 4px; opacity: 0.5; }
+.member-card-row3 { font-size: var(--fs-sm); color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+.member-card-status { font-size: var(--fs-xs); padding: 2px 8px; border-radius: var(--radius-sm); font-weight: 600; }
+.member-card-actions { display: flex; gap: 6px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-light); }
+.member-card-actions .btn { flex: 1; font-size: var(--fs-xs); padding: 8px 4px; }
+
+/* Member badges */
+.member-badge-admin { font-size: var(--fs-xs); background: var(--blue-bg); color: var(--navy); padding: 2px 6px; border-radius: 4px; font-weight: 600; }
+.member-badge-locked { font-size: var(--fs-xs); background: var(--red-bg); color: var(--red); padding: 2px 6px; border-radius: 4px; font-weight: 600; }
+.status-active { background: var(--green-bg); color: var(--green); }
+.status-inactive { background: var(--red-bg); color: var(--red); }
+.stat-active { color: var(--green); }
+.stat-inactive { color: var(--red); }
+.stat-locked { color: var(--orange); }
+
+/* Position color classes */
+.pos-color-direktur { color: var(--pos-direktur); }
+.pos-color-senior-manager { color: var(--pos-senior-manager); }
+.pos-color-junior-manager { color: var(--pos-junior-manager); }
+.pos-color-coordinator { color: var(--pos-coordinator); }
+.pos-bg-direktur { background: var(--pos-direktur); }
+.pos-bg-senior-manager { background: var(--pos-senior-manager); }
+.pos-bg-junior-manager { background: var(--pos-junior-manager); }
+.pos-bg-coordinator { background: var(--pos-coordinator); }
+
+/* Empty state */
+.empty-full { grid-column: 1 / -1; }
+
+/* Members responsive */
+@media (max-width: 1024px) {
+  .members-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .stat-card { padding: 12px; }
+  .stat-card .stat-value { font-size: var(--fs-xl); }
+  .members-grid { grid-template-columns: 1fr; }
+  .members-toolbar { flex-direction: column; align-items: stretch; }
+  .members-toolbar .toolbar-right { flex-wrap: wrap; }
+  .search-input { width: 100%; }
+  .member-card-actions { flex-wrap: wrap; }
+  .member-card-actions .btn { padding: 8px 6px; }
+}
+@media (max-width: 360px) {
+  .stat-card .stat-value { font-size: var(--fs-lg); }
+  .member-card { padding: 14px; }
+}
 
 /* --- 23. Pagination --- */
 .pagination { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 15px; color: var(--text-muted); }
@@ -1190,6 +1318,13 @@ body.light .summary-mobile div { color: #1a1a1a; }
 body.light .rekap-table td { color: #333; font-weight: 500; }
 body.light .rekap-table .rekap-name { color: #1a1a1a; }
 
+/* Members page */
+body.light .stat-card { background: #ffffff; border-color: rgba(0,0,0,0.08); }
+body.light .member-card { background: #ffffff; border-color: rgba(0,0,0,0.08); }
+body.light .member-card:hover { background: #f8f8f8; border-color: rgba(76,175,80,0.2); }
+body.light .member-card-name { color: #1a1a1a; }
+body.light .search-input { background: #efefef; border-color: rgba(0,0,0,0.1); color: #333; }
+body.light .search-input::placeholder { color: rgba(0,0,0,0.4); }
 /* Badge colors stronger in light */
 body.light .badge-status { font-weight: 700; }
 body.light .badge-approved { background: rgba(46,125,50,0.12); color: #2e7d32; }
