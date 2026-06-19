@@ -13,51 +13,133 @@
 <link rel="apple-touch-icon" href="../icons/icon-192.png">
 <style>
 /* Page-specific: members.html */
-.content { max-width: 900px; }
+.content { max-width: none; }
+
+/* Stats row */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+.stat-card .stat-icon { font-size: 20px; margin-bottom: 6px; }
+.stat-card .stat-value { font-size: 24px; font-weight: 800; color: var(--text); }
+.stat-card .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+/* Toolbar */
+.members-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.members-toolbar h2 { font-size: 20px; color: var(--text); font-weight: 700; }
+.members-toolbar .toolbar-right { display: flex; gap: 8px; align-items: center; }
+.search-input {
+  padding: 8px 14px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  width: 200px;
+  transition: border-color 0.2s;
+}
+.search-input::placeholder { color: var(--text-muted); }
+.search-input:focus { border-color: var(--primary); }
+
+/* Member grid */
+.members-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.member-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 18px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.member-card:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(102,187,106,0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+.member-card.inactive { opacity: 0.5; }
+.member-card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.member-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+.member-card-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.member-card-position {
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 2px;
+}
+.member-card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.member-card-nik {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.member-card-status {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+.member-card-badges {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+@media (max-width: 1024px) {
+  .members-grid { grid-template-columns: repeat(2, 1fr); }
+}
 
 @media (max-width: 768px) {
-  /* Card header: stack title + buttons */
-  .card-header {
-    flex-direction: column;
-    align-items: flex-start !important;
-    gap: 10px;
-  }
-  .card-header > div {
-    width: 100%;
-  }
-  .card-header > div button {
-    flex: 1;
-    font-size: 12px;
-    padding: 8px 10px;
-  }
+  .stats-row { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .stat-card { padding: 12px; }
+  .stat-card .stat-value { font-size: 20px; }
+  .members-grid { grid-template-columns: 1fr; }
+  .members-toolbar { flex-direction: column; align-items: stretch; }
+  .members-toolbar .toolbar-right { flex-wrap: wrap; }
+  .search-input { width: 100%; }
 
-  /* Member cards: compact layout */
-  .member-card {
-    padding: 12px 14px !important;
-    gap: 10px !important;
-  }
-  .member-card .member-avatar {
-    width: 36px !important;
-    height: 36px !important;
-    font-size: 14px !important;
-  }
-  .member-card .member-name {
-    font-size: 13px !important;
-  }
-  .member-card .member-meta {
-    font-size: 9px !important;
-  }
-  .member-card .member-badges {
-    flex-direction: column;
-    gap: 4px !important;
-    align-items: flex-end !important;
-  }
-  .member-card .member-badges span {
-    font-size: 10px !important;
-    padding: 2px 6px !important;
-  }
-
-  /* Detail modal: action buttons stack on small screens */
   .detail-actions {
     flex-direction: column !important;
     gap: 6px !important;
@@ -69,14 +151,8 @@
 }
 
 @media (max-width: 360px) {
-  .member-card .member-avatar {
-    width: 32px !important;
-    height: 32px !important;
-    font-size: 12px !important;
-  }
-  .member-card .member-name {
-    font-size: 12px !important;
-  }
+  .stat-card .stat-value { font-size: 18px; }
+  .member-card { padding: 14px; }
 }
 </style>
 </head>
@@ -87,12 +163,37 @@
   <app-nav active="members" :pending-count="pendingCount" :open="navOpen" @close="navOpen = false"></app-nav>
 
   <div class="content">
-    <div class="card">
-      <div class="card-header">
-        <h2>👥 Daftar Anggota</h2>
-      <div style="display:flex;gap:8px;">
-        <button class="btn-add" @click="loadMembers">🔄 Refresh</button>
-        <button class="btn-add" @click="openModal()">+ Tambah Anggota</button>
+    <!-- Stats Row -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-value">{{ members.length }}</div>
+        <div class="stat-label">Total</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-value" style="color:#66bb6a;">{{ members.filter(m => isActive(m)).length }}</div>
+        <div class="stat-label">Active</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">❌</div>
+        <div class="stat-value" style="color:#ef5350;">{{ members.filter(m => !isActive(m)).length }}</div>
+        <div class="stat-label">Inactive</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔒</div>
+        <div class="stat-value" style="color:#ffa726;">{{ members.filter(m => Number(m.retry_count) >= 3).length }}</div>
+        <div class="stat-label">Locked</div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="members-toolbar">
+      <h2>👥 Anggota</h2>
+      <div class="toolbar-right">
+        <input class="search-input" type="text" v-model="searchQuery" placeholder="🔍 Cari nama / NIK...">
+        <button class="btn btn-primary btn-sm" @click="loadMembers">🔄</button>
+        <button class="btn btn-primary btn-sm" @click="openModal()">+ Tambah</button>
       </div>
     </div>
 
@@ -101,21 +202,31 @@
       <div class="spinner"></div> Memuat data...
     </div>
 
-    <template v-else>
-    <!-- Member Cards -->
-    <div v-for="m in sortedMembers" :key="m.nik" @click="openDetail(m)" class="member-card" style="margin-bottom:10px;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:14px;cursor:pointer;transition:all 0.2s;background:rgba(255,255,255,0.06);" :style="{ opacity: isActive(m) ? 1 : 0.5 }" @mouseover="$event.currentTarget.style.background='rgba(255,255,255,0.1)'" @mouseout="$event.currentTarget.style.background='rgba(255,255,255,0.06)'">
-      <div class="member-avatar" style="width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:16px;" :style="{ background: posColors[m.position] || '#66bb6a' }">{{ getInitials(m.name) }}</div>
-      <div style="flex:1;min-width:0;">
-        <div class="member-name" style="font-size:14px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ m.name }} <span v-if="m.isAdmin === true || m.isAdmin === 'TRUE'" style="font-size:10px;background:rgba(66,165,245,0.15);color:#90caf9;padding:1px 6px;border-radius:4px;margin-left:4px;font-weight:600;">ADMIN</span></div>
-        <div class="member-meta" style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;">{{ m.nik }} | <span :style="{ color: posColors[m.position] || 'var(--text-light)', fontWeight: '500' }">{{ m.position }}</span></div>
+    <!-- Member Grid -->
+    <div v-else class="members-grid">
+      <div v-for="m in filteredMembers" :key="m.nik" @click="openDetail(m)" class="member-card" :class="{ inactive: !isActive(m) }">
+        <div class="member-card-top">
+          <div class="member-avatar" :style="{ background: posColors[m.position] || '#66bb6a' }">{{ getInitials(m.name) }}</div>
+          <div style="min-width:0;flex:1;">
+            <div class="member-card-name">{{ m.name }}</div>
+            <div class="member-card-position" :style="{ color: posColors[m.position] || 'var(--text-light)' }">{{ m.position }}</div>
+          </div>
+        </div>
+        <div class="member-card-bottom">
+          <span class="member-card-nik">{{ m.nik }}</span>
+          <div class="member-card-badges">
+            <span v-if="m.isAdmin === true || m.isAdmin === 'TRUE'" style="font-size:10px;background:rgba(66,165,245,0.15);color:#90caf9;padding:2px 6px;border-radius:4px;font-weight:600;">ADMIN</span>
+            <span v-if="Number(m.retry_count) >= 3" style="font-size:10px;background:rgba(239,83,80,0.12);color:#ef5350;padding:2px 6px;border-radius:4px;font-weight:600;">🔒</span>
+            <span class="member-card-status" :style="{ background: isActive(m) ? 'rgba(102,187,106,0.12)' : 'rgba(239,83,80,0.12)', color: isActive(m) ? '#66bb6a' : '#ef5350' }">{{ isActive(m) ? 'Active' : 'Inactive' }}</span>
+          </div>
+        </div>
       </div>
-      <div class="member-badges" style="display:flex;gap:6px;align-items:center;">
-        <span v-if="Number(m.retry_count) >= 3" style="font-size:11px;background:rgba(239,83,80,0.12);color:#ef5350;padding:3px 8px;border-radius:6px;font-weight:600;">🔒 Reset</span>
-        <span style="font-size:11px;padding:3px 8px;border-radius:6px;font-weight:600;" :style="{ background: isActive(m) ? 'rgba(102,187,106,0.12)' : 'rgba(239,83,80,0.12)', color: isActive(m) ? '#66bb6a' : '#ef5350' }">{{ isActive(m) ? 'Active' : 'Inactive' }}</span>
+      <!-- Empty state -->
+      <div v-if="filteredMembers.length === 0 && !loading" class="empty-state" style="grid-column:1/-1;">
+        <div class="icon">🔍</div>
+        <div class="text">Tidak ada anggota ditemukan</div>
       </div>
     </div>
-    </template>
-  </div>
 
   <!-- Detail Modal -->
   <div class="modal-overlay" :class="{ active: showDetailModal }" @click.self="showDetailModal = false">
@@ -198,6 +309,7 @@ const app = createApp({
       // Detail modal
       showDetailModal: false,
       detailMember: null,
+      searchQuery: '',
       posColors: { 'Direktur': '#ef5350', 'Senior Manager': '#42a5f5', 'Junior Manager': '#ffca28', 'Coordinator': '#66bb6a' },
       posOrder: { 'Direktur': 0, 'Senior Manager': 1, 'Junior Manager': 2, 'Coordinator': 3 }
     };
@@ -210,6 +322,13 @@ const app = createApp({
         if (activeA !== activeB) return activeA - activeB;
         return (this.posOrder[a.position] ?? 9) - (this.posOrder[b.position] ?? 9);
       });
+    },
+    filteredMembers() {
+      if (!this.searchQuery.trim()) return this.sortedMembers;
+      const q = this.searchQuery.trim().toLowerCase();
+      return this.sortedMembers.filter(m =>
+        m.name.toLowerCase().includes(q) || m.nik.includes(q)
+      );
     }
   },
   mounted() {
