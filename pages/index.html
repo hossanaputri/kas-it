@@ -78,19 +78,6 @@
             <div class="progress-pct">{{ targetPct }}%</div>
           </div>
         </div>
-        <!-- Aktivitas Terakhir -->
-        <div class="activity-section">
-          <div class="activity-title">🕐 Aktivitas Terakhir</div>
-          <div v-if="recentActivity.length" class="activity-list">
-            <div v-for="tx in recentActivity" :key="tx.id" class="activity-item">
-              <span class="activity-name">{{ tx.memberName || tx.note || '-' }}</span>
-              <span class="activity-desc">{{ tx.note || tx.kategori }}</span>
-              <span class="activity-amount" :class="tx.type === 'masuk' ? 'amount-in' : 'amount-out'">{{ tx.type === 'masuk' ? '+' : '-' }}{{ fmt(tx.amount) }}</span>
-              <span class="activity-time">{{ relativeTime(tx.submittedAt) }}</span>
-            </div>
-          </div>
-          <div v-else class="activity-empty">Belum ada aktivitas</div>
-        </div>
       </div>
       <!-- Card 2: Master Iuran Bulanan -->
       <div class="table-section dash-card">
@@ -113,6 +100,9 @@
       <div class="table-section dash-card">
         <div class="dash-card-header">
           <h2 class="dash-card-title">📅 Status Bulan Ini</h2>
+          <div class="dash-card-actions">
+            <button v-if="isAdmin && statusBulanIni.unpaidNames.length" @click="copyReminder" class="btn btn-sm btn-copy-wa">📋 Copy WA</button>
+          </div>
         </div>
         <div class="status-counts">
           <div class="status-count-item">
@@ -128,15 +118,6 @@
             <span class="status-count-value belum">{{ statusBulanIni.belum }}</span>
           </div>
         </div>
-        <div v-if="statusBulanIni.unpaidNames.length" class="status-unpaid-list">
-          <div class="status-unpaid-title">Belum bayar:</div>
-          <div class="status-unpaid-names">
-            <span v-for="(name, i) in statusBulanIni.unpaidNames.slice(0, 8)" :key="i">{{ name }}<span v-if="i < Math.min(statusBulanIni.unpaidNames.length, 8) - 1">, </span></span>
-            <span v-if="statusBulanIni.unpaidNames.length > 8"> +{{ statusBulanIni.unpaidNames.length - 8 }} lainnya</span>
-          </div>
-          <button v-if="isAdmin" @click="copyReminder" class="btn-copy-wa" style="margin-top:10px;">📋 Copy untuk WA</button>
-        </div>
-        <div v-else class="all-paid-msg">🎉 Semua lunas!</div>
       </div>
 
     </div>
