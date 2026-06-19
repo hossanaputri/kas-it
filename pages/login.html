@@ -11,473 +11,12 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="IT-Kas">
 <link rel="apple-touch-icon" href="../icons/icon-192.png">
-<style>
-/* Page-specific: login.html â€” Aesthetic Green */
-body::before, body::after { display: none !important; }
-html {
-  overflow: hidden;
-  height: 100%;
-  position: fixed;
-  width: 100%;
-}
-
-body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  background: #0d1f0f;
-  position: fixed;
-  inset: 0;
-  overflow: hidden;
-  margin: 0;
-  touch-action: none;
-  overscroll-behavior: none;
-}
-
-/* Animated gradient orbs */
-.bg-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.5;
-  animation: float 8s ease-in-out infinite;
-}
-.bg-orb-1 {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, #2e7d32, transparent 70%);
-  top: -100px;
-  right: -100px;
-  animation-delay: 0s;
-}
-.bg-orb-2 {
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, #1b5e20, transparent 70%);
-  bottom: -80px;
-  left: -80px;
-  animation-delay: -3s;
-}
-.bg-orb-3 {
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, #43a047, transparent 70%);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0.2;
-  animation-delay: -5s;
-}
-
-@keyframes float {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(20px, -20px) scale(1.05); }
-  66% { transform: translate(-15px, 15px) scale(0.95); }
-}
-.bg-orb-3 {
-  animation-name: floatCenter;
-}
-@keyframes floatCenter {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); }
-  33% { transform: translate(-50%, -50%) scale(1.1); }
-  66% { transform: translate(-50%, -50%) scale(0.9); }
-}
-
-/* Grain texture overlay */
-body::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-}
-
-.login-wrapper {
-  position: relative;
-  z-index: 1;
-  width: 90%;
-  max-width: 400px;
-}
-
-.login-card {
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 24px;
-  padding: 48px 36px 40px;
-  text-align: center;
-  animation: cardIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-@keyframes cardIn {
-  from { opacity: 0; transform: translateY(30px) scale(0.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-/* Logo */
-.logo-container {
-  width: 72px;
-  height: 72px;
-  margin: 0 auto 20px;
-  background: linear-gradient(135deg, #2e7d32, #66bb6a);
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8px 32px rgba(46, 125, 50, 0.4);
-  position: relative;
-}
-.logo-container::after {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: 22px;
-  background: linear-gradient(135deg, rgba(102,187,106,0.5), transparent, rgba(46,125,50,0.3));
-  z-index: -1;
-  filter: blur(4px);
-}
-.logo-container span {
-  font-size: 34px;
-}
-.logo-img {
-  height: 100%;
-  border-radius: 12px;
-}
-
-.login-card h1 {
-  font-size: 26px;
-  color: #ffffff;
-  margin-bottom: 6px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
-.login-card .subtitle {
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.5);
-  margin-bottom: 32px;
-}
-.login-card .change-pw-warning {
-  color: #ffb74d;
-}
-
-/* Form */
-.form-group {
-  text-align: left;
-  margin-bottom: 18px;
-}
-.form-group label {
-  font-size: 14px;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.6);
-  margin-bottom: 8px;
-  display: block;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.form-group input {
-  width: 100%;
-  padding: 14px 16px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  font-size: 16px;
-  color: #ffffff;
-  transition: all 0.3s ease;
-  outline: none;
-}
-.form-group input::placeholder {
-  color: rgba(255, 255, 255, 0.45);
-}
-.form-group input:focus {
-  background: rgba(255, 255, 255, 0.09);
-  border-color: #66bb6a;
-  box-shadow: 0 0 0 3px rgba(102, 187, 106, 0.15), 0 0 20px rgba(102, 187, 106, 0.1);
-}
-
-/* Button */
-.btn-login {
-  width: 100%;
-  padding: 14px;
-  background: linear-gradient(135deg, #2e7d32, #43a047);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 10px;
-  letter-spacing: 0.3px;
-  position: relative;
-  overflow: hidden;
-}
-.btn-login::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-  transition: left 0.5s ease;
-}
-.btn-login:hover::before {
-  left: 100%;
-}
-.btn-login:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(46, 125, 50, 0.5);
-}
-.btn-login:active {
-  transform: translateY(0);
-}
-.btn-login:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-.btn-login:disabled::before {
-  display: none;
-}
-
-/* Error */
-.error-msg {
-  color: #ef5350;
-  font-size: 14px;
-  margin-top: 16px;
-  display: none;
-  background: rgba(239, 83, 80, 0.1);
-  border: 1px solid rgba(239, 83, 80, 0.2);
-  padding: 10px 14px;
-  border-radius: 10px;
-  text-align: left;
-}
-.error-msg.show {
-  display: block;
-}
-
-/* Session expired */
-.session-expired-banner {
-  background: rgba(255, 152, 0, 0.1);
-  border: 1px solid rgba(255, 152, 0, 0.2);
-  border-radius: 10px;
-  padding: 10px 14px;
-  margin-bottom: 20px;
-  font-size: 14px;
-  color: #ffb74d;
-  font-weight: 500;
-}
-
-/* Password wrapper */
-.password-wrapper {
-  position: relative;
-}
-.password-wrapper input {
-  padding-right: 44px;
-}
-.eye-toggle {
-  position: absolute;
-  right: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  user-select: none;
-  display: flex;
-  align-items: center;
-  opacity: 0.4;
-  transition: opacity 0.2s;
-  color: rgba(255, 255, 255, 0.7);
-}
-.eye-toggle:hover {
-  opacity: 0.7;
-}
-.eye-toggle svg {
-  stroke: currentColor;
-}
-
-/* Divider */
-.divider {
-  height: 1px;
-  background: rgba(255, 255, 255, 0.06);
-  margin: 28px 0 20px;
-}
-
-/* Footer */
-.footer-text {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.25);
-  margin-top: 24px;
-}
-
-/* Responsive â€” Mobile */
-@media (max-width: 480px) {
-  body {
-    align-items: center;
-    padding: 0;
-    height: 100vh;
-    height: 100dvh;
-    overflow: hidden;
-  }
-  .login-wrapper {
-    width: 92%;
-    max-height: 100vh;
-    max-height: 100dvh;
-    overflow: hidden;
-  }
-  .login-card {
-    padding: 32px 24px 28px;
-    border-radius: 20px;
-  }
-  .logo-container {
-    width: 56px;
-    height: 56px;
-    border-radius: 16px;
-    margin-bottom: 14px;
-  }
-  .logo-container span { font-size: 26px; }
-  .login-card h1 { font-size: 22px; }
-  .login-card .subtitle { font-size: 13px; margin-bottom: 22px; }
-  .form-group { margin-bottom: 14px; }
-  .form-group input { padding: 12px 14px; font-size: 16px; /* prevent iOS zoom on focus */ }
-  .btn-login { padding: 13px; font-size: 15px; }
-  .eye-toggle { right: 12px; padding: 4px; }
-  .divider { margin: 20px 0 14px; }
-  .footer-text { font-size: 10px; margin-top: 16px; }
-
-  /* Orbs â€” smaller on mobile to prevent overflow */
-  .bg-orb-1 { width: 280px; height: 280px; top: -60px; right: -60px; }
-  .bg-orb-2 { width: 220px; height: 220px; bottom: -50px; left: -50px; }
-  .bg-orb-3 { width: 160px; height: 160px; }
-}
-
-@media (max-width: 360px) {
-  .login-card { padding: 24px 18px 22px; }
-  .logo-container { width: 48px; height: 48px; }
-  .logo-container span { font-size: 22px; }
-  .login-card h1 { font-size: 20px; margin-bottom: 4px; }
-  .login-card .subtitle { margin-bottom: 18px; }
-  .form-group { margin-bottom: 12px; }
-  .form-group input { padding: 11px 12px; }
-  .btn-login { padding: 12px; }
-  .divider { margin: 16px 0 12px; }
-}
-
-/* =========================
-   LIGHT THEME â€” Login
-   ========================= */
-[data-theme="light"] body,
-body.light {
-  background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 50%, #ffffff 100%);
-}
-
-body.light .bg-orb-1 {
-  background: radial-gradient(circle, rgba(76,175,80,0.3), transparent 70%);
-  opacity: 0.4;
-}
-body.light .bg-orb-2 {
-  background: radial-gradient(circle, rgba(129,199,132,0.25), transparent 70%);
-  opacity: 0.35;
-}
-body.light .bg-orb-3 {
-  background: radial-gradient(circle, rgba(165,214,167,0.2), transparent 70%);
-  opacity: 0.3;
-}
-
-body.light .login-card {
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(76, 175, 80, 0.15);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 0 40px rgba(76,175,80,0.05);
-}
-
-body.light .login-card h1 {
-  color: #1b5e20;
-}
-body.light .login-card .subtitle {
-  color: rgba(0, 0, 0, 0.5);
-}
-
-body.light .form-group label {
-  color: rgba(0, 0, 0, 0.55);
-}
-body.light .form-group input {
-  background: rgba(0, 0, 0, 0.03);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  color: #1a1a1a;
-}
-body.light .form-group input::placeholder {
-  color: rgba(0, 0, 0, 0.45);
-}
-body.light .form-group input:focus {
-  background: rgba(255, 255, 255, 1);
-  border-color: #4caf50;
-  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15), 0 0 20px rgba(76, 175, 80, 0.08);
-}
-
-body.light .eye-toggle {
-  color: rgba(0, 0, 0, 0.4);
-}
-
-body.light .error-msg {
-  background: rgba(239, 83, 80, 0.08);
-  border-color: rgba(239, 83, 80, 0.2);
-  color: #c62828;
-}
-
-body.light .session-expired-banner {
-  background: rgba(255, 152, 0, 0.08);
-  border-color: rgba(255, 152, 0, 0.2);
-  color: #e65100;
-}
-
-body.light .divider {
-  background: rgba(0, 0, 0, 0.06);
-}
-
-body.light .footer-text {
-  color: rgba(0, 0, 0, 0.3);
-}
-
-/* Theme toggle button */
-.theme-toggle {
-  position: fixed;
-  top: 16px;
-  right: 16px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  z-index: 10;
-  transition: all 0.3s;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-.theme-toggle:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.1);
-}
-body.light .theme-toggle {
-  background: rgba(0, 0, 0, 0.06);
-  border-color: rgba(0, 0, 0, 0.1);
-}
-body.light .theme-toggle:hover {
-  background: rgba(0, 0, 0, 0.1);
-}
-</style>
 </head>
-<body>
+<body class="login-page">
 
 <!-- Theme toggle -->
 <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
-  <span id="theme-icon">ðŸŒ™</span>
+  <span id="theme-icon">🌙</span>
 </button>
 
 <!-- Background orbs -->
@@ -493,7 +32,7 @@ body.light .theme-toggle:hover {
     <!-- Login Form -->
     <template v-if="!showChangePassword">
       <div v-if="sessionExpired" class="session-expired-banner">
-        â±ï¸ Sesi kamu sudah habis. Silakan login ulang.
+        ⏱️ Sesi kamu sudah habis. Silakan login ulang.
       </div>
 
       <div class="form-group">
@@ -505,8 +44,8 @@ body.light .theme-toggle:hover {
         <div class="password-wrapper">
           <input :type="showPass ? 'text' : 'password'" v-model="password" placeholder="Masukkan Password" @keyup.enter="login">
           <span class="eye-toggle" @click="showPass = !showPass">
-            <svg v-if="!showPass" width="20" height="20" viewBox="0 0 24 24" fill="none"  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none"  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            <svg v-if="!showPass" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
           </span>
         </div>
       </div>
@@ -518,15 +57,15 @@ body.light .theme-toggle:hover {
 
     <!-- Change Password Form -->
     <template v-else>
-      <div class="subtitle change-pw-warning">âš ï¸ Buat password baru untuk akun kamu</div>
+      <div class="subtitle change-pw-warning">⚠️ Buat password baru untuk akun kamu</div>
 
       <div class="form-group">
         <label>Password Baru</label>
         <div class="password-wrapper">
           <input :type="showNewPass ? 'text' : 'password'" v-model="newPassword" placeholder="Minimal 4 karakter" @keyup.enter="$refs.confirmInput.focus()">
           <span class="eye-toggle" @click="showNewPass = !showNewPass">
-            <svg v-if="!showNewPass" width="20" height="20" viewBox="0 0 24 24" fill="none"  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none"  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            <svg v-if="!showNewPass" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
           </span>
         </div>
       </div>
@@ -535,8 +74,8 @@ body.light .theme-toggle:hover {
         <div class="password-wrapper">
           <input :type="showConfirmPass ? 'text' : 'password'" v-model="confirmPassword" placeholder="Ketik ulang password" ref="confirmInput" @keyup.enter="changePassword">
           <span class="eye-toggle" @click="showConfirmPass = !showConfirmPass">
-            <svg v-if="!showConfirmPass" width="20" height="20" viewBox="0 0 24 24" fill="none"  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none"  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            <svg v-if="!showConfirmPass" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
           </span>
         </div>
       </div>
@@ -568,7 +107,7 @@ function applyTheme(theme) {
     document.body.classList.remove('light');
   }
   const icon = document.getElementById('theme-icon');
-  if (icon) icon.textContent = theme === 'light' ? 'â˜€ï¸' : 'ðŸŒ™';
+  if (icon) icon.textContent = theme === 'light' ? '☀️' : '🌙';
 }
 function toggleTheme() {
   const current = localStorage.getItem('kas-it-theme') || 'dark';
