@@ -182,7 +182,7 @@
                   <div class="rekap-position">{{ member.position }}</div>
                 </td>
                 <td v-for="(m, i) in months" :key="i" style="text-align:center;" :style="getMemberMonthStatus(member.nik, i+1) === 'late' ? { background: 'rgba(239,83,80,0.08)' } : getMemberMonthStatus(member.nik, i+1) === 'pending' ? { background: 'rgba(255,202,40,0.08)' } : {}">
-                  <span v-if="getMemberMonthStatus(member.nik, i+1) === 'approved'" class="amount-in" style="font-size:11px;">{{ Number(getMemberMonthAmount(member.nik, i+1)).toLocaleString('id-ID') }}</span>
+                  <span v-if="getMemberMonthStatus(member.nik, i+1) === 'approved'" class="amount-in">{{ Number(getMemberMonthAmount(member.nik, i+1)).toLocaleString('id-ID') }}</span>
                   <span v-else-if="getMemberMonthStatus(member.nik, i+1) === 'pending'" class="status-pending">PENDING</span>
                   <span v-else-if="getMemberMonthStatus(member.nik, i+1) === 'late'" class="status-late">TELAT</span>
                   <span v-else class="status-empty">—</span>

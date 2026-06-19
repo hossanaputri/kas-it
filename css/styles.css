@@ -422,13 +422,13 @@ body:not(.login-page) .nav-overlay {
 .card-header h2 { font-size: 18px; color: var(--text); }
 
 /* --- 8. Tables --- */
-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 15px; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: var(--fs-md); }
 th, td { padding: 11px 12px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.08); }
 th {
   background: #ffffff;
   color: #333333;
   font-weight: 600;
-  font-size: 14px;
+  font-size: var(--fs-md);
   text-transform: uppercase;
   letter-spacing: 0.3px;
 }
@@ -2285,7 +2285,7 @@ body.light .all-paid-msg { color: var(--text); }
 
 /* Rekap table */
 .rekap-table { min-height: 200px; }
-.rekap-position { color: var(--text-muted); font-size: var(--fs-xs); }
+.rekap-position { color: var(--text-muted); font-size: var(--fs-sm); }
 .rekap-name {
   display: block;
   max-width: 130px;
@@ -2312,9 +2312,9 @@ body.light .all-paid-msg { color: var(--text); }
 }
 
 /* Rekap status badges */
-.status-pending { color: var(--pending-yellow); font-size: var(--fs-xs); font-weight: 600; }
-.status-late { color: var(--keluar-red); font-size: var(--fs-xs); font-weight: 600; }
-.status-empty { color: rgba(255,255,255,0.15); font-size: var(--fs-sm); }
+.status-pending { color: var(--pending-yellow); font-size: var(--fs-sm); font-weight: 600; }
+.status-late { color: var(--keluar-red); font-size: var(--fs-sm); font-weight: 600; }
+.status-empty { color: rgba(255,255,255,0.15); font-size: var(--fs-md); }
 body.light .status-empty { color: rgba(0,0,0,0.15); }
 
 /* --- Dropdown --- */
