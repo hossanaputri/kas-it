@@ -2302,7 +2302,7 @@ body.light .all-paid-msg { color: var(--text); }
   background: var(--table-head-bg);
   color: var(--table-head-color);
   text-align: center;
-  font-size: 11px;
+  font-size: var(--fs-sm);
 }
 .rekap-th-name {
   background: var(--table-head-bg);
