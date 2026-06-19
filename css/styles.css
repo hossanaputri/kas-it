@@ -388,10 +388,8 @@ body:not(.login-page) .nav-overlay {
 
 /* --- 7. Cards & Sections --- */
 .card, .table-section {
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-lg);
   padding: 20px;
   box-shadow: var(--shadow-sm);
@@ -1111,10 +1109,9 @@ body.light .sidebar-logout-btn { background: rgba(239, 83, 80, 0.06); border-col
 /* Cards */
 body.light .card,
 body.light .table-section {
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-  backdrop-filter: blur(10px);
 }
 
 /* Table */
