@@ -2216,9 +2216,6 @@ body.light .all-paid-msg { color: var(--text); }
   font-weight: 500;
   color: var(--text);
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 120px;
 }
 .activity-desc {
   color: var(--text-muted);
