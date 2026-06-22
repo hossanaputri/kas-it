@@ -9,7 +9,7 @@
   if (theme === 'light') document.body.classList.add('light');
 })();
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbzWezVL0Z_ncMRg36Mr7GXPYmJQmuvzlXu5kji1YHNjaWk_6j_wUKCHSb0uzy1bHL0IUw/exec';
+const API_URL = atob('aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy9BS2Z5Y2J6V2V6VkwwWl9uY01SZzM2TXI3R1hQWW1KUW11dnpsWHU1a2ppMVlITmphV2tfNmpfd1VLQ0hTYjB1enkxYkhMMElVdy9leGVj');
 
 /**
  * Check if user is authenticated.
