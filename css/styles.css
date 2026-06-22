@@ -973,9 +973,6 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
 .card-gallery-dots {
   display: none;
 }
-.summary-mobile {
-  display: none;
-}
 .rekap-header {
   display: flex;
   justify-content: space-between;
@@ -1170,9 +1167,9 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
     max-height: 85vh;
   }
 
-  /* --- Summary grid → Saldo big + masuk/keluar 2col --- */
-  .summary-desktop { display: none !important; }
-  .summary-mobile { display: block !important; }
+  /* --- Summary cards responsive --- */
+  .summary-cards { grid-template-columns: 1fr 1fr; }
+  .summary-cards .summary-card:first-child { grid-column: 1 / -1; }
 }
 
 @media (max-width: 480px) {
@@ -1316,8 +1313,7 @@ body.light .card-header h2 { color: #1a2e1c; }
 body.light .table-header h2 { color: #1a2e1c; }
 
 /* Summary values - labels dark, amounts keep color */
-body.light .summary-desktop .label,
-body.light .summary-mobile .label,
+body.light .summary-cards .label,
 body.light .summary-grid .label { color: #1a1a1a; }
 body.light .summary-saldo { color: var(--saldo-green); }
 body.light .summary-masuk { color: var(--masuk-green); }
@@ -1992,38 +1988,21 @@ body.light {
 .summary-saldo { color: var(--saldo-green); }
 .summary-masuk { color: var(--masuk-green); }
 .summary-keluar { color: var(--keluar-red); }
-.summary-desktop {
+.summary-cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   text-align: center;
 }
+.summary-card {
+  background: var(--subtle-bg);
+  padding: 14px 10px;
+  border-radius: var(--radius-md);
+}
 .summary-value {
   font-size: var(--fs-xl);
   font-weight: 700;
 }
-.summary-mobile { display: none; }
-.summary-mobile-saldo {
-  text-align: center;
-  margin-bottom: 12px;
-}
-.summary-mobile-saldo .summary-value {
-  font-size: 26px;
-}
-.summary-mobile-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  text-align: center;
-}
-.summary-mobile-card {
-  background: var(--subtle-bg);
-  padding: 10px;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-}
-.summary-mobile-card .label { font-size: 11px; }
-.summary-mobile-card .summary-value { font-size: 15px; }
 
 /* --- Target Kas --- */
 .target-section {
@@ -2688,8 +2667,8 @@ body.light .history-thead { background: rgba(46,125,50,0.08); }
     scroll-snap-align: start;
     margin-right: 12px;
   }
-  .summary-desktop { display: none; }
-  .summary-mobile { display: block; }
+  .summary-cards { grid-template-columns: 1fr 1fr; }
+  .summary-cards .summary-card:first-child { grid-column: 1 / -1; }
   .rekap-tx-desktop { display: none; }
   .rekap-actions-mobile { display: block; margin-bottom: 12px; }
 }

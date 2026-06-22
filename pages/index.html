@@ -35,36 +35,19 @@
             <button v-if="isAdmin" class="btn btn-sm btn-report" @click="showReportPicker = true">📷 Laporan</button>
           </div>
         </div>
-        <!-- Desktop: 3 columns -->
-        <div class="summary-desktop">
-          <div>
+        <!-- Summary cards (responsive: 3-col desktop, stack mobile) -->
+        <div class="summary-cards">
+          <div class="summary-card">
             <div class="label">💰 Total Saldo</div>
             <div class="summary-value summary-saldo">{{ fmt(summary.masuk - summary.keluar) }}</div>
           </div>
-          <div style="cursor:pointer;" @click="openHistory('masuk')">
+          <div class="summary-card" style="cursor:pointer;" @click="openHistory('masuk')">
             <div class="label">📥 Total Masuk</div>
             <div class="summary-value summary-masuk">{{ fmt(summary.masuk) }}</div>
           </div>
-          <div style="cursor:pointer;" @click="openHistory('keluar')">
+          <div class="summary-card" style="cursor:pointer;" @click="openHistory('keluar')">
             <div class="label">📤 Total Keluar</div>
             <div class="summary-value summary-keluar">{{ fmt(summary.keluar) }}</div>
-          </div>
-        </div>
-        <!-- Mobile: stacked layout -->
-        <div class="summary-mobile">
-          <div class="summary-mobile-saldo">
-            <div class="label">💰 Total Saldo</div>
-            <div class="summary-value summary-saldo">{{ fmt(summary.masuk - summary.keluar) }}</div>
-          </div>
-          <div class="summary-mobile-grid">
-            <div class="summary-mobile-card" @click="openHistory('masuk')">
-              <div class="label">📥 Masuk</div>
-              <div class="summary-value summary-masuk">{{ fmt(summary.masuk) }}</div>
-            </div>
-            <div class="summary-mobile-card" @click="openHistory('keluar')">
-              <div class="label">📤 Keluar</div>
-              <div class="summary-value summary-keluar">{{ fmt(summary.keluar) }}</div>
-            </div>
           </div>
         </div>
         <!-- Target Kas Tahunan -->
