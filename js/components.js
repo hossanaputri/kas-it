@@ -11,11 +11,11 @@
 const AppHeader = {
   template: `
     <div class="header">
-      <h1><img src="../icons/icon-192.png" alt="IT-Kas" style="height:28px;vertical-align:middle;margin-right:6px;">IT-Kas</h1>
-      <div class="header-right">
+      <div class="header-left">
         <button class="hamburger-btn" @click="$emit('toggle-nav')">
           <span></span><span></span><span></span>
         </button>
+        <h1><img src="../icons/icon-192.png" alt="IT-Kas" style="height:28px;vertical-align:middle;margin-right:6px;">IT-Kas</h1>
       </div>
     </div>
   `,

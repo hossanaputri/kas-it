@@ -143,6 +143,7 @@ body::after {
   z-index: 10;
 }
 .header h1 { font-size: 22px; color: #ffffff; font-weight: 700; }
+.header-left { display: flex; align-items: center; gap: 12px; }
 .header-right { display: flex; align-items: center; gap: 12px; }
 .header-right span { font-size: 15px; color: rgba(255,255,255,0.7); }
 
