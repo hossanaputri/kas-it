@@ -1,0 +1,5 @@
+# Backend reference (contains auth logic + default password hash)
+apps-script.js
+
+# Config with API URL
+js/auth.js
