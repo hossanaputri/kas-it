@@ -1007,23 +1007,23 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
   .header h1 { font-size: 16px; }
   .hamburger-btn { display: flex; }
 
-  /* --- Sidebar becomes slide-in drawer from right --- */
+  /* --- Sidebar becomes slide-in drawer from left --- */
   .sidebar {
     position: fixed;
     top: 0;
-    left: auto;
-    right: -300px;
+    right: auto;
+    left: -300px;
     width: 280px;
     height: 100%;
-    border-right: none;
-    border-left: 1px solid rgba(102,187,106,0.15);
+    border-left: none;
+    border-right: 1px solid rgba(102,187,106,0.15);
     z-index: 100;
-    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: -8px 0 40px rgba(0,0,0,0.5);
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 8px 0 40px rgba(0,0,0,0.5);
     background: linear-gradient(180deg, #0d2210 0%, #0a1a0d 100%);
   }
   .sidebar.open {
-    right: 0;
+    left: 0;
   }
   .sidebar-header .nav-close-btn {
     display: flex;
