@@ -1249,9 +1249,9 @@ body.light .table-section {
 
 /* Table */
 body.light th { background: #e8f5e9; color: #1b5e20; font-weight: 700; }
-body.light th, body.light td { border-bottom-color: rgba(0, 0, 0, 0.08); background: #ffffff; color: #333; }
+body.light th { border-bottom-color: rgba(0, 0, 0, 0.08); color: #333; }
+body.light td { border-bottom-color: rgba(0, 0, 0, 0.08); background: #ffffff; color: #1a1a1a; }
 body.light tr:hover td { background: rgba(76, 175, 80, 0.06); }
-body.light td { color: #1a1a1a; }
 body.light .rekap-name-cell { color: #1a1a1a; }
 body.light .amount-in { color: #2e7d32; }
 body.light .amount-out { color: #c62828; }
@@ -1356,11 +1356,11 @@ body.light [style*="border:1px solid rgba(255,255,255"] { border-color: rgba(0,0
 body.light [style*="border-top:1px solid rgba(255,255,255"] { border-top-color: rgba(0,0,0,0.08) !important; }
 body.light [style*="border-right:2px solid rgba(255,255,255"] { border-right-color: rgba(0,0,0,0.1) !important; }
 
-/* Rekap sticky column light bg */
-body.light .rekap-name-cell {
-  background: #f8fdf8 !important;
+/* Rekap sticky column light bg — now using variable */
+body.light .rekap-name-cell-bg {
+  background: var(--rekap-name-bg) !important;
 }
-body.light .rekap-name-cell div { color: rgba(0,0,0,0.5) !important; }
+body.light .rekap-name-cell .rekap-position { color: rgba(0,0,0,0.5); }
 
 /* Empty states & placeholders */
 body.light .empty { color: rgba(0,0,0,0.4) !important; }
@@ -1914,11 +1914,13 @@ html:has(.login-page) {
   --btn-blue-border: rgba(66,165,245,0.3);
   --btn-green-bg: rgba(102,187,106,0.25);
   --btn-green-border: rgba(102,187,106,0.3);
-  --rekap-name-bg: rgba(10,26,13,0.95);
+  --rekap-name-bg: #0d1f10;
   --rekap-name-border: rgba(255,255,255,0.15);
-  --table-head-bg: #ffffff;
-  --table-head-color: #333;
-  --table-head-border: rgba(0,0,0,0.1);
+  --table-head-bg: rgba(102,187,106,0.12);
+  --table-head-color: #66bb6a;
+  --table-head-border: rgba(102,187,106,0.2);
+  --rekap-cell-bg: #0a0a0a;
+  --rekap-border: rgba(255,255,255,0.08);
 }
 
 /* Light mode overrides */
@@ -1939,11 +1941,13 @@ body.light {
   --btn-blue-border: rgba(66,165,245,0.3);
   --btn-green-bg: rgba(102,187,106,0.15);
   --btn-green-border: rgba(102,187,106,0.3);
-  --rekap-name-bg: rgba(255,255,255,0.95);
-  --rekap-name-border: rgba(0,0,0,0.1);
-  --table-head-bg: #f5f5f5;
-  --table-head-color: #333;
-  --table-head-border: rgba(0,0,0,0.1);
+  --rekap-name-bg: #e8f5e9;
+  --rekap-name-border: rgba(76,175,80,0.2);
+  --table-head-bg: #66bb6a;
+  --table-head-color: #ffffff;
+  --table-head-border: rgba(255,255,255,0.3);
+  --rekap-cell-bg: #ffffff;
+  --rekap-border: rgba(0,0,0,0.08);
 }
 
 /* --- Dashboard 3-Column Layout (Desktop) --- */
@@ -2292,6 +2296,14 @@ body.light .all-paid-msg { color: var(--text); }
 
 /* Rekap table */
 .rekap-table { min-height: 200px; }
+.rekap-table table {
+  border: 1px solid var(--rekap-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.rekap-table td {
+  background: var(--rekap-cell-bg);
+}
 .rekap-position { color: var(--text-muted); font-size: var(--fs-sm); }
 .rekap-name {
   display: block;
@@ -2300,7 +2312,12 @@ body.light .all-paid-msg { color: var(--text); }
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.rekap-name-cell { font-weight: 500; cursor: pointer; }
+.rekap-name-cell { font-weight: 500; cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.rekap-name-cell:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 5;
+}
 .rekap-name-cell-bg {
   background: var(--rekap-name-bg);
   border-right: 2px solid var(--rekap-name-border);
