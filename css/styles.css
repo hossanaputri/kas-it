@@ -2657,7 +2657,7 @@ body.light .history-thead { background: rgba(46,125,50,0.08); }
   }
   .dash-grid::-webkit-scrollbar { display: none; }
   .dash-grid > .table-section {
-    flex: 0 0 calc(100vw - 80px);
+    flex: 0 0 calc(100vw - 40px);
     scroll-snap-align: start;
     margin-right: 12px;
   }
