@@ -310,26 +310,10 @@ body:not(.login-page) .nav-overlay {
 
 /* --- 5. Content Container --- */
 .content { padding: 20px; position: relative; z-index: 1; }
-.dashboard-page .content {
-  height: 100vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-.dashboard-page .rekap-section {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  overflow: hidden;
-}
 .dashboard-page .rekap-table {
-  flex: 1;
+  max-height: calc(100vh - 340px);
   overflow-y: auto;
   overflow-x: auto;
-  min-height: 0;
-  max-height: calc(100vh - 340px);
-  padding-bottom: 8px;
 }
 
 /* --- 6. Buttons --- */
