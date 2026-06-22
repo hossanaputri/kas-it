@@ -329,6 +329,7 @@ body:not(.login-page) .nav-overlay {
   overflow-x: auto;
   min-height: 0;
   max-height: calc(100vh - 340px);
+  padding-bottom: 8px;
 }
 
 /* --- 6. Buttons --- */
