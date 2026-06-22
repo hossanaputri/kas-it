@@ -105,27 +105,9 @@ body {
   color: var(--text);
   position: relative;
 }
-body::before {
-  content: '';
-  position: fixed;
-  top: -200px;
-  right: -200px;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(46,125,50,0.15) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
+body::before,
 body::after {
-  content: '';
-  position: fixed;
-  bottom: -200px;
-  left: -200px;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(27,94,32,0.1) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
+  display: none;
 }
 
 /* --- 3. Header --- */
