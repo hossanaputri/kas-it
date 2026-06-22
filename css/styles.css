@@ -1913,7 +1913,7 @@ html:has(.login-page) {
   --btn-blue-border: rgba(66,165,245,0.3);
   --btn-green-bg: rgba(102,187,106,0.25);
   --btn-green-border: rgba(102,187,106,0.3);
-  --rekap-name-bg: #0d1f10;
+  --rekap-name-bg: #0a1a0d;
   --rekap-name-border: rgba(255,255,255,0.15);
   --table-head-bg: #66bb6a;
   --table-head-color: #ffffff;
@@ -1940,7 +1940,7 @@ body.light {
   --btn-blue-border: rgba(66,165,245,0.3);
   --btn-green-bg: rgba(102,187,106,0.15);
   --btn-green-border: rgba(102,187,106,0.3);
-  --rekap-name-bg: #e8f5e9;
+  --rekap-name-bg: #f0f7f0;
   --rekap-name-border: rgba(76,175,80,0.2);
   --table-head-bg: #66bb6a;
   --table-head-color: #ffffff;
