@@ -13,31 +13,13 @@ const AppHeader = {
     <div class="header">
       <h1><img src="../icons/icon-192.png" alt="IT-Kas" style="height:28px;vertical-align:middle;margin-right:6px;">IT-Kas</h1>
       <div class="header-right">
-        <button class="theme-toggle" @click="toggleTheme" :title="isDark ? 'Light mode' : 'Dark mode'">{{ isDark ? '🌙' : '☀️' }}</button>
         <button class="hamburger-btn" @click="$emit('toggle-nav')">
           <span></span><span></span><span></span>
         </button>
       </div>
     </div>
   `,
-  emits: ['toggle-nav'],
-  data() {
-    return {
-      isDark: (localStorage.getItem('kas-it-theme') || 'dark') === 'dark'
-    };
-  },
-  methods: {
-    toggleTheme() {
-      this.isDark = !this.isDark;
-      const theme = this.isDark ? 'dark' : 'light';
-      localStorage.setItem('kas-it-theme', theme);
-      if (theme === 'light') {
-        document.body.classList.add('light');
-      } else {
-        document.body.classList.remove('light');
-      }
-    }
-  }
+  emits: ['toggle-nav']
 };
 
 /**
