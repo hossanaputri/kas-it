@@ -326,7 +326,9 @@ body:not(.login-page) .nav-overlay {
 .dashboard-page .rekap-table {
   flex: 1;
   overflow-y: auto;
+  overflow-x: auto;
   min-height: 0;
+  max-height: calc(100vh - 380px);
 }
 
 /* --- 6. Buttons --- */
