@@ -2187,12 +2187,8 @@ body.light .all-paid-msg { color: var(--text); }
 }
 .rekap-tab:hover { color: var(--text-light); }
 .rekap-tab.active {
-  background: rgba(102, 187, 106, 0.12);
-  color: #66bb6a;
-}
-body.light .rekap-tab.active {
-  background: rgba(76, 175, 80, 0.1);
-  color: #2e7d32;
+  background: #66bb6a;
+  color: #ffffff;
 }
 
 /* --- Activity Section (Summary Card) --- */
