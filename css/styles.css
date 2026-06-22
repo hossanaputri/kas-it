@@ -311,8 +311,8 @@ body:not(.login-page) .nav-overlay {
 /* --- 5. Content Container --- */
 .content { padding: 20px; position: relative; z-index: 1; }
 .dashboard-page .content {
-  max-height: 100vh;
-  overflow-y: auto;
+  height: 100vh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -321,6 +321,7 @@ body:not(.login-page) .nav-overlay {
   display: flex;
   flex-direction: column;
   min-height: 0;
+  overflow: hidden;
 }
 .dashboard-page .rekap-table {
   flex: 1;
