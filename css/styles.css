@@ -2285,11 +2285,9 @@ body.light .rekap-tab.active {
 .rekap-tx-desktop { position: relative; }
 
 /* Rekap table */
-.rekap-table { min-height: 200px; }
+.rekap-table { min-height: 200px; border: 1px solid var(--rekap-border); border-radius: var(--radius-md); }
 .rekap-table table {
-  border: 1px solid var(--rekap-border);
-  border-radius: var(--radius-md);
-  overflow: hidden;
+  width: 100%;
 }
 .rekap-table td {
   background: var(--rekap-cell-bg);
