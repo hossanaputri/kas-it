@@ -1308,9 +1308,13 @@ body.light .label { color: rgba(0, 0, 0, 0.55) !important; }
 body.light .card-header h2 { color: #1a2e1c; }
 body.light .table-header h2 { color: #1a2e1c; }
 
-/* Summary values - ensure dark text */
-body.light .summary-desktop div,
-body.light .summary-mobile div { color: #1a1a1a; }
+/* Summary values - labels dark, amounts keep color */
+body.light .summary-desktop .label,
+body.light .summary-mobile .label,
+body.light .summary-grid .label { color: #1a1a1a; }
+body.light .summary-saldo { color: var(--saldo-green); }
+body.light .summary-masuk { color: var(--masuk-green); }
+body.light .summary-keluar { color: var(--keluar-red); }
 
 /* Rekap table - ensure numbers are readable */
 body.light .rekap-table td { color: #333; font-weight: 500; }
