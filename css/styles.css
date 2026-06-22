@@ -2279,6 +2279,14 @@ body.light .all-paid-msg { color: var(--text); }
   background: var(--subtle-bg-hover);
   color: var(--text);
 }
+.rekap-select-inline {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 4px;
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  padding: 4px 10px;
+}
 .rekap-actions-mobile { display: none; }
 .rekap-tx-desktop { position: relative; }
 

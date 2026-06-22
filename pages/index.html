@@ -138,11 +138,12 @@
       <!-- Tab: Rekap Iuran -->
       <div v-show="rekapTab === 'iuran'">
         <div class="rekap-header">
-          <h2 class="dash-card-title">📊 Rekap Kas per Anggota</h2>
-          <div class="rekap-controls-row">
-            <select v-model="selectedYear" @change="loadData" class="rekap-select">
+          <h2 class="dash-card-title">📊 Tahun :
+            <select v-model="selectedYear" @change="loadData" class="rekap-select rekap-select-inline">
               <option v-for="y in yearOptions" :key="y" :value="y">{{ y }}</option>
             </select>
+          </h2>
+          <div class="rekap-controls-row">
             <!-- Desktop only: transaksi button -->
             <div v-if="isLoggedIn" class="rekap-tx-desktop" style="position:relative;">
               <button class="btn btn-sm btn-transaksi" @click="showTxMenu = !showTxMenu">➕ Transaksi</button>
