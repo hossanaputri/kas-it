@@ -733,7 +733,7 @@ const app = createApp({
       });
     },
     activeEvents() { return this.events.filter(ev => ev.status !== 'closed').concat(this.events.filter(ev => ev.status === 'closed').slice(0, 3)); },
-    yearOptions() { const current = new Date().getFullYear(); const years = []; for (let y = current; y >= 2024; y--) years.push(y); return years; },
+    yearOptions() { const years = [...new Set(this.transactions.map(t => Number(t.year)).filter(y => y))]; if (!years.length) years.push(new Date().getFullYear()); return years.sort((a, b) => b - a); },
     pendingCount() { return this.transactions.filter(t => t.status === 'pending').length; },
     reportPeriod() { return this.monthNames[this.reportMonth - 1] + ' ' + this.reportYear; },
     reportMasukBulan() { return this.transactions.filter(t => t.status === 'approved' && t.type === 'masuk' && Number(t.month) === this.reportMonth && Number(t.year) === this.reportYear).reduce((s, t) => s + Number(t.amount), 0); },
