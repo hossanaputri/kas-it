@@ -2334,10 +2334,8 @@ body.light .rekap-tab.active {
 .rekap-position { color: var(--text-muted); font-size: var(--fs-sm); }
 .rekap-name {
   display: block;
-  max-width: 130px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
 }
 .rekap-name-cell { font-weight: 500; cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s ease; }
 .rekap-name-cell:hover {
