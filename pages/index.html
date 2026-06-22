@@ -82,7 +82,7 @@
       <!-- Card 3: Status Bulan Ini -->
       <div class="table-section dash-card">
         <div class="dash-card-header">
-          <h2 class="dash-card-title">📅 Status Bulan Ini</h2>
+          <h2 class="dash-card-title">📅 Status Bulan Ini ({{ monthNames[new Date().getMonth()] }})</h2>
           <div class="dash-card-actions">
             <button v-if="isAdmin && statusBulanIni.unpaidNames.length" @click="copyReminder" class="btn btn-sm btn-copy-wa">📋 Copy WA</button>
           </div>
