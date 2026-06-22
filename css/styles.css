@@ -2666,8 +2666,6 @@ body.light .history-thead { background: rgba(46,125,50,0.08); }
   }
   .summary-cards { grid-template-columns: 1fr 1fr; }
   .summary-cards .summary-card:first-child { grid-column: 1 / -1; }
-  .rekap-tx-desktop { display: none; }
-  .rekap-actions-mobile { display: block; margin-bottom: 12px; }
 }
 
 /* --- Gallery Dots --- */

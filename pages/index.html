@@ -127,8 +127,7 @@
             </select>
           </h2>
           <div class="rekap-controls-row">
-            <!-- Desktop only: transaksi button -->
-            <div v-if="isLoggedIn" class="rekap-tx-desktop" style="position:relative;">
+            <div v-if="isLoggedIn" style="position:relative;">
               <button class="btn btn-sm btn-transaksi" @click="showTxMenu = !showTxMenu">➕ Transaksi</button>
               <div v-if="showTxMenu" class="dropdown-menu" @click.stop>
                 <div class="dropdown-item" @click="showTxMenu=false;openSubmitModal()"><span class="dropdown-icon">💵</span> Submit Kas</div>
@@ -136,18 +135,6 @@
                 <div v-if="isAdmin" class="dropdown-item" @click="showTxMenu=false;showOutModal=true"><span class="dropdown-icon">📤</span> Pengeluaran</div>
                 <div v-if="isAdmin" class="dropdown-item" @click="showTxMenu=false;openBulkModal()"><span class="dropdown-icon">📋</span> Bulk Input</div>
               </div>
-            </div>
-          </div>
-        </div>
-        <!-- Mobile only: transaksi button -->
-        <div class="rekap-actions-mobile">
-          <div v-if="isLoggedIn" style="position:relative;">
-            <button class="btn btn-sm btn-transaksi" @click="showTxMenu = !showTxMenu">➕ Transaksi</button>
-            <div v-if="showTxMenu" class="dropdown-menu" @click.stop>
-              <div class="dropdown-item" @click="showTxMenu=false;openSubmitModal()"><span class="dropdown-icon">💵</span> Submit Kas</div>
-              <div v-if="isAdmin" class="dropdown-item" @click="showTxMenu=false;showExtModal=true"><span class="dropdown-icon">📥</span> Pemasukan Lain</div>
-              <div v-if="isAdmin" class="dropdown-item" @click="showTxMenu=false;showOutModal=true"><span class="dropdown-icon">📤</span> Pengeluaran</div>
-              <div v-if="isAdmin" class="dropdown-item" @click="showTxMenu=false;openBulkModal()"><span class="dropdown-icon">📋</span> Bulk Input</div>
             </div>
           </div>
         </div>
