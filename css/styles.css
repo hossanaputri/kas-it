@@ -2710,9 +2710,6 @@ body.light .dash-gallery-dots .dot.active { background: var(--primary); }
   border: 1px solid rgba(255, 255, 255, 0.15);
   overflow: hidden;
 }
-.tx-table-wrap table { border-radius: 0; }
-.tx-table-wrap th:first-child { border-top-left-radius: 0; }
-.tx-table-wrap th:last-child { border-top-right-radius: 0; }
 
 /* Table columns */
 .tx-table-wrap table .col-right { text-align: right; }
