@@ -45,20 +45,20 @@
         <div class="tx-controls-left">
           <input type="text" v-model="filter.search" placeholder="🔍 Cari nama / keterangan...">
         </div>
-        <div class="filter-chips">
-          <span class="chip-label">Kategori:</span>
-          <label class="chip-item"><input type="checkbox" v-model="filter.kategori" value="iuran"><span class="chip kat-iuran">Iuran</span></label>
-          <label class="chip-item"><input type="checkbox" v-model="filter.kategori" value="event"><span class="chip kat-event">Event</span></label>
-          <label class="chip-item"><input type="checkbox" v-model="filter.kategori" value="lainnya"><span class="chip kat-lainnya">Lainnya</span></label>
-          <span class="chip-divider"></span>
-          <span class="chip-label">Tipe:</span>
-          <label class="chip-item"><input type="checkbox" v-model="filter.type" value="masuk"><span class="chip st-approved">Masuk</span></label>
-          <label class="chip-item"><input type="checkbox" v-model="filter.type" value="keluar"><span class="chip st-rejected">Keluar</span></label>
-          <span class="chip-divider"></span>
-          <span class="chip-label">Status:</span>
-          <label class="chip-item"><input type="checkbox" v-model="filter.status" value="approved"><span class="chip st-approved">Approved</span></label>
-          <label class="chip-item"><input type="checkbox" v-model="filter.status" value="pending"><span class="chip st-pending">Pending</span></label>
-          <label class="chip-item"><input type="checkbox" v-model="filter.status" value="rejected"><span class="chip st-rejected">Rejected</span></label>
+        <div class="tx-filters">
+          <div class="tx-filter-dropdown" v-for="f in filterDropdowns" :key="f.key">
+            <button class="tx-filter-btn" @click="toggleDropdown(f.key)" :class="{ active: filter[f.key].length }">
+              {{ f.label }} <span v-if="filter[f.key].length" class="tx-filter-count">{{ filter[f.key].length }}</span>
+              <span class="tx-filter-arrow">▾</span>
+            </button>
+            <div class="tx-filter-menu" v-if="openDropdown === f.key" @click.stop>
+              <label v-for="opt in f.options" :key="opt.value" class="tx-filter-option">
+                <input type="checkbox" :value="opt.value" v-model="filter[f.key]">
+                <span>{{ opt.label }}</span>
+              </label>
+              <button class="tx-filter-clear" @click="filter[f.key] = []" v-if="filter[f.key].length">Clear</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -149,6 +149,23 @@ const app = createApp({
       transactions: [],
       loading: false,
       filter: { kategori: [], type: [], status: [], search: '' },
+      openDropdown: null,
+      filterDropdowns: [
+        { key: 'kategori', label: 'Kategori', options: [
+          { value: 'iuran', label: 'Iuran' },
+          { value: 'event', label: 'Event' },
+          { value: 'lainnya', label: 'Lainnya' }
+        ]},
+        { key: 'type', label: 'Tipe', options: [
+          { value: 'masuk', label: 'Masuk' },
+          { value: 'keluar', label: 'Keluar' }
+        ]},
+        { key: 'status', label: 'Status', options: [
+          { value: 'approved', label: 'Approved' },
+          { value: 'pending', label: 'Pending' },
+          { value: 'rejected', label: 'Rejected' }
+        ]}
+      ],
       currentPage: 1,
       pageSize: 10,
       toast: { show: false, message: '', success: true }
@@ -215,8 +232,12 @@ const app = createApp({
   },
   mounted() {
     this.loadTransactions();
+    document.addEventListener('click', () => { this.openDropdown = null; });
   },
   methods: {
+    toggleDropdown(key) {
+      this.openDropdown = this.openDropdown === key ? null : key;
+    },
     fmt(n) { return 'Rp ' + Number(n || 0).toLocaleString('id-ID'); },
     formatDate(iso) {
       if (!iso) return '-';
