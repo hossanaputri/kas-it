@@ -170,19 +170,22 @@
       <!-- Tab: Rekap Event -->
       <div v-show="rekapTab === 'event'">
         <div v-if="!activeEvents.length" class="dash-event-empty">Belum ada event aktif</div>
-        <div v-for="ev in activeEvents" :key="ev.id" class="dash-event-card">
-          <div class="dash-event-header">
-            <div>
-              <span class="dash-event-name">{{ ev.name }}</span>
-              <span class="dash-event-id">{{ ev.id }}</span>
+        <div v-for="ev in activeEvents" :key="ev.id" class="ev-card">
+          <div class="ev-card-top">
+            <div class="ev-card-info">
+              <span class="ev-card-name">{{ ev.name }}</span>
+              <span class="ev-card-badge" :class="ev.status === 'closed' ? 'closed' : 'active'">{{ ev.status === 'closed' ? 'Closed' : 'Active' }}</span>
             </div>
-            <div style="display:flex;gap:8px;align-items:center;">
-              <span class="dash-event-lunas">{{ getEventPaidCount(ev.id) }}/{{ activeMembers.length }} lunas</span>
-              <span class="dash-event-badge" :class="ev.status === 'closed' ? 'closed' : 'active'">{{ ev.status === 'closed' ? 'Closed' : 'Active' }}</span>
+            <div class="ev-card-stats">
+              <span class="ev-card-count">{{ getEventPaidCount(ev.id) }}<span class="ev-card-total">/{{ activeMembers.length }}</span></span>
+              <span class="ev-card-label">lunas</span>
             </div>
           </div>
-          <div class="dash-event-members">
-            <span v-for="m in activeMembers" :key="m.nik" class="dash-event-member" :style="getEventMemberStyle(ev.id, m.nik)">{{ m.name.split(' ')[0] }}</span>
+          <div class="ev-card-progress">
+            <div class="ev-card-progress-bar" :style="{ width: (getEventPaidCount(ev.id) / activeMembers.length * 100) + '%' }"></div>
+          </div>
+          <div class="ev-card-members">
+            <span v-for="m in activeMembers" :key="m.nik" class="ev-member-chip" :class="getEventMemberClass(ev.id, m.nik)">{{ m.name.split(' ')[0] }}</span>
           </div>
         </div>
       </div>
@@ -953,6 +956,12 @@ const app = createApp({
       if (tx && tx.status === 'approved') return { background: 'rgba(102,187,106,0.12)', color: '#66bb6a' };
       if (tx && tx.status === 'pending') return { background: 'rgba(255,202,40,0.12)', color: '#ffca28' };
       return { background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.25)' };
+    },
+    getEventMemberClass(eventId, nik) {
+      const tx = this.transactions.find(t => t.kategori === 'event' && t.eventId === eventId && t.memberNik === nik && t.status !== 'rejected');
+      if (tx && tx.status === 'approved') return 'paid';
+      if (tx && tx.status === 'pending') return 'pending';
+      return 'unpaid';
     },
     openProfile(member) { this.profileMember = member; this.showProfileModal = true; },
     getProfileTotal() {

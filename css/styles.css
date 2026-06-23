@@ -2348,54 +2348,114 @@ body.light .status-empty { color: rgba(0,0,0,0.15); }
 .dropdown-item:hover { background: rgba(102,187,106,0.1); }
 .dropdown-icon { font-size: var(--fs-lg); }
 
-/* --- Event Cards (Dashboard) --- */
-.dash-event-card {
-  border-radius: 10px;
-  padding: 14px;
-  margin-bottom: 10px;
+/* --- Event Cards (Dashboard) — Redesign --- */
+.ev-card {
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  margin-bottom: 12px;
   background: var(--subtle-bg);
-  border-left: 3px solid var(--amount-blue);
   border: 1px solid var(--subtle-border);
+  transition: all 0.2s;
 }
-.dash-event-header {
+.ev-card:hover {
+  border-color: rgba(102,187,106,0.2);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+.ev-card-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
-.dash-event-name {
-  font-size: var(--fs-md);
-  font-weight: 600;
+.ev-card-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ev-card-name {
+  font-size: var(--fs-lg);
+  font-weight: 700;
   color: var(--text);
 }
-.dash-event-id {
+.ev-card-badge {
   font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+.ev-card-badge.active { background: var(--green-bg); color: var(--green); }
+.ev-card-badge.closed { background: rgba(255,255,255,0.05); color: var(--text-muted); }
+.ev-card-stats {
+  text-align: right;
+}
+.ev-card-count {
+  font-size: var(--fs-xl);
+  font-weight: 800;
+  color: var(--green);
+}
+.ev-card-total {
+  font-size: var(--fs-md);
+  font-weight: 500;
   color: var(--text-muted);
-  margin-left: 8px;
 }
-.dash-event-lunas {
-  font-size: var(--fs-sm);
-  font-weight: 600;
-  color: var(--saldo-green);
+.ev-card-label {
+  display: block;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  margin-top: -2px;
 }
-.dash-event-badge {
-  font-size: 11px;
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-weight: 600;
+
+/* Progress bar */
+.ev-card-progress {
+  height: 6px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 14px;
 }
-.dash-event-badge.active { background: rgba(102,187,106,0.12); color: #66bb6a; }
-.dash-event-badge.closed { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.4); }
-.dash-event-members {
+body.light .ev-card-progress { background: rgba(0,0,0,0.06); }
+.ev-card-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #2e7d32, #66bb6a);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+/* Member chips */
+.ev-card-members {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 6px;
 }
-.dash-event-member {
+.ev-member-chip {
   font-size: 11px;
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+.ev-member-chip.paid {
+  background: var(--green-bg);
+  color: var(--green);
+}
+.ev-member-chip.pending {
+  background: var(--yellow-bg);
+  color: var(--orange);
+}
+.ev-member-chip.unpaid {
+  background: rgba(255,255,255,0.04);
+  color: var(--text-muted);
+}
+body.light .ev-member-chip.unpaid {
+  background: rgba(0,0,0,0.04);
+  color: rgba(0,0,0,0.3);
+}
+body.light .ev-card {
+  background: rgba(0,0,0,0.02);
+  border-color: rgba(0,0,0,0.06);
+}
+body.light .ev-card:hover {
+  border-color: rgba(76,175,80,0.2);
 }
 .dash-event-empty {
   text-align: center;
