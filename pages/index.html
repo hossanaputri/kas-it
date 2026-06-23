@@ -187,6 +187,9 @@
           <div class="ev-card-members">
             <span v-for="m in activeMembers" :key="m.nik" class="ev-member-chip" :class="getEventMemberClass(ev.id, m.nik)">{{ m.name.split(' ')[0] }}</span>
           </div>
+          <div class="ev-card-footer" v-if="isAdmin && getEventUnpaidNames(ev.id).length">
+            <button class="btn btn-sm btn-copy-wa" @click="copyEventReminder(ev)">📋 Copy WA</button>
+          </div>
         </div>
       </div>
     </div>
@@ -962,6 +965,17 @@ const app = createApp({
       if (tx && tx.status === 'approved') return 'paid';
       if (tx && tx.status === 'pending') return 'pending';
       return 'unpaid';
+    },
+    getEventUnpaidNames(eventId) {
+      return this.activeMembers.filter(m => {
+        const tx = this.transactions.find(t => t.kategori === 'event' && t.eventId === eventId && t.memberNik === m.nik && t.status !== 'rejected');
+        return !tx;
+      }).map(m => m.name);
+    },
+    copyEventReminder(ev) {
+      const names = this.getEventUnpaidNames(ev.id).map(n => '• ' + n).join('\n');
+      const text = `⚠️ Reminder Event "${ev.name}"\n\nYang belum bayar:\n${names}\n\nMohon segera disetor ya. Terima kasih 🙏\n\n📲 Submit via: https://hossanaputri.github.io/kas-it/`;
+      navigator.clipboard.writeText(text).then(() => { this.showToast('Berhasil di-copy! Tinggal paste ke WA'); }).catch(() => { this.showToast('Gagal copy', false); });
     },
     openProfile(member) { this.profileMember = member; this.showProfileModal = true; },
     getProfileTotal() {

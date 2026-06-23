@@ -2457,6 +2457,13 @@ body.light .ev-card {
 body.light .ev-card:hover {
   border-color: rgba(76,175,80,0.2);
 }
+.ev-card-footer {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--subtle-border);
+  display: flex;
+  justify-content: flex-end;
+}
 .dash-event-empty {
   text-align: center;
   padding: 20px;
