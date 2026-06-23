@@ -2378,7 +2378,7 @@ body.light .status-empty { color: rgba(0,0,0,0.15); }
   color: var(--text);
 }
 .ev-card-badge {
-  font-size: 11px;
+  font-size: var(--fs-sm);
   padding: 3px 10px;
   border-radius: 20px;
   font-weight: 600;
@@ -2428,7 +2428,7 @@ body.light .ev-card-progress { background: rgba(0,0,0,0.06); }
   gap: 6px;
 }
 .ev-member-chip {
-  font-size: 11px;
+  font-size: var(--fs-sm);
   padding: 4px 10px;
   border-radius: 20px;
   font-weight: 600;
