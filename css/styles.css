@@ -2704,6 +2704,16 @@ body.light .dash-gallery-dots .dot.active { background: var(--primary); }
   font-weight: 700;
 }
 
+/* Table wrapper — rounded corners + border (match dashboard) */
+.tx-table-wrap {
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+.tx-table-wrap table { border-radius: 0; }
+.tx-table-wrap th:first-child { border-top-left-radius: 0; }
+.tx-table-wrap th:last-child { border-top-right-radius: 0; }
+
 /* Table columns */
 .tx-table-wrap table .col-right { text-align: right; }
 .tx-table-wrap table .col-center { text-align: center; }
@@ -2745,6 +2755,77 @@ body.light .dash-gallery-dots .dot.active { background: var(--primary); }
 }
 .tx-controls-right {
   margin-left: auto;
+}
+
+/* --- Pagination --- */
+.tx-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+  padding: 0 4px;
+}
+.tx-pagination-info {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+.tx-pagination-btns {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.tx-page-btn {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.04);
+  color: var(--text-light);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tx-page-btn:hover:not(:disabled) {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.2);
+}
+.tx-page-btn.active {
+  background: var(--primary-gradient);
+  color: white;
+  border-color: transparent;
+}
+.tx-page-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.tx-page-btn.tx-page-dots {
+  border: none;
+  background: none;
+  cursor: default;
+  min-width: 24px;
+}
+
+/* Light mode pagination */
+body.light .tx-page-btn {
+  background: rgba(0,0,0,0.03);
+  border-color: rgba(0,0,0,0.1);
+  color: #333;
+}
+body.light .tx-page-btn:hover:not(:disabled) {
+  background: rgba(0,0,0,0.06);
+}
+body.light .tx-page-btn.active {
+  background: var(--primary-gradient);
+  color: white;
+  border-color: transparent;
+}
+body.light .tx-table-wrap {
+  border-color: rgba(0,0,0,0.1);
 }
 
 /* --- Transactions Mobile --- */
@@ -2801,6 +2882,13 @@ body.light .dash-gallery-dots .dot.active { background: var(--primary); }
   .tx-controls-right {
     margin-left: 0;
     align-self: flex-end;
+  }
+
+  /* Pagination mobile */
+  .tx-pagination {
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
   }
 }
 
