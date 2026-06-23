@@ -4,8 +4,9 @@
  */
 
 // Apply saved theme immediately (prevent flash)
+// Default: light mode (first visit). Use localStorage if already set.
 (function() {
-  const theme = localStorage.getItem('kas-it-theme') || 'dark';
+  const theme = localStorage.getItem('kas-it-theme') || 'light';
   if (theme === 'light') document.body.classList.add('light');
 })();
 
