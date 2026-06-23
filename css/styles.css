@@ -43,6 +43,10 @@
        - Tab Switcher (Rekap Iuran / Event)
        - Buttons, Dropdowns, Modals
        - Mobile Gallery (3 slides)
+   28. Transactions Page
+       - Summary Grid
+       - Table columns & controls
+       - Mobile responsive
    ============================================ */
 
 /* --- 1. CSS Variables --- */
@@ -2674,3 +2678,126 @@ body.light .history-thead { background: rgba(46,125,50,0.08); }
 }
 body.light .dash-gallery-dots .dot { background: rgba(0,0,0,0.15); }
 body.light .dash-gallery-dots .dot.active { background: var(--primary); }
+
+/* ============================================
+   28. TRANSACTIONS PAGE
+   ============================================ */
+
+/* Controls spacing */
+.transactions-page .controls { margin-bottom: 16px; justify-content: space-between; }
+
+/* Summary grid */
+.tx-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  text-align: center;
+}
+.tx-summary-grid .summary-value {
+  font-size: var(--fs-xl);
+  font-weight: 700;
+}
+
+/* Table columns */
+.tx-table-wrap table .col-right { text-align: right; }
+.tx-table-wrap table .col-center { text-align: center; }
+.tx-table-wrap td.col-nowrap { white-space: nowrap; }
+
+/* Saldo cell */
+.tx-saldo { font-weight: 700; }
+.tx-saldo.positive { color: var(--green); }
+.tx-saldo.negative { color: var(--red); }
+
+/* Delete button */
+.tx-delete-btn {
+  padding: 4px 10px;
+  background: var(--red-bg);
+  color: var(--red);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.tx-delete-btn:hover { background: rgba(239,83,80,0.2); }
+
+/* Empty row */
+.tx-empty-row td {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 20px;
+}
+
+/* Controls search */
+.tx-controls-left {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.tx-controls-left input[type="text"] {
+  min-width: 200px;
+}
+.tx-controls-right {
+  margin-left: auto;
+}
+
+/* --- Transactions Mobile --- */
+@media (max-width: 768px) {
+  /* Summary: stack vertical on mobile */
+  .tx-summary-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .tx-summary-grid > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .tx-summary-grid > div:last-child { border-bottom: none; }
+  .tx-summary-grid .label { margin-bottom: 0; }
+  .tx-summary-grid .summary-value { font-size: var(--fs-lg); }
+
+  /* Search input */
+  .tx-controls-left input[type="text"] {
+    min-width: 0;
+    width: 100%;
+  }
+
+  /* Filter chips wrap */
+  .transactions-page .filter-chips {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .transactions-page .chip-divider { display: none; }
+
+  /* Table horizontal scroll */
+  .tx-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tx-table-wrap table {
+    min-width: 700px;
+  }
+  .tx-table-wrap td, .tx-table-wrap th {
+    font-size: 12px;
+    padding: 8px 6px;
+    white-space: nowrap;
+  }
+
+  /* Controls stack */
+  .transactions-page .controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .tx-controls-right {
+    margin-left: 0;
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .tx-summary-grid .summary-value { font-size: var(--fs-md); }
+}

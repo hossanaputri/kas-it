@@ -11,91 +11,27 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="IT-Kas">
 <link rel="apple-touch-icon" href="../icons/icon-192.png">
-<style>
-/* Page-specific: transactions.html */
-.controls { margin-bottom: 16px; justify-content: space-between; }
-
-@media (max-width: 768px) {
-  /* Summary: stack vertical on mobile */
-  .summary-grid {
-    grid-template-columns: 1fr !important;
-    gap: 8px !important;
-  }
-  .summary-grid > div {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-  }
-  .summary-grid > div:last-child { border-bottom: none; }
-  .summary-grid .label { margin-bottom: 0; }
-  .summary-grid .summary-value { font-size: 16px !important; }
-
-  /* Search input */
-  .controls input[type="text"] {
-    min-width: 0 !important;
-    width: 100%;
-  }
-
-  /* Filter chips wrap */
-  .filter-chips {
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-  .chip-divider { display: none; }
-
-  /* Table horizontal scroll */
-  .tx-table-wrap {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  .tx-table-wrap table {
-    min-width: 700px;
-  }
-  .tx-table-wrap td, .tx-table-wrap th {
-    font-size: 12px;
-    padding: 8px 6px;
-    white-space: nowrap;
-  }
-
-  /* Controls stack */
-  .controls {
-    flex-direction: column;
-    align-items: stretch !important;
-    gap: 10px;
-  }
-  .controls > div[style*="margin-left:auto"] {
-    margin-left: 0 !important;
-    align-self: flex-end;
-  }
-}
-
-@media (max-width: 480px) {
-  .summary-grid .summary-value { font-size: 14px !important; }
-}
-</style>
 </head>
-<body>
+<body class="transactions-page">
 <div id="app" v-cloak>
   <app-header @toggle-nav="navOpen = !navOpen"></app-header>
   <app-nav active="transactions" :pending-count="pendingCount" :open="navOpen" @close="navOpen = false"></app-nav>
 
   <div class="content">
     <!-- Summary -->
-    <div class="card" style="padding:16px 20px;">
-      <div class="summary-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center;">
+    <div class="card dash-card">
+      <div class="tx-summary-grid">
         <div>
           <div class="label">💰 Total Saldo</div>
-          <div class="summary-value summary-saldo" style="font-size:20px;font-weight:700;">{{ fmt(summary.masuk - summary.keluar) }}</div>
+          <div class="summary-value summary-saldo">{{ fmt(summary.masuk - summary.keluar) }}</div>
         </div>
         <div>
           <div class="label">📥 Total Masuk</div>
-          <div class="summary-value summary-masuk" style="font-size:20px;font-weight:700;">{{ fmt(summary.masuk) }}</div>
+          <div class="summary-value summary-masuk">{{ fmt(summary.masuk) }}</div>
         </div>
         <div>
           <div class="label">📤 Total Keluar</div>
-          <div class="summary-value summary-keluar" style="font-size:20px;font-weight:700;">{{ fmt(summary.keluar) }}</div>
+          <div class="summary-value summary-keluar">{{ fmt(summary.keluar) }}</div>
         </div>
       </div>
     </div>
@@ -106,8 +42,8 @@
         <h2>📋 Daftar Transaksi</h2>
       </div>
       <div class="controls">
-        <div style="display:flex;gap:8px;align-items:center;">
-          <input type="text" v-model="filter.search" placeholder="🔍 Cari nama / keterangan..." style="min-width:200px;">
+        <div class="tx-controls-left">
+          <input type="text" v-model="filter.search" placeholder="🔍 Cari nama / keterangan...">
         </div>
         <div class="filter-chips">
           <span class="chip-label">Kategori:</span>
@@ -124,7 +60,7 @@
           <label class="chip-item"><input type="checkbox" v-model="filter.status" value="pending"><span class="chip st-pending">Pending</span></label>
           <label class="chip-item"><input type="checkbox" v-model="filter.status" value="rejected"><span class="chip st-rejected">Rejected</span></label>
         </div>
-        <div style="margin-left:auto;">
+        <div class="tx-controls-right">
           <button @click="loadTransactions">🔄</button>
         </div>
       </div>
@@ -143,30 +79,30 @@
               <th>Kategori</th>
               <th>Anggota</th>
               <th>Keterangan</th>
-              <th style="text-align:right;">Masuk</th>
-              <th style="text-align:right;">Keluar</th>
-              <th style="text-align:right;">Saldo</th>
+              <th class="col-right">Masuk</th>
+              <th class="col-right">Keluar</th>
+              <th class="col-right">Saldo</th>
               <th>Status</th>
-              <th v-if="isAdmin" style="text-align:center;">Aksi</th>
+              <th v-if="isAdmin" class="col-center">Aksi</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="tx in paginatedTransactions" :key="tx.id">
-              <td style="white-space:nowrap;">{{ formatDate(tx.submittedAt) }}</td>
+              <td class="col-nowrap">{{ formatDate(tx.submittedAt) }}</td>
               <td><span class="badge-status" :class="'badge-kat-' + tx.kategori">{{ (tx.kategori || '').toUpperCase() }}</span></td>
               <td>{{ tx.memberName || '-' }}</td>
               <td>{{ tx.note || '-' }}</td>
-              <td style="text-align:right;" class="amount-in">{{ tx.type === 'masuk' ? fmt(tx.amount) : '' }}</td>
-              <td style="text-align:right;" class="amount-out">{{ tx.type === 'keluar' ? fmt(tx.amount) : '' }}</td>
-              <td style="text-align:right;font-weight:700;" :style="{ color: tx._saldo >= 0 ? '#66bb6a' : '#ef5350' }">{{ tx.status === 'rejected' ? '-' : fmt(tx._saldo) }}</td>
+              <td class="col-right amount-in">{{ tx.type === 'masuk' ? fmt(tx.amount) : '' }}</td>
+              <td class="col-right amount-out">{{ tx.type === 'keluar' ? fmt(tx.amount) : '' }}</td>
+              <td class="col-right tx-saldo" :class="tx._saldo >= 0 ? 'positive' : 'negative'">{{ tx.status === 'rejected' ? '-' : fmt(tx._saldo) }}</td>
               <td>
                 <span class="badge-status" :class="'badge-' + (tx.status || 'pending')">{{ (tx.status || 'pending').toUpperCase() }}</span>
               </td>
-              <td v-if="isAdmin" style="text-align:center;"><button style="padding:4px 10px;background:rgba(239,83,80,0.12);color:#ef5350;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;" @click.stop="deleteTx(tx)">🗑️</button>
+              <td v-if="isAdmin" class="col-center"><button class="tx-delete-btn" @click.stop="deleteTx(tx)">🗑️</button>
               </td>
             </tr>
-            <tr v-if="!filteredTransactions.length">
-              <td colspan="9" style="text-align:center;color:rgba(255,255,255,0.4);padding:20px;">Tidak ada data</td>
+            <tr v-if="!filteredTransactions.length" class="tx-empty-row">
+              <td colspan="9">Tidak ada data</td>
             </tr>
           </tbody>
         </table>
