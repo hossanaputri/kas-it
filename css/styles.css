@@ -2762,9 +2762,28 @@ body.light .dash-gallery-dots .dot.active { background: var(--primary); }
   margin-top: 14px;
   padding: 0 4px;
 }
+.tx-pagination-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 .tx-pagination-info {
   font-size: var(--fs-sm);
   color: var(--text-muted);
+}
+.tx-pagesize-select {
+  padding: 6px 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.04);
+  color: var(--text-light);
+  font-size: var(--fs-sm);
+  cursor: pointer;
+}
+body.light .tx-pagesize-select {
+  background: rgba(0,0,0,0.03);
+  border-color: rgba(0,0,0,0.1);
+  color: #333;
 }
 .tx-pagination-btns {
   display: flex;

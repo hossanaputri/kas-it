@@ -110,7 +110,15 @@
 
       <!-- Pagination -->
       <div class="tx-pagination" v-if="totalPages > 1">
-        <span class="tx-pagination-info">{{ pageStart + 1 }}-{{ Math.min(pageEnd, filteredTransactions.length) }} dari {{ filteredTransactions.length }}</span>
+        <div class="tx-pagination-left">
+          <select v-model.number="pageSize" class="tx-pagesize-select">
+            <option :value="10">10</option>
+            <option :value="20">20</option>
+            <option :value="50">50</option>
+            <option :value="100">100</option>
+          </select>
+          <span class="tx-pagination-info">{{ pageStart + 1 }}-{{ Math.min(pageEnd, filteredTransactions.length) }} dari {{ filteredTransactions.length }}</span>
+        </div>
         <div class="tx-pagination-btns">
           <button class="tx-page-btn" :disabled="currentPage === 1" @click="currentPage--">‹</button>
           <template v-for="p in visiblePages" :key="p">
@@ -205,7 +213,8 @@ const app = createApp({
     'filter.kategori'() { this.currentPage = 1; },
     'filter.type'() { this.currentPage = 1; },
     'filter.status'() { this.currentPage = 1; },
-    'filter.search'() { this.currentPage = 1; }
+    'filter.search'() { this.currentPage = 1; },
+    pageSize() { this.currentPage = 1; }
   },
   mounted() {
     this.loadTransactions();
