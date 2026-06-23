@@ -11,64 +11,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="IT-Kas">
 <link rel="apple-touch-icon" href="../icons/icon-192.png">
-<style>
-/* Page-specific: events.html */
-.content { max-width: 1000px; }
-
-@media (max-width: 768px) {
-  /* Event row: stack card + side actions */
-  .event-row {
-    flex-direction: column;
-    align-items: stretch !important;
-  }
-  .event-side-actions {
-    flex-direction: row !important;
-    justify-content: flex-end;
-    gap: 8px;
-    padding: 8px 12px 0 !important;
-  }
-
-  /* Event top: stack name/status and stats */
-  .event-top {
-    flex-direction: column;
-    align-items: flex-start !important;
-    gap: 8px;
-  }
-  .event-stats {
-    text-align: left !important;
-  }
-
-  /* Iuran chips wrap */
-  .event-iuran-grid {
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-  .iuran-chip {
-    font-size: 11px !important;
-  }
-
-  /* Detail modal: payment grid stack */
-  .payment-grid {
-    grid-template-columns: 1fr !important;
-    gap: 12px;
-  }
-
-  /* Detail summary boxes */
-  .detail-summary {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  /* Card header stack */
-  .card-header {
-    flex-direction: column;
-    align-items: flex-start !important;
-    gap: 10px;
-  }
-}
-</style>
 </head>
-<body>
+<body class="events-page">
 
 <div id="app" v-cloak>
   <app-header @toggle-nav="navOpen = !navOpen"></app-header>
@@ -78,8 +22,8 @@
     <div class="card">
       <div class="card-header">
         <h2>📅 Daftar Event</h2>
-        <div style="display:flex;gap:6px;">
-        <button class="btn" style="background:rgba(255,255,255,0.12);color:var(--text-light);border:1px solid rgba(255,255,255,0.18);" @click="loadData">🔄</button>
+        <div class="events-header-actions">
+        <button class="btn btn-secondary" @click="loadData">🔄</button>
         <button class="btn btn-save" @click="openCreateModal">+ Buat Event</button>
       </div>
     </div>
@@ -112,10 +56,10 @@
             </div>
           </div>
           <div class="event-iuran-grid">
-            <span class="iuran-chip" v-if="ev.iuranDirektur" :style="{ borderLeftColor: posColor('Direktur') }"><span class="pos">Direktur:</span> <span class="amt">{{ fmt(ev.iuranDirektur) }}</span></span>
-            <span class="iuran-chip" v-if="ev.iuranSeniorManager" :style="{ borderLeftColor: posColor('Senior Manager') }"><span class="pos">SM:</span> <span class="amt">{{ fmt(ev.iuranSeniorManager) }}</span></span>
-            <span class="iuran-chip" v-if="ev.iuranJuniorManager" :style="{ borderLeftColor: posColor('Junior Manager') }"><span class="pos">JM:</span> <span class="amt">{{ fmt(ev.iuranJuniorManager) }}</span></span>
-            <span class="iuran-chip" v-if="ev.iuranCoordinator" :style="{ borderLeftColor: posColor('Coordinator') }"><span class="pos">Coord:</span> <span class="amt">{{ fmt(ev.iuranCoordinator) }}</span></span>
+            <span class="iuran-chip" v-if="ev.iuranDirektur" :class="'iuran-chip-' + posClass('Direktur')"><span class="pos">Direktur:</span> <span class="amt">{{ fmt(ev.iuranDirektur) }}</span></span>
+            <span class="iuran-chip" v-if="ev.iuranSeniorManager" :class="'iuran-chip-' + posClass('Senior Manager')"><span class="pos">SM:</span> <span class="amt">{{ fmt(ev.iuranSeniorManager) }}</span></span>
+            <span class="iuran-chip" v-if="ev.iuranJuniorManager" :class="'iuran-chip-' + posClass('Junior Manager')"><span class="pos">JM:</span> <span class="amt">{{ fmt(ev.iuranJuniorManager) }}</span></span>
+            <span class="iuran-chip" v-if="ev.iuranCoordinator" :class="'iuran-chip-' + posClass('Coordinator')"><span class="pos">Coord:</span> <span class="amt">{{ fmt(ev.iuranCoordinator) }}</span></span>
           </div>
         </div>
         <div class="event-side-actions" @click.stop>
@@ -145,7 +89,7 @@
 
   <!-- Detail Modal -->
   <div class="modal-overlay" :class="{ active: showDetailModal }" @click.self="closeDetailModal">
-    <div class="modal" style="max-width:550px;">
+    <div class="modal modal-detail">
       <h2>{{ detailEvent ? detailEvent.name : '' }}</h2>
       <div v-if="detailEvent">
         <div class="detail-summary">
@@ -159,30 +103,30 @@
           </div>
         </div>
         <div class="detail-iuran">
-          <span class="chip" style="border-color:#e53935;" v-if="detailEvent.iuranDirektur">Direktur: <strong>{{ fmt(detailEvent.iuranDirektur) }}</strong></span>
-          <span class="chip" style="border-color:#1565c0;" v-if="detailEvent.iuranSeniorManager">SM: <strong>{{ fmt(detailEvent.iuranSeniorManager) }}</strong></span>
-          <span class="chip" style="border-color:#f9a825;" v-if="detailEvent.iuranJuniorManager">JM: <strong>{{ fmt(detailEvent.iuranJuniorManager) }}</strong></span>
-          <span class="chip" style="border-color:#2e7d32;" v-if="detailEvent.iuranCoordinator">Coord: <strong>{{ fmt(detailEvent.iuranCoordinator) }}</strong></span>
+          <span class="chip chip-direktur" v-if="detailEvent.iuranDirektur">Direktur: <strong>{{ fmt(detailEvent.iuranDirektur) }}</strong></span>
+          <span class="chip chip-sm" v-if="detailEvent.iuranSeniorManager">SM: <strong>{{ fmt(detailEvent.iuranSeniorManager) }}</strong></span>
+          <span class="chip chip-jm" v-if="detailEvent.iuranJuniorManager">JM: <strong>{{ fmt(detailEvent.iuranJuniorManager) }}</strong></span>
+          <span class="chip chip-coord" v-if="detailEvent.iuranCoordinator">Coord: <strong>{{ fmt(detailEvent.iuranCoordinator) }}</strong></span>
         </div>
         <div class="payment-grid">
           <div class="payment-list paid">
-            <h4 style="color:#2e7d32;">✅ Sudah Bayar</h4>
+            <h4>✅ Sudah Bayar</h4>
             <div v-for="p in getEventPayments(detailEvent)" :key="p.id" class="payment-item">
-              <span :style="{ color: posColor(getMemberPosition(p.memberNik)), fontWeight: 500 }">{{ p.memberName }} — <strong>{{ fmt(p.amount) }}</strong></span>
+              <span :class="'pos-color-' + posClass(getMemberPosition(p.memberNik))">{{ p.memberName }} — <strong>{{ fmt(p.amount) }}</strong></span>
               <span v-if="p.status === 'pending'" class="badge-pending">PENDING</span>
             </div>
-            <div v-if="!getEventPayments(detailEvent).length" style="color:#999;">-</div>
+            <div v-if="!getEventPayments(detailEvent).length" class="payment-empty">-</div>
           </div>
           <div class="payment-list unpaid">
-            <h4 style="color:#c62828;">❌ Belum Bayar</h4>
+            <h4>❌ Belum Bayar</h4>
             <div v-for="m in getUnpaidMembers(detailEvent)" :key="m.nik" class="payment-item">
-              <span :style="{ color: posColor(m.position), fontWeight: 500 }">{{ m.name }}</span>
+              <span :class="'pos-color-' + posClass(m.position)">{{ m.name }}</span>
             </div>
-            <div v-if="!getUnpaidMembers(detailEvent).length" style="color:#999;">Semua sudah bayar! 🎉</div>
+            <div v-if="!getUnpaidMembers(detailEvent).length" class="payment-empty">Semua sudah bayar! 🎉</div>
           </div>
         </div>
       </div>
-      <div class="form-actions" style="margin-top:16px;">
+      <div class="form-actions detail-form-actions">
         <button class="btn btn-save" @click="openEditFromDetail">✏️ Edit</button>
         <button class="btn btn-cancel" @click="closeDetailModal">Tutup</button>
       </div>
@@ -198,7 +142,7 @@
         <button class="btn-no" @click="cancelConfirm">Batal</button>
         <button class="btn-yes" @click="doConfirm">{{ confirmBtnText }}</button>
       </div>
-      <div v-else style="margin-top:18px;font-size:14px;color:#888;">Memproses...</div>
+      <div v-else class="confirm-processing">Memproses...</div>
     </div>
   </div>
 
@@ -256,6 +200,11 @@ const app = createApp({
     parseRibuan(str) { return Number(String(str).replace(/\D/g, '')) || 0; },
 
     posColor(position) { return POS_COLORS[position] || '#333'; },
+
+    posClass(position) {
+      const map = { 'Direktur': 'direktur', 'Senior Manager': 'senior-manager', 'Junior Manager': 'junior-manager', 'Coordinator': 'coordinator' };
+      return map[position] || '';
+    },
 
     getMemberPosition(nik) {
       const m = this.members.find(m => String(m.nik) === String(nik));

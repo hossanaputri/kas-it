@@ -50,6 +50,9 @@
    29. Inbox Page (Extended)
        - Layout, badges, metadata
        - Mobile responsive
+   30. Events Page (Extended)
+       - Layout, detail modal, chips
+       - Mobile responsive
    ============================================ */
 
 /* --- 1. CSS Variables --- */
@@ -2853,5 +2856,92 @@ body.light .dash-gallery-dots .dot.active { background: var(--primary); }
   .inbox-page .tx-item .detail {
     flex-wrap: wrap;
     gap: 4px;
+  }
+}
+
+/* ============================================
+   30. EVENTS PAGE (Extended)
+   ============================================ */
+
+/* Page layout */
+.events-page .content { max-width: 1000px; }
+
+/* Header actions row */
+.events-header-actions {
+  display: flex;
+  gap: 6px;
+}
+
+/* Detail modal wider */
+.events-page .modal-detail { max-width: 550px; }
+
+/* Detail iuran chip border colors */
+.detail-iuran .chip-direktur { border-color: var(--pos-direktur); }
+.detail-iuran .chip-sm { border-color: #1565c0; }
+.detail-iuran .chip-jm { border-color: #f9a825; }
+.detail-iuran .chip-coord { border-color: #2e7d32; }
+
+/* Iuran chip border-left by position */
+.iuran-chip-direktur { border-left-color: var(--pos-direktur); }
+.iuran-chip-senior-manager { border-left-color: var(--pos-senior-manager); }
+.iuran-chip-junior-manager { border-left-color: var(--pos-junior-manager); }
+.iuran-chip-coordinator { border-left-color: var(--pos-coordinator); }
+
+/* Payment list headers */
+.payment-list.paid h4 { color: #2e7d32; }
+.payment-list.unpaid h4 { color: #c62828; }
+
+/* Payment empty text */
+.payment-empty { color: #999; }
+
+/* Detail form actions spacing */
+.detail-form-actions { margin-top: 16px; }
+
+/* Confirm loading text */
+.confirm-processing {
+  margin-top: 18px;
+  font-size: 14px;
+  color: #888;
+}
+
+/* --- Events Mobile --- */
+@media (max-width: 768px) {
+  .events-page .event-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .events-page .event-side-actions {
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 8px 12px 0;
+  }
+  .events-page .event-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .events-page .event-stats {
+    text-align: left;
+  }
+  .events-page .event-iuran-grid {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .events-page .iuran-chip {
+    font-size: 11px;
+  }
+  .events-page .payment-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .events-page .detail-summary {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .events-page .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
   }
 }
