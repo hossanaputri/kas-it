@@ -2660,7 +2660,13 @@ body.light .history-thead { background: rgba(46,125,50,0.08); }
   .summary-cards .summary-card:first-child { grid-column: 1 / -1; }
 }
 
-/* --- Gallery Dots --- */
+/* Rekap amount: full on desktop, short on mobile */
+.rekap-amt-short { display: none; }
+
+@media (max-width: 768px) {
+  .rekap-amt-full { display: none; }
+  .rekap-amt-short { display: inline; }
+}
 .dash-gallery-dots {
   display: none;
   justify-content: center;

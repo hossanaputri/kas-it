@@ -153,7 +153,10 @@
                   <div class="rekap-position">{{ member.position }}</div>
                 </td>
                 <td v-for="(m, i) in months" :key="i" style="text-align:center;" :style="getMemberMonthStatus(member.nik, i+1) === 'late' ? { background: 'rgba(239,83,80,0.08)' } : getMemberMonthStatus(member.nik, i+1) === 'pending' ? { background: 'rgba(255,202,40,0.08)' } : {}">
-                  <span v-if="getMemberMonthStatus(member.nik, i+1) === 'approved'" class="amount-in">{{ fmtRekap(getMemberMonthAmount(member.nik, i+1)) }}</span>
+                  <span v-if="getMemberMonthStatus(member.nik, i+1) === 'approved'" class="amount-in">
+                    <span class="rekap-amt-full">{{ Number(getMemberMonthAmount(member.nik, i+1)).toLocaleString('id-ID') }}</span>
+                    <span class="rekap-amt-short">{{ fmtRekap(getMemberMonthAmount(member.nik, i+1)) }}</span>
+                  </span>
                   <span v-else-if="getMemberMonthStatus(member.nik, i+1) === 'pending'" class="status-pending">PENDING</span>
                   <span v-else-if="getMemberMonthStatus(member.nik, i+1) === 'late'" class="status-late">TELAT</span>
                   <span v-else class="status-empty">—</span>
@@ -891,12 +894,9 @@ const app = createApp({
     fmt(n) { return 'Rp ' + Number(n || 0).toLocaleString('id-ID'); },
     fmtRekap(n) {
       const num = Number(n || 0);
-      if (window.innerWidth <= 768) {
-        if (num >= 1000000) return (num / 1000000).toFixed(num % 1000000 === 0 ? 0 : 1) + 'jt';
-        if (num >= 1000) return (num / 1000).toFixed(num % 1000 === 0 ? 0 : 1) + 'rb';
-        return num.toString();
-      }
-      return num.toLocaleString('id-ID');
+      if (num >= 1000000) return (num / 1000000).toFixed(num % 1000000 === 0 ? 0 : 1) + 'jt';
+      if (num >= 1000) return Math.round(num / 1000) + 'rb';
+      return num.toString();
     },
     fmtInput(n) { if (!n && n !== 0) return ''; return Number(n).toLocaleString('id-ID'); },
     parseRibuan(str) { return Number(String(str).replace(/\D/g, '')) || 0; },
