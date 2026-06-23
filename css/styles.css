@@ -2639,16 +2639,6 @@ body.light .history-thead { background: rgba(46,125,50,0.08); }
 /* --- Event Min Amount Hint --- */
 .event-min-hint { font-size: var(--fs-sm); color: var(--text-muted); margin-top: -8px; margin-bottom: 12px; }
 
-/* --- Dashboard Medium (769px–1024px) --- */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .dash-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-  .dash-grid > .table-section:first-child {
-    grid-column: 1 / -1;
-  }
-}
-
 /* --- Dashboard Mobile (≤768px) --- */
 @media (max-width: 768px) {
   .dash-grid {
