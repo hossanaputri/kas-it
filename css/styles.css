@@ -3043,8 +3043,7 @@ body.light .tx-table-wrap {
    29. INBOX PAGE (Extended)
    ============================================ */
 
-/* Page layout */
-.inbox-page .content { max-width: 900px; }
+/* Page layout — full width (no max-width) */
 
 /* Badge count override */
 .inbox-page .badge { background: var(--orange-bg); color: var(--orange); }
@@ -3094,8 +3093,7 @@ body.light .tx-table-wrap {
    30. EVENTS PAGE (Extended)
    ============================================ */
 
-/* Page layout */
-.events-page .content { max-width: 1000px; }
+/* Page layout — full width (no max-width) */
 
 /* Header actions row */
 .events-header-actions {
