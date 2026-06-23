@@ -11,37 +11,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="IT-Kas">
 <link rel="apple-touch-icon" href="../icons/icon-192.png">
-<style>
-/* Page-specific: inbox.html */
-.content { max-width: 900px; }
-.badge { background: var(--orange-bg); color: var(--orange); }
-
-@media (max-width: 768px) {
-  /* Pending items: stack amount + actions below info */
-  .tx-item .tx-top {
-    flex-direction: column;
-    align-items: flex-start !important;
-    gap: 10px;
-  }
-  .tx-item .tx-top > div:last-child {
-    width: 100%;
-    justify-content: space-between;
-  }
-  .tx-item .tx-amount {
-    font-size: 15px;
-  }
-  .tx-item .tx-actions button {
-    padding: 8px 14px;
-    font-size: 16px;
-  }
-  .tx-item .detail {
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-}
-</style>
 </head>
-<body>
+<body class="inbox-page">
 
 <div id="app" v-cloak>
   <app-header @toggle-nav="navOpen = !navOpen"></app-header>
@@ -75,13 +46,13 @@
                   {{ tx.kategori === 'iuran' ? '💳' : tx.kategori === 'event' ? '📅' : '📦' }}
                   {{ tx.note || kategoriLabel(tx.kategori) }}
                 </span>
-                <span v-if="tx.kategori === 'event'" style="font-size:11px;color:#999;margin-left:4px;">
+                <span v-if="tx.kategori === 'event'" class="tx-detail-meta">
                   ({{ getEventName(tx.eventId) }})
                 </span>
-                <span style="font-size:11px;color:#999;margin-left:6px;">• {{ formatDate(tx.submittedAt) }}</span>
+                <span class="tx-detail-meta tx-detail-date">• {{ formatDate(tx.submittedAt) }}</span>
               </div>
             </div>
-            <div style="display:flex;align-items:center;gap:12px;">
+            <div class="tx-amount-row">
               <div class="tx-amount" :class="{ keluar: tx.type === 'keluar' }">
                 {{ tx.type === 'keluar' ? '-' : '+' }}{{ fmt(tx.amount) }}
               </div>

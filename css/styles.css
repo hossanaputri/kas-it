@@ -47,6 +47,9 @@
        - Summary Grid
        - Table columns & controls
        - Mobile responsive
+   29. Inbox Page (Extended)
+       - Layout, badges, metadata
+       - Mobile responsive
    ============================================ */
 
 /* --- 1. CSS Variables --- */
@@ -2800,4 +2803,55 @@ body.light .dash-gallery-dots .dot.active { background: var(--primary); }
 
 @media (max-width: 480px) {
   .tx-summary-grid .summary-value { font-size: var(--fs-md); }
+}
+
+/* ============================================
+   29. INBOX PAGE (Extended)
+   ============================================ */
+
+/* Page layout */
+.inbox-page .content { max-width: 900px; }
+
+/* Badge count override */
+.inbox-page .badge { background: var(--orange-bg); color: var(--orange); }
+
+/* Detail metadata */
+.tx-detail-meta {
+  font-size: 11px;
+  color: #999;
+  margin-left: 4px;
+}
+.tx-detail-date {
+  margin-left: 6px;
+}
+
+/* Amount + actions row */
+.tx-amount-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* --- Inbox Mobile --- */
+@media (max-width: 768px) {
+  .inbox-page .tx-item .tx-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .inbox-page .tx-item .tx-amount-row {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .inbox-page .tx-item .tx-amount {
+    font-size: 15px;
+  }
+  .inbox-page .tx-item .tx-actions button {
+    padding: 8px 14px;
+    font-size: 16px;
+  }
+  .inbox-page .tx-item .detail {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
 }
