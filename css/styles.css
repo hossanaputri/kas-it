@@ -2708,7 +2708,22 @@ body.light .dash-gallery-dots .dot.active { background: var(--primary); }
 .tx-table-wrap {
   border-radius: var(--radius-lg);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  overflow: visible;
+  overflow: hidden;
+}
+.tx-table-wrap table {
+  border-collapse: collapse;
+}
+.tx-table-wrap thead tr:first-child th:first-child {
+  border-top-left-radius: var(--radius-lg);
+}
+.tx-table-wrap thead tr:first-child th:last-child {
+  border-top-right-radius: var(--radius-lg);
+}
+.tx-table-wrap tbody tr:last-child td:first-child {
+  border-bottom-left-radius: var(--radius-lg);
+}
+.tx-table-wrap tbody tr:last-child td:last-child {
+  border-bottom-right-radius: var(--radius-lg);
 }
 
 /* Table columns */
