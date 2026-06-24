@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
@@ -10,13 +10,13 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="IT-Kas">
-<link rel="apple-touch-icon" href="../icons/icon-192.png">
+<link rel="apple-touch-icon" href="../icons/icon-light-192.png">
 </head>
 <body class="login-page">
 
 <!-- Theme toggle -->
 <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
-  <span id="theme-icon">🌙</span>
+  <span id="theme-icon">??</span>
 </button>
 
 <!-- Background orbs -->
@@ -26,13 +26,13 @@
 
 <div class="login-wrapper">
   <div class="login-card" id="app">
-    <div class="logo-container"><img src="../icons/icon-192.png" alt="IT-Kas" class="logo-img"></div>
+    <div class="logo-container"><img id="login-logo" src="../icons/icon-light-192.png" alt="IT-Kas" class="logo-img"></div>
     <h1>IT-Kas</h1>
 
     <!-- Login Form -->
     <template v-if="!showChangePassword">
       <div v-if="sessionExpired" class="session-expired-banner">
-        ⏱️ Sesi kamu sudah habis. Silakan login ulang.
+        ?? Sesi kamu sudah habis. Silakan login ulang.
       </div>
 
       <div class="form-group">
@@ -58,7 +58,7 @@
     <!-- Change Password Form -->
     <template v-else>
       <div class="change-pw-alert">
-        <strong>🔐 Buat Password Baru</strong>
+        <strong>?? Buat Password Baru</strong>
         <p>Kamu perlu membuat password baru sebelum bisa menggunakan dashboard.</p>
       </div>
 
@@ -110,7 +110,9 @@ function applyTheme(theme) {
     document.body.classList.remove('light');
   }
   const icon = document.getElementById('theme-icon');
-  if (icon) icon.textContent = theme === 'light' ? '☀️' : '🌙';
+  if (icon) icon.textContent = theme === 'light' ? '??' : '??';
+  const logo = document.getElementById('login-logo');
+  if (logo) logo.src = '../icons/icon-' + theme + '-192.png';
 }
 function toggleTheme() {
   const current = localStorage.getItem('kas-it-theme') || 'dark';

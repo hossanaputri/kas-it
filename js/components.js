@@ -15,11 +15,17 @@ const AppHeader = {
         <button class="hamburger-btn" @click="$emit('toggle-nav')">
           <span></span><span></span><span></span>
         </button>
-        <h1><img src="../icons/icon-192.png" alt="IT-Kas" style="height:28px;vertical-align:middle;margin-right:6px;">IT-Kas</h1>
+        <h1><img :src="logoSrc" alt="IT-Kas" style="height:28px;vertical-align:middle;margin-right:6px;">IT-Kas</h1>
       </div>
     </div>
   `,
-  emits: ['toggle-nav']
+  emits: ['toggle-nav'],
+  computed: {
+    logoSrc() {
+      const theme = document.body.classList.contains('light') ? 'light' : 'dark';
+      return '../icons/icon-' + theme + '-192.png';
+    }
+  }
 };
 
 /**
@@ -38,7 +44,7 @@ const AppNav = {
     <div class="nav-overlay" :class="{ open: open }" @click="$emit('close')"></div>
     <aside class="sidebar" :class="{ open: open }">
       <div class="sidebar-header">
-        <img src="../icons/icon-192.png" alt="IT-Kas" class="sidebar-logo">
+        <img :src="logoSrc" alt="IT-Kas" class="sidebar-logo">
         <span class="sidebar-title">IT-Kas</span>
         <button class="nav-close-btn" @click="$emit('close')">✕</button>
       </div>
@@ -78,6 +84,9 @@ const AppNav = {
     },
     userName() {
       return sessionStorage.getItem('kas-it-member-name') || '';
+    },
+    logoSrc() {
+      return '../icons/icon-' + (this.isDark ? 'dark' : 'light') + '-192.png';
     }
   },
   methods: {

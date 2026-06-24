@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="IT-Kas">
-<link rel="apple-touch-icon" href="../icons/icon-192.png">
+<link rel="apple-touch-icon" href="../icons/icon-light-192.png">
 </head>
 <body class="dashboard-page">
 <div id="app" v-cloak>
@@ -68,13 +68,13 @@
           <h2 class="dash-card-title">📋 Master Iuran</h2>
           <div class="dash-card-actions">
             <button class="btn btn-sm btn-simulasi" @click="showSimModal = true">🧮 Simulasi</button>
-            <button v-if="isAdmin" class="btn btn-sm btn-edit-iuran" @click="openEditIuran">✏️ Edit</button>
+            <button v-if="isAdmin" class="btn btn-sm btn-edit-iuran" @click="openEditIuran">📋 Ubah</button>
           </div>
         </div>
         <div class="iuran-list">
-          <div v-for="item in masterIuran" :key="item.position" class="iuran-item" :style="{ border: '1.5px solid ' + (posColors[item.position] || '#66bb6a') }">
-            <span class="iuran-pos" :style="{ color: posColors[item.position] || 'var(--text)' }">{{ item.position }}</span>
-            <span class="iuran-amount">{{ fmt(item.amount) }}</span>
+          <div v-for="pos in positionList" :key="pos" class="iuran-item" :style="{ border: '1.5px solid ' + (posColors[pos] || '#66bb6a') }">
+            <span class="iuran-pos" :style="{ color: posColors[pos] || 'var(--text)' }">{{ pos }}</span>
+            <span class="iuran-amount">{{ fmt(getCurrentRate(pos)) }}</span>
           </div>
         </div>
       </div>
@@ -152,8 +152,12 @@
                   <span class="rekap-name" :style="{ color: posColors[member.position] || 'var(--text)' }">{{ member.name }}</span>
                   <div class="rekap-position">{{ member.position }}</div>
                 </td>
-                <td v-for="(m, i) in months" :key="i" style="text-align:center;" :style="getMemberMonthStatus(member.nik, i+1) === 'late' ? { background: 'rgba(239,83,80,0.08)' } : getMemberMonthStatus(member.nik, i+1) === 'pending' ? { background: 'rgba(255,202,40,0.08)' } : {}">
+                <td v-for="(m, i) in months" :key="i" style="text-align:center;" :style="getMemberMonthStatus(member.nik, i+1) === 'late' ? { background: 'rgba(239,83,80,0.08)' } : getMemberMonthStatus(member.nik, i+1) === 'pending' ? { background: 'rgba(255,202,40,0.08)' } : getMemberMonthStatus(member.nik, i+1) === 'partial' ? { background: 'rgba(255,152,0,0.08)' } : {}">
                   <span v-if="getMemberMonthStatus(member.nik, i+1) === 'approved'" class="amount-in">
+                    <span class="rekap-amt-full">{{ Number(getMemberMonthAmount(member.nik, i+1)).toLocaleString('id-ID') }}</span>
+                    <span class="rekap-amt-short">{{ fmtRekap(getMemberMonthAmount(member.nik, i+1)) }}</span>
+                  </span>
+                  <span v-else-if="getMemberMonthStatus(member.nik, i+1) === 'partial'" class="status-partial">
                     <span class="rekap-amt-full">{{ Number(getMemberMonthAmount(member.nik, i+1)).toLocaleString('id-ID') }}</span>
                     <span class="rekap-amt-short">{{ fmtRekap(getMemberMonthAmount(member.nik, i+1)) }}</span>
                   </span>
@@ -248,7 +252,6 @@
         <div class="rekap-month-box">
           <div class="rekap-month-header">
             <span class="rekap-month-title">📊 Rekap {{ form.year }}:</span>
-            <span class="rekap-iuran-label">💰 Iuran: {{ fmt(form.amount) }}/bln</span>
           </div>
           <div class="rekap-month-grid">
             <div v-for="(m, i) in monthNames" :key="i" style="padding:4px;border-radius:4px;" :style="getFormRekapStyle(form.memberNik, i+1)">
@@ -259,10 +262,13 @@
         <div class="form-group">
           <label>Bulan (klik untuk pilih)</label>
           <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:6px;">
-            <div v-for="(m, i) in monthNames" :key="i" class="month-cb" :class="{ selected: form.months.includes(i+1), disabled: isFormMonthDisabled(form.memberNik, i+1) }" @click="!isFormMonthDisabled(form.memberNik, i+1) && toggleMonth(i+1)">{{ m }}<span v-if="isFormMonthDisabled(form.memberNik, i+1)" class="month-cb-check">✅</span></div>
+            <template v-for="(m, i) in monthNames" :key="i">
+              <div v-if="!isFormMonthDisabled(form.memberNik, i+1)" class="month-cb" :class="{ selected: form.months.includes(i+1), selisih: isFormMonthSelisih(form.memberNik, i+1) }" @click="toggleMonth(i+1)">{{ m }}<span v-if="isFormMonthSelisih(form.memberNik, i+1)" class="month-cb-selisih">(selisih)</span></div>
+            </template>
           </div>
+          <div v-if="!form.months.length && monthNames.every((m, i) => isFormMonthDisabled(form.memberNik, i+1))" style="text-align:center;padding:12px;color:var(--green);font-weight:600;">✅ Semua bulan sudah lunas!</div>
         </div>
-        <div class="submit-total">Total: {{ fmt(form.amount * form.months.length) }}</div>
+        <div class="submit-total">Total: {{ fmt(submitTotal) }}</div>
       </template>
 
       <!-- Event Section -->
@@ -311,10 +317,22 @@
     </div>
   </div>
 
-  <!-- Edit Iuran Modal -->
+  <!-- Edit Iuran Modal (History-based: creates new rate entries) -->
   <div class="modal-overlay" :class="{ active: showEditIuranModal }" @click.self="showEditIuranModal = false">
-    <div class="modal">
-      <h2>✏️ Edit Master Iuran</h2>
+    <div class="modal" style="max-width:500px;">
+      <h2>📋 Ubah Iuran</h2>
+      <p style="font-size:var(--fs-sm);color:var(--text-light);margin-bottom:12px;">Tarif baru akan berlaku mulai bulan yang dipilih. Tarif lama tetap tersimpan sebagai riwayat.</p>
+      <div class="form-group">
+        <label>Berlaku Mulai</label>
+        <div style="display:flex;gap:8px;">
+          <select v-model.number="editIuranMonth" style="flex:1;">
+            <option v-for="(m, i) in monthNames" :key="i" :value="i+1">{{ m }}</option>
+          </select>
+          <select v-model.number="editIuranYear" style="flex:1;">
+            <option v-for="y in editIuranYearOptions" :key="y" :value="y">{{ y }}</option>
+          </select>
+        </div>
+      </div>
       <div class="form-group" v-for="pos in positionList" :key="pos">
         <label :style="{ color: posColors[pos] }">{{ pos }}</label>
         <input type="text" :value="fmtInput(editIuranValues[pos])" @input="editIuranValues[pos] = parseRibuan($event.target.value); $event.target.value = fmtInput(editIuranValues[pos])" inputmode="numeric">
@@ -322,6 +340,22 @@
       <div class="form-actions">
         <button class="btn btn-secondary" @click="showEditIuranModal = false">Batal</button>
         <button class="btn btn-primary" @click="saveEditIuran" :disabled="editIuranSaving">{{ editIuranSaving ? 'Menyimpan...' : 'Simpan' }}</button>
+      </div>
+      <!-- Riwayat Perubahan -->
+      <div v-if="masterIuran.length" style="margin-top:16px;border-top:1px solid var(--border);padding-top:12px;">
+        <h3 style="font-size:var(--fs-md);margin-bottom:8px;">📜 Riwayat Tarif</h3>
+        <div style="max-height:200px;overflow-y:auto;">
+          <table style="width:100%;border-collapse:collapse;font-size:var(--fs-sm);">
+            <thead><tr><th style="padding:6px 8px;text-align:left;">Position</th><th style="padding:6px 8px;text-align:right;">Tarif</th><th style="padding:6px 8px;text-align:center;">Berlaku Dari</th></tr></thead>
+            <tbody>
+              <tr v-for="(item, idx) in sortedMasterIuran" :key="idx">
+                <td style="padding:4px 8px;" :style="{ color: posColors[item.position] || 'var(--text)' }">{{ item.position }}</td>
+                <td style="padding:4px 8px;text-align:right;">{{ fmt(item.amount) }}</td>
+                <td style="padding:4px 8px;text-align:center;color:var(--text-light);">{{ item.activeFrom || '-' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -578,6 +612,7 @@ const app = createApp({
       members: [],
       transactions: [],
       masterIuran: [],
+      ratesForYear: {},
       events: [],
       months: ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'],
       monthNames: ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'],
@@ -601,6 +636,8 @@ const app = createApp({
       simSaving: false,
       showEditIuranModal: false,
       editIuranValues: { 'Direktur': 0, 'Senior Manager': 0, 'Junior Manager': 0, 'Coordinator': 0 },
+      editIuranMonth: new Date().getMonth() + 2 > 12 ? 1 : new Date().getMonth() + 2,
+      editIuranYear: new Date().getMonth() + 2 > 12 ? new Date().getFullYear() + 1 : new Date().getFullYear(),
       editIuranSaving: false,
       positionList: ['Direktur', 'Senior Manager', 'Junior Manager', 'Coordinator'],
       showExtModal: false,
@@ -631,7 +668,13 @@ const app = createApp({
       return this.activeMembers.filter(m => m.name.toLowerCase().includes(s));
     },
     sortedMembers() {
-      return [...this.members].sort((a, b) => {
+      const year = this.selectedYear;
+      return [...this.members].filter(m => {
+        const isActive = m.isActive === true || m.isActive === 'TRUE';
+        if (isActive) return true;
+        // Inactive: only show if they have transactions in selected year
+        return this.transactions.some(t => t.memberNik === m.nik && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status !== 'rejected');
+      }).sort((a, b) => {
         const activeA = (a.isActive === true || a.isActive === 'TRUE') ? 0 : 1;
         const activeB = (b.isActive === true || b.isActive === 'TRUE') ? 0 : 1;
         if (activeA !== activeB) return activeA - activeB;
@@ -660,9 +703,13 @@ const app = createApp({
           if (parseInt(parts[0]) > year) return;
         }
         if (month < startMonth) return;
-        const tx = this.transactions.find(t => t.memberNik === m.nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status !== 'rejected');
-        if (tx && tx.status === 'approved') lunas++;
-        else if (tx && tx.status === 'pending') pending++;
+        const target = this.getRateForMonth(m.position, month);
+        const paid = this.transactions
+          .filter(t => t.memberNik === m.nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status === 'approved')
+          .reduce((sum, t) => sum + Number(t.amount), 0);
+        const hasPending = this.transactions.some(t => t.memberNik === m.nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status === 'pending');
+        if (paid >= target && target > 0) lunas++;
+        else if (hasPending) pending++;
         else { belum++; unpaidNames.push(m.name); }
       });
       return { lunas, pending, belum, unpaidNames };
@@ -682,8 +729,8 @@ const app = createApp({
         const mTx = this.transactions.filter(t => t.memberNik === m.nik && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status !== 'rejected');
         const unpaidMonths = this.bulkMonths.filter(mo => mo >= startMonth && !mTx.some(t => Number(t.month) === mo));
         if (unpaidMonths.length) {
-          const iuran = this.getMemberIuran(m.position);
-          rows.push({ nik: m.nik, name: m.name, position: m.position, unpaidMonths, total: unpaidMonths.length * iuran, iuran, checked: this.bulkMemberData.find(x => x.nik === m.nik)?.checked || false });
+          const total = unpaidMonths.reduce((sum, mo) => sum + this.getRateForMonth(m.position, mo), 0);
+          rows.push({ nik: m.nik, name: m.name, position: m.position, unpaidMonths, total, checked: this.bulkMemberData.find(x => x.nik === m.nik)?.checked || false });
         }
       });
       return rows;
@@ -695,7 +742,28 @@ const app = createApp({
       const total = checked.reduce((s, x) => { const row = this.bulkRows.find(r => r.nik === x.nik); return s + (row ? row.total : 0); }, 0);
       return checked.length + ' orang • ' + this.fmt(total);
     },
-    targetKas() { return this.activeMembers.reduce((sum, m) => sum + this.getMemberIuran(m.position), 0) * 12; },
+    targetKas() {
+      return this.activeMembers.reduce((sum, m) => {
+        const rates = this.ratesForYear[m.position];
+        if (rates && rates.length === 12) {
+          // Sum per-month rates, respecting activeFrom
+          let startMonth = 1;
+          if (m.activeFrom) {
+            const parts = m.activeFrom.split('-');
+            const afYear = parseInt(parts[0]);
+            const afMonth = parseInt(parts[1]);
+            if (afYear > this.selectedYear) return sum;
+            if (afYear === this.selectedYear) startMonth = afMonth;
+          }
+          for (let mo = startMonth; mo <= 12; mo++) {
+            sum += rates[mo - 1];
+          }
+          return sum;
+        }
+        // Fallback: flat rate × 12
+        return sum + this.getMemberIuran(m.position) * 12;
+      }, 0);
+    },
     simTotal() { return this.positionList.reduce((sum, pos) => sum + (this.simValues[pos] || 0) * this.getPosMemberCount(pos), 0); },
     targetPct() { if (!this.targetKas) return 0; return Math.min(100, Math.round((this.summary.masuk / this.targetKas) * 100)); },
     lateMembers() {
@@ -710,8 +778,11 @@ const app = createApp({
           if (parseInt(parts[0]) > year) return false;
         }
         for (let mo = startMonth; mo <= lateMonth; mo++) {
-          const paid = this.transactions.some(t => t.memberNik === m.nik && Number(t.month) === mo && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status !== 'rejected');
-          if (!paid) return true;
+          const target = this.getRateForMonth(m.position, mo);
+          const paid = this.transactions
+            .filter(t => t.memberNik === m.nik && Number(t.month) === mo && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status === 'approved')
+            .reduce((sum, t) => sum + Number(t.amount), 0);
+          if (paid < target) return true;
         }
         return false;
       });
@@ -721,7 +792,13 @@ const app = createApp({
       return sorted.slice(0, 5);
     },
     yearOptions() { const years = [...new Set(this.transactions.map(t => Number(t.year)).filter(y => y))]; if (!years.length) years.push(new Date().getFullYear()); return years.sort((a, b) => b - a); },
+    submitTotal() {
+      if (!this.form.memberNik || this.form.txType !== 'iuran') return 0;
+      return this.form.months.reduce((sum, month) => sum + this.getFormMonthRemaining(this.form.memberNik, month), 0);
+    },
     pendingCount() { return this.transactions.filter(t => t.status === 'pending').length; },
+    editIuranYearOptions() { const y = new Date().getFullYear(); return [y, y + 1]; },
+    sortedMasterIuran() { return [...this.masterIuran].sort((a, b) => (b.activeFrom || '').localeCompare(a.activeFrom || '') || a.position.localeCompare(b.position)); },
     reportPeriod() { return this.monthNames[this.reportMonth - 1] + ' ' + this.reportYear; },
     reportMasukBulan() { return this.transactions.filter(t => t.status === 'approved' && t.type === 'masuk' && Number(t.month) === this.reportMonth && Number(t.year) === this.reportYear).reduce((s, t) => s + Number(t.amount), 0); },
     reportKeluarBulan() { return this.transactions.filter(t => t.status === 'approved' && t.type === 'keluar' && Number(t.month) === this.reportMonth && Number(t.year) === this.reportYear).reduce((s, t) => s + Number(t.amount), 0); },
@@ -749,7 +826,11 @@ const app = createApp({
     }
   },
   watch: {
-    'form.year'() { this.form.months = []; },
+    'form.year'(newYear) {
+      this.form.months = [];
+      // Reload rates for the new year
+      fetch(API_URL + '?action=ratesForYear&year=' + newYear).then(r => r.json()).then(data => { this.ratesForYear = data; }).catch(() => {});
+    },
     bulkRows(newRows) { this.bulkMemberData = newRows.map(r => ({ nik: r.nik, checked: this.bulkMemberData.find(x => x.nik === r.nik)?.checked || false })); },
     masterIuran(val) { if (val && val.length) { this.positionList.forEach(pos => { const item = val.find(x => x.position === pos); this.simValues[pos] = item ? Number(item.amount) : 0; }); } }
   },
@@ -770,16 +851,19 @@ const app = createApp({
     async loadData() {
       this.dataLoading = true;
       try {
-        const [mRes, tRes, iRes, evRes] = await Promise.all([
+        const year = this.selectedYear;
+        const [mRes, tRes, iRes, evRes, rRes] = await Promise.all([
           fetch(API_URL + '?action=members'),
           fetch(API_URL + '?action=transactions'),
           fetch(API_URL + '?action=masterIuran'),
-          fetch(API_URL + '?action=events')
+          fetch(API_URL + '?action=events'),
+          fetch(API_URL + '?action=ratesForYear&year=' + year)
         ]);
         this.members = await mRes.json();
         this.transactions = await tRes.json();
         this.masterIuran = await iRes.json();
         this.events = await evRes.json();
+        this.ratesForYear = await rRes.json();
       } catch (err) { console.error(err); }
       this.dataLoading = false;
     },
@@ -792,8 +876,15 @@ const app = createApp({
         const afMonth = parseInt(parts[1]);
         if (year < afYear || (year === afYear && month < afMonth)) return 'none';
       }
-      const tx = this.transactions.find(t => t.memberNik === nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status !== 'rejected');
-      if (tx) return tx.status;
+      // Sum all approved payments for this month
+      const paid = this.transactions
+        .filter(t => t.memberNik === nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status === 'approved')
+        .reduce((sum, t) => sum + Number(t.amount), 0);
+      const hasPending = this.transactions.some(t => t.memberNik === nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status === 'pending');
+      const target = member ? this.getRateForMonth(member.position, month) : 0;
+      if (paid >= target && target > 0) return 'approved';
+      if (paid > 0 && paid < target) return 'partial';
+      if (hasPending) return 'pending';
       const now = new Date();
       const lateMonth = now.getDate() > 28 ? now.getMonth() + 1 : now.getMonth();
       if (year === now.getFullYear() && month <= lateMonth) return 'late';
@@ -802,8 +893,9 @@ const app = createApp({
     },
     getMemberMonthAmount(nik, month) {
       const year = this.selectedYear;
-      const tx = this.transactions.find(t => t.memberNik === nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status === 'approved');
-      return tx ? Number(tx.amount) : 0;
+      return this.transactions
+        .filter(t => t.memberNik === nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status === 'approved')
+        .reduce((sum, t) => sum + Number(t.amount), 0);
     },
     isMemberActive(m) { return m.isActive === true || m.isActive === 'TRUE'; },
     isMemberLate(member) { if (!this.isMemberActive(member)) return false; return this.lateMembers.some(m => m.nik === member.nik); },
@@ -813,7 +905,6 @@ const app = createApp({
       this.form.months = [];
       this.form.eventId = '';
       this.form.eventAmount = 0;
-      if (m) { const iuran = this.masterIuran.find(x => x.position === m.position); if (iuran) this.form.amount = Number(iuran.amount); }
     },
     selectFormMember(m) { this.form.memberNik = m.nik; this.memberSearch = ''; this.showMemberDropdown = false; this.onMemberChange(); },
     openSubmitModal() {
@@ -838,14 +929,44 @@ const app = createApp({
         const afMonth = parseInt(parts[1]);
         if (year < afYear || (year === afYear && month < afMonth)) return true;
       }
-      return this.transactions.some(t => t.memberNik === nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && (t.status === 'approved' || t.status === 'pending'));
+      // Disabled if target fully paid (remaining = 0) and no pending
+      const target = this.getMemberMonthTarget(nik, month);
+      const paid = this.transactions
+        .filter(t => t.memberNik === nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status === 'approved')
+        .reduce((sum, t) => sum + Number(t.amount), 0);
+      const hasPending = this.transactions.some(t => t.memberNik === nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status === 'pending');
+      return paid >= target || hasPending;
+    },
+    isFormMonthSelisih(nik, month) {
+      if (!nik) return false;
+      const year = this.form.year;
+      const target = this.getMemberMonthTarget(nik, month);
+      const paid = this.transactions
+        .filter(t => t.memberNik === nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status === 'approved')
+        .reduce((sum, t) => sum + Number(t.amount), 0);
+      return paid > 0 && paid < target;
+    },
+    getFormMonthRemaining(nik, month) {
+      if (!nik) return 0;
+      const year = this.form.year;
+      const target = this.getMemberMonthTarget(nik, month);
+      const paid = this.transactions
+        .filter(t => t.memberNik === nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status === 'approved')
+        .reduce((sum, t) => sum + Number(t.amount), 0);
+      return Math.max(0, target - paid);
     },
     getFormMonthStatus(nik, month) {
       const year = this.form.year;
       const member = this.members.find(m => m.nik === nik);
       if (member && member.activeFrom) { const parts = member.activeFrom.split('-'); if (year < parseInt(parts[0]) || (year === parseInt(parts[0]) && month < parseInt(parts[1]))) return 'none'; }
-      const tx = this.transactions.find(t => t.memberNik === nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status !== 'rejected');
-      if (tx) return tx.status;
+      const paid = this.transactions
+        .filter(t => t.memberNik === nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status === 'approved')
+        .reduce((sum, t) => sum + Number(t.amount), 0);
+      const hasPending = this.transactions.some(t => t.memberNik === nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status === 'pending');
+      const target = member ? this.getRateForMonth(member.position, month) : 0;
+      if (paid >= target && target > 0) return 'approved';
+      if (paid > 0 && paid < target) return 'partial';
+      if (hasPending) return 'pending';
       const now = new Date();
       const lateMonth = now.getDate() > 28 ? now.getMonth() + 1 : now.getMonth();
       if (year === now.getFullYear() && month <= lateMonth) return 'late';
@@ -855,24 +976,38 @@ const app = createApp({
     getFormRekapStyle(nik, month) {
       const status = this.getFormMonthStatus(nik, month);
       if (status === 'approved') return { background: 'rgba(102,187,106,0.12)', color: '#66bb6a', fontWeight: '600' };
+      if (status === 'partial') return { background: 'rgba(255,152,0,0.12)', color: '#ff9800', fontWeight: '600' };
       if (status === 'pending') return { background: 'rgba(255,202,40,0.12)', color: '#ffca28', fontWeight: '600' };
       if (status === 'late') return { background: 'rgba(239,83,80,0.12)', color: '#ef5350', fontWeight: '600' };
       return { background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.3)' };
     },
     getFormRekapLabel(nik, month) {
       const status = this.getFormMonthStatus(nik, month);
-      if (status === 'approved') return '✅'; if (status === 'pending') return 'PEND'; if (status === 'late') return 'TELAT'; return '-';
+      if (status === 'approved') {
+        const paid = this.transactions
+          .filter(t => t.memberNik === nik && Number(t.month) === month && Number(t.year) === this.form.year && t.kategori === 'iuran' && t.type === 'masuk' && t.status === 'approved')
+          .reduce((sum, t) => sum + Number(t.amount), 0);
+        return this.fmtRekap(paid);
+      }
+      if (status === 'partial') {
+        const paid = this.transactions
+          .filter(t => t.memberNik === nik && Number(t.month) === month && Number(t.year) === this.form.year && t.kategori === 'iuran' && t.type === 'masuk' && t.status === 'approved')
+          .reduce((sum, t) => sum + Number(t.amount), 0);
+        return this.fmtRekap(paid);
+      }
+      if (status === 'pending') return 'PEND'; if (status === 'late') return 'TELAT'; return '-';
     },
     getRekapStyle(nik, month) {
       const status = this.getMemberMonthStatus(nik, month);
       if (status === 'approved') return { background: 'rgba(102,187,106,0.12)', color: '#66bb6a', fontWeight: '600' };
+      if (status === 'partial') return { background: 'rgba(255,152,0,0.12)', color: '#ff9800', fontWeight: '600' };
       if (status === 'pending') return { background: 'rgba(255,202,40,0.12)', color: '#ffca28', fontWeight: '600' };
       if (status === 'late') return { background: 'rgba(239,83,80,0.12)', color: '#ef5350', fontWeight: '600' };
       return { background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.3)' };
     },
     getRekapLabel(nik, month) {
       const status = this.getMemberMonthStatus(nik, month);
-      if (status === 'approved') return '✅'; if (status === 'pending') return 'PEND'; if (status === 'late') return 'TELAT'; return '-';
+      if (status === 'approved') return '✅'; if (status === 'partial') return 'SISA'; if (status === 'pending') return 'PEND'; if (status === 'late') return 'TELAT'; return '-';
     },
     toggleMonth(m) { const idx = this.form.months.indexOf(m); if (idx >= 0) this.form.months.splice(idx, 1); else this.form.months.push(m); },
     async submitKas() {
@@ -891,11 +1026,17 @@ const app = createApp({
         } catch (err) { this.showToast('Gagal: koneksi error', false); }
         this.submitting = false; return;
       }
-      if (!this.form.months.length || !this.form.amount) { this.showToast('Pilih minimal 1 bulan', false); return; }
+      if (!this.form.months.length) { this.showToast('Pilih minimal 1 bulan', false); return; }
       this.submitting = true;
       const year = this.form.year;
       const isAdmin = this.isAdmin;
-      const txs = this.form.months.map(month => ({ kategori: 'iuran', memberNik: this.form.memberNik, memberName: this.form.memberName, month, year, type: 'masuk', amount: this.form.amount, note: 'Iuran ' + this.monthNames[month - 1] + ' ' + year, submittedAt: new Date().toISOString(), status: isAdmin ? 'approved' : 'pending', eventId: '', approvedAt: isAdmin ? new Date().toISOString() : '', approvedBy: isAdmin ? 'admin' : '', createdBy: sessionStorage.getItem('kas-it-member-nik') || '' }));
+      const txs = this.form.months.map(month => {
+        const remaining = this.getFormMonthRemaining(this.form.memberNik, month);
+        const isSelisih = this.isFormMonthSelisih(this.form.memberNik, month);
+        const notePrefix = isSelisih ? 'Selisih Iuran ' : 'Iuran ';
+        return { kategori: 'iuran', memberNik: this.form.memberNik, memberName: this.form.memberName, month, year, type: 'masuk', amount: remaining, note: notePrefix + this.monthNames[month - 1] + ' ' + year, submittedAt: new Date().toISOString(), status: isAdmin ? 'approved' : 'pending', eventId: '', approvedAt: isAdmin ? new Date().toISOString() : '', approvedBy: isAdmin ? 'admin' : '', createdBy: sessionStorage.getItem('kas-it-member-nik') || '' };
+      }).filter(t => t.amount > 0);
+      if (!txs.length) { this.showToast('Tidak ada sisa yang perlu dibayar', false); this.submitting = false; return; }
       try {
         const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'bulkAddTransactions', transactions: txs }) });
         const result = await res.json();
@@ -922,20 +1063,76 @@ const app = createApp({
       navigator.clipboard.writeText(text).then(() => { this.showToast('Berhasil di-copy! Tinggal paste ke WA'); }).catch(() => { this.showToast('Gagal copy', false); });
     },
     getPosMemberCount(pos) { return this.activeMembers.filter(m => m.position === pos).length; },
-    openEditIuran() { this.positionList.forEach(pos => { const item = this.masterIuran.find(x => x.position === pos); this.editIuranValues[pos] = item ? Number(item.amount) : 0; }); this.showEditIuranModal = true; },
+    openEditIuran() {
+      // Pre-fill with current rates
+      this.positionList.forEach(pos => {
+        const item = this.masterIuran.find(x => x.position === pos);
+        this.editIuranValues[pos] = item ? Number(item.amount) : 0;
+      });
+      this.showEditIuranModal = true;
+    },
     async saveEditIuran() {
+      const activeFrom = this.editIuranYear + '-' + String(this.editIuranMonth).padStart(2, '0');
+      // Check if any value actually changed from current rate
+      const rates = this.positionList
+        .filter(pos => {
+          const current = this.getRateForMonth(pos, parseInt(String(this.editIuranMonth)));
+          return this.editIuranValues[pos] !== current;
+        })
+        .map(pos => ({ position: pos, amount: this.editIuranValues[pos], activeFrom }));
+      if (!rates.length) { this.showToast('Tidak ada perubahan tarif', false); return; }
       this.editIuranSaving = true;
-      try { for (const pos of this.positionList) { await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'updateMasterIuran', position: pos, amount: this.editIuranValues[pos] }) }); } this.showToast('Master iuran berhasil diupdate'); this.showEditIuranModal = false; this.loadData(); }
-      catch (err) { this.showToast('Gagal menyimpan', false); }
+      try {
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'addMasterIuran', rates }) });
+        const result = await res.json();
+        if (result.ok !== false) { this.showToast(rates.length + ' tarif baru berhasil disimpan!'); this.showEditIuranModal = false; this.loadData(); }
+        else { this.showToast(result.error || 'Gagal', false); }
+      } catch (err) { this.showToast('Gagal: koneksi error', false); }
       this.editIuranSaving = false;
     },
     async applySimulasi() {
       this.simSaving = true;
-      try { for (const pos of this.positionList) { await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'updateMasterIuran', position: pos, amount: this.simValues[pos] }) }); } this.showToast('Simulasi diterapkan!'); this.showSimModal = false; this.loadData(); }
-      catch (err) { this.showToast('Gagal menyimpan', false); }
+      const now = new Date();
+      const activeFrom = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+      const rates = this.positionList.map(pos => ({ position: pos, amount: this.simValues[pos], activeFrom }));
+      try {
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'addMasterIuran', rates }) });
+        const result = await res.json();
+        if (result.ok !== false) { this.showToast('Simulasi diterapkan!'); this.showSimModal = false; this.loadData(); }
+        else { this.showToast(result.error || 'Gagal', false); }
+      } catch (err) { this.showToast('Gagal menyimpan', false); }
       this.simSaving = false;
     },
     getMemberIuran(position) { const item = this.masterIuran.find(x => x.position === position); return item ? Number(item.amount) : 0; },
+    getCurrentRate(position) {
+      // Get rate for current month
+      const now = new Date();
+      const month = now.getMonth() + 1;
+      return this.getRateForMonth(position, month);
+    },
+    getRateForMonth(position, month) {
+      // Use ratesForYear if available (index 0 = Jan)
+      const rates = this.ratesForYear[position];
+      if (rates && rates.length >= month) return rates[month - 1];
+      // Fallback to flat masterIuran
+      return this.getMemberIuran(position);
+    },
+    getMemberMonthTarget(nik, month) {
+      const member = this.members.find(m => m.nik === nik);
+      if (!member) return 0;
+      return this.getRateForMonth(member.position, month);
+    },
+    getMemberMonthPaid(nik, month) {
+      const year = this.selectedYear;
+      return this.transactions
+        .filter(t => t.memberNik === nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status === 'approved')
+        .reduce((sum, t) => sum + Number(t.amount), 0);
+    },
+    getMemberMonthRemaining(nik, month) {
+      const target = this.getMemberMonthTarget(nik, month);
+      const paid = this.getMemberMonthPaid(nik, month);
+      return Math.max(0, target - paid);
+    },
     openBulkModal() { this.bulkMonths = []; this.bulkSearch = ''; this.bulkSelectAll = false; this.bulkMemberData = []; this.showBulkModal = true; },
     toggleBulkMonth(mo) { const idx = this.bulkMonths.indexOf(mo); if (idx >= 0) this.bulkMonths.splice(idx, 1); else this.bulkMonths.push(mo); this.refreshBulkData(); },
     refreshBulkData() { this.$nextTick(() => { this.bulkMemberData = this.bulkRows.map(r => ({ nik: r.nik, checked: this.bulkMemberData.find(x => x.nik === r.nik)?.checked || false })); }); },
@@ -948,7 +1145,8 @@ const app = createApp({
       const txs = [];
       this.bulkRows.filter(r => checkedNiks.includes(r.nik)).forEach(row => {
         row.unpaidMonths.forEach(month => {
-          txs.push({ kategori: 'iuran', memberNik: row.nik, memberName: row.name, month, year, type: 'masuk', amount: row.iuran, note: 'Iuran ' + this.monthNames[month - 1] + ' ' + year, submittedAt: new Date().toISOString(), status: 'approved', eventId: '', approvedAt: new Date().toISOString(), approvedBy: sessionStorage.getItem('kas-it-member-nik') || '', createdBy: sessionStorage.getItem('kas-it-member-nik') || '' });
+          const amount = this.getRateForMonth(row.position, month);
+          txs.push({ kategori: 'iuran', memberNik: row.nik, memberName: row.name, month, year, type: 'masuk', amount, note: 'Iuran ' + this.monthNames[month - 1] + ' ' + year, submittedAt: new Date().toISOString(), status: 'approved', eventId: '', approvedAt: new Date().toISOString(), approvedBy: sessionStorage.getItem('kas-it-member-nik') || '', createdBy: sessionStorage.getItem('kas-it-member-nik') || '' });
         });
       });
       if (!txs.length) return;

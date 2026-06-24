@@ -642,9 +642,11 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
   user-select: none;
   transition: all 0.2s;
   border: 2px solid transparent;
-  color: rgba(255,255,255,0.6);
+  color: var(--text);
 }
 .month-cb:hover { background: rgba(255,255,255,0.08); }
+body.light .month-cb { background: rgba(0,0,0,0.03); }
+body.light .month-cb:hover { background: rgba(0,0,0,0.06); }
 .month-cb.selected {
   background: var(--green-bg);
   color: var(--green);
@@ -660,6 +662,21 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
   font-size: 10px;
   line-height: 1;
   margin-top: 2px;
+}
+.month-cb.selisih {
+  border-color: #ff9800;
+  background: rgba(255, 152, 0, 0.08);
+}
+.month-cb.selisih.selected {
+  background: rgba(255, 152, 0, 0.2);
+}
+.month-cb-selisih {
+  display: block;
+  font-size: 9px;
+  line-height: 1;
+  margin-top: 2px;
+  color: #ff9800;
+  font-weight: 600;
 }
 
 /* --- 17. Filter Chips (Transactions) --- */
@@ -2340,6 +2357,7 @@ body.light .iuran-item {
 
 /* Rekap status badges */
 .status-pending { color: var(--pending-yellow); font-size: var(--fs-sm); font-weight: 600; }
+.status-partial { color: #ff9800; font-size: var(--fs-sm); font-weight: 600; }
 .status-late { color: var(--keluar-red); font-size: var(--fs-sm); font-weight: 600; }
 .status-empty { color: rgba(255,255,255,0.15); font-size: var(--fs-md); }
 body.light .status-empty { color: rgba(0,0,0,0.15); }
