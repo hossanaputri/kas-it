@@ -47,7 +47,7 @@
         </div>
         <div class="tx-filters">
           <div class="tx-filter-dropdown" v-for="f in filterDropdowns" :key="f.key">
-            <button class="tx-filter-btn" @click="toggleDropdown(f.key)" :class="{ active: filter[f.key].length }">
+            <button class="tx-filter-btn" @click.stop="toggleDropdown(f.key)" :class="{ active: filter[f.key].length }">
               {{ f.label }} <span v-if="filter[f.key].length" class="tx-filter-count">{{ filter[f.key].length }}</span>
               <span class="tx-filter-arrow">▾</span>
             </button>
@@ -128,6 +128,19 @@
     </div>
   </div>
 
+  <!-- Confirm Modal -->
+  <div class="modal-overlay" :class="{ active: showConfirm }" @click.self="cancelConfirm">
+    <div class="toast" @click.stop>
+      <div class="toast-icon">⚠️</div>
+      <div class="toast-msg">{{ confirmMsg }}</div>
+      <div v-if="!confirmLoading" class="confirm-btns">
+        <button class="btn-no" @click="cancelConfirm">Batal</button>
+        <button class="btn-yes" @click="doConfirm">{{ confirmBtnText }}</button>
+      </div>
+      <div v-else class="confirm-processing">Memproses...</div>
+    </div>
+  </div>
+
   <!-- Toast -->
   <app-toast :show="toast.show" :message="toast.message" :success="toast.success" @close="toast.show = false"></app-toast>
 </div>
@@ -168,7 +181,12 @@ const app = createApp({
       ],
       currentPage: 1,
       pageSize: 10,
-      toast: { show: false, message: '', success: true }
+      toast: { show: false, message: '', success: true },
+      showConfirm: false,
+      confirmMsg: '',
+      confirmBtnText: 'Hapus',
+      confirmLoading: false,
+      confirmCallback: null
     };
   },
   computed: {
@@ -256,22 +274,40 @@ const app = createApp({
       this.loading = false;
     },
     async deleteTx(tx) {
-      if (!confirm('Hapus transaksi "' + (tx.note || tx.id) + '" dari ' + tx.memberName + '?')) return;
-      try {
-        const res = await fetch(API_URL, {
-          method: 'POST',
-          body: JSON.stringify({ action: 'deleteTransaction', id: tx.id })
-        });
-        const result = await res.json();
-        if (result.ok !== false) {
-          this.showToast('Transaksi berhasil dihapus');
-          this.loadTransactions();
-        } else {
-          this.showToast('Gagal menghapus', false);
+      this.askConfirm('Hapus transaksi "' + (tx.note || tx.id) + '" dari ' + (tx.memberName || '-') + '?', 'Hapus', async () => {
+        try {
+          const res = await fetch(API_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'deleteTransaction', id: tx.id })
+          });
+          const result = await res.json();
+          if (result.ok !== false) {
+            this.showToast('Transaksi berhasil dihapus');
+            this.loadTransactions();
+          } else {
+            this.showToast('Gagal menghapus', false);
+          }
+        } catch (err) {
+          this.showToast('Gagal: koneksi error', false);
         }
-      } catch (err) {
-        this.showToast('Gagal: koneksi error', false);
-      }
+      });
+    },
+    askConfirm(msg, btnText, callback) {
+      this.confirmMsg = msg;
+      this.confirmBtnText = btnText;
+      this.confirmCallback = callback;
+      this.confirmLoading = false;
+      this.showConfirm = true;
+    },
+    async doConfirm() {
+      this.confirmLoading = true;
+      if (this.confirmCallback) await this.confirmCallback();
+      this.showConfirm = false;
+      this.confirmLoading = false;
+    },
+    cancelConfirm() {
+      this.showConfirm = false;
+      this.confirmLoading = false;
     },
     showToast(message, success = true) {
       this.toast = { show: true, message, success };

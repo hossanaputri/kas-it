@@ -175,6 +175,11 @@
             <div class="ev-card-info">
               <span class="ev-card-name">{{ ev.name }}</span>
               <span class="ev-card-badge" :class="ev.status === 'closed' ? 'closed' : 'active'">{{ ev.status === 'closed' ? 'Closed' : 'Active' }}</span>
+              <div class="ev-card-date">
+                <span>📅 {{ formatDateShort(ev.createdAt) }}</span>
+                <span v-if="ev.closedAt"> — {{ formatDateShort(ev.closedAt) }}</span>
+                <span v-else class="ev-card-ongoing"> — Ongoing</span>
+              </div>
             </div>
             <div class="ev-card-stats">
               <span class="ev-card-count">{{ getEventPaidCount(ev.id) }}<span class="ev-card-total">/{{ activeMembers.length }}</span></span>
@@ -254,7 +259,7 @@
         <div class="form-group">
           <label>Bulan (klik untuk pilih)</label>
           <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:6px;">
-            <div v-for="(m, i) in monthNames" :key="i" class="month-cb" :class="{ selected: form.months.includes(i+1) }" :style="{ opacity: isFormMonthDisabled(form.memberNik, i+1) ? 0.4 : 1, pointerEvents: isFormMonthDisabled(form.memberNik, i+1) ? 'none' : '' }" @click="toggleMonth(i+1)">{{ m }}</div>
+            <div v-for="(m, i) in monthNames" :key="i" class="month-cb" :class="{ selected: form.months.includes(i+1), disabled: isFormMonthDisabled(form.memberNik, i+1) }" @click="!isFormMonthDisabled(form.memberNik, i+1) && toggleMonth(i+1)">{{ m }}<span v-if="isFormMonthDisabled(form.memberNik, i+1)" class="month-cb-check">✅</span></div>
           </div>
         </div>
         <div class="submit-total">Total: {{ fmt(form.amount * form.months.length) }}</div>
@@ -711,7 +716,10 @@ const app = createApp({
         return false;
       });
     },
-    activeEvents() { return this.events.filter(ev => ev.status !== 'closed').concat(this.events.filter(ev => ev.status === 'closed').slice(0, 3)); },
+    activeEvents() {
+      const sorted = [...this.events].sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+      return sorted.slice(0, 5);
+    },
     yearOptions() { const years = [...new Set(this.transactions.map(t => Number(t.year)).filter(y => y))]; if (!years.length) years.push(new Date().getFullYear()); return years.sort((a, b) => b - a); },
     pendingCount() { return this.transactions.filter(t => t.status === 'pending').length; },
     reportPeriod() { return this.monthNames[this.reportMonth - 1] + ' ' + this.reportYear; },
@@ -984,6 +992,7 @@ const app = createApp({
     },
     openHistory(type) { this.historyType = type; this.showHistoryModal = true; },
     formatDate(iso) { if (!iso) return '-'; const d = new Date(iso); return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: '2-digit' }); },
+    formatDateShort(iso) { if (!iso) return '-'; const d = new Date(iso); return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }); },
     relativeTime(iso) {
       if (!iso) return '';
       const now = new Date();

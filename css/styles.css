@@ -651,6 +651,16 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
   font-weight: 600;
   border-color: var(--primary);
 }
+.month-cb.disabled {
+  cursor: not-allowed;
+  position: relative;
+}
+.month-cb-check {
+  display: block;
+  font-size: 10px;
+  line-height: 1;
+  margin-top: 2px;
+}
 
 /* --- 17. Filter Chips (Transactions) --- */
 .filter-chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
@@ -2387,11 +2397,22 @@ body.light .status-empty { color: rgba(0,0,0,0.15); }
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
 }
 .ev-card-name {
   font-size: var(--fs-lg);
   font-weight: 700;
   color: var(--text);
+}
+.ev-card-date {
+  width: 100%;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.ev-card-ongoing {
+  color: var(--green);
+  font-weight: 600;
 }
 .ev-card-badge {
   font-size: var(--fs-sm);
@@ -2898,7 +2919,7 @@ body.light .dash-gallery-dots .dot.active { background: var(--primary); }
 .tx-filter-menu {
   position: absolute;
   top: calc(100% + 4px);
-  left: 0;
+  right: 0;
   background: var(--dropdown-bg, #1a2e1c);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: var(--radius-md);

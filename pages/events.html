@@ -23,7 +23,7 @@
       <div class="card-header">
         <h2>📅 Daftar Event</h2>
         <div class="events-header-actions">
-        <button class="btn btn-secondary" @click="loadData">🔄 Refresh</button>
+        <button class="btn btn-primary" @click="loadData">🔄 Refresh</button>
         <button class="btn btn-primary" @click="openCreateModal">+ Buat Event</button>
       </div>
     </div>
@@ -314,7 +314,7 @@ const app = createApp({
     // Actions
     closeEvent(ev) {
       this.askConfirm('Close event "' + ev.name + '"?', 'Close', async () => {
-        await this.postAction({ action: 'closeEvent', id: ev.id });
+        await this.postAction({ action: 'closeEvent', id: ev.id, closedBy: sessionStorage.getItem('kas-it-member-nik') || '' });
       });
     },
 
