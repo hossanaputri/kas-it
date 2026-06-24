@@ -21,7 +21,7 @@ function checkAuth() {
   const token = sessionStorage.getItem('kas-it-token');
   const loginTime = sessionStorage.getItem('kas-it-login-time');
   if (!token || !loginTime) { window.location.href = 'login.html'; return false; }
-  if (Date.now() - Number(loginTime) > 30 * 60 * 1000) {
+  if (Date.now() - Number(loginTime) > 24 * 60 * 60 * 1000) {
     sessionStorage.removeItem('kas-it-token');
     sessionStorage.removeItem('kas-it-login-time');
     window.location.href = 'login.html?expired';
@@ -77,7 +77,7 @@ const authMixin = {
       const token = sessionStorage.getItem('kas-it-token');
       const loginTime = sessionStorage.getItem('kas-it-login-time');
       if (!token || !loginTime) return false;
-      return Date.now() - Number(loginTime) < 30 * 60 * 1000;
+      return Date.now() - Number(loginTime) < 24 * 60 * 60 * 1000;
     },
     isAdmin() {
       return this.isLoggedIn && sessionStorage.getItem('kas-it-is-admin') === 'true';
