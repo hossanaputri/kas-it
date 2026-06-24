@@ -247,6 +247,21 @@ body:not(.login-page) .content {
   padding: 10px 12px;
   margin-bottom: 8px;
 }
+.sidebar-user-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  padding: 4px 6px;
+  margin: -4px -6px;
+  transition: background 0.2s;
+}
+.sidebar-user-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
 .sidebar-user-avatar {
   width: 34px;
   height: 34px;
@@ -1213,6 +1228,7 @@ body.light .sidebar-divider { background: rgba(0, 0, 0, 0.06); }
 body.light .sidebar-user-avatar { background: rgba(76, 175, 80, 0.1); border-color: rgba(76, 175, 80, 0.2); color: #2e7d32; }
 body.light .sidebar-user-name { color: #1a1a1a; }
 body.light .sidebar-user-role { color: rgba(0, 0, 0, 0.4); }
+body.light .sidebar-user-link:hover { background: rgba(0, 0, 0, 0.04); }
 body.light .sidebar-logout-btn { background: rgba(239, 83, 80, 0.06); border-color: rgba(239, 83, 80, 0.12); color: #c62828; }
 
 /* Cards */
@@ -3247,3 +3263,50 @@ body.light .tx-table-wrap {
     gap: 10px;
   }
 }
+
+/* ============================================
+   31. ACCOUNT PAGE
+   ============================================ */
+.account-profile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.account-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(102,187,106,0.3), rgba(46,125,50,0.3));
+  border: 2px solid rgba(102,187,106,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: #66bb6a;
+  flex-shrink: 0;
+}
+.account-info { min-width: 0; }
+.account-name {
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.account-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--fs-sm);
+}
+.account-role { font-weight: 600; }
+.account-nik { color: var(--text-muted); }
+
+/* Account light theme */
+body.light .account-avatar {
+  background: rgba(76, 175, 80, 0.1);
+  border-color: rgba(76, 175, 80, 0.2);
+  color: #2e7d32;
+}
+body.light .account-name { color: #1a1a1a; }
+body.light .account-nik { color: rgba(0, 0, 0, 0.4); }

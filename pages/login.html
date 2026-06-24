@@ -192,12 +192,14 @@ createApp({
             sessionStorage.setItem('kas-it-login-time', String(Date.now()));
             sessionStorage.setItem('kas-it-member-nik', result.memberNik || '');
             sessionStorage.setItem('kas-it-member-name', result.memberName || '');
+            sessionStorage.setItem('kas-it-member-position', result.memberPosition || '');
             sessionStorage.setItem('kas-it-is-admin', result.isAdmin ? 'true' : 'false');
           } else {
             sessionStorage.setItem('kas-it-token', result.token);
             sessionStorage.setItem('kas-it-login-time', String(Date.now()));
             sessionStorage.setItem('kas-it-member-nik', result.memberNik || '');
             sessionStorage.setItem('kas-it-member-name', result.memberName || '');
+            sessionStorage.setItem('kas-it-member-position', result.memberPosition || '');
             sessionStorage.setItem('kas-it-is-admin', result.isAdmin ? 'true' : 'false');
             window.location.href = 'index.html';
           }

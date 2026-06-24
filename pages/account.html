@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IT-Kas - Akun</title>
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0a1a0d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="IT-Kas">
+<link rel="apple-touch-icon" href="../icons/icon-192.png">
+</head>
+<body>
+<div id="app" v-cloak>
+  <app-header @toggle-nav="navOpen = !navOpen"></app-header>
+  <app-nav active="account" :pending-count="pendingCount" :open="navOpen" @close="navOpen = false"></app-nav>
+
+  <div class="content">
+    <!-- Profil Card -->
+    <div class="card">
+      <div class="account-profile">
+        <div class="account-avatar">{{ userName.charAt(0) }}</div>
+        <div class="account-info">
+          <h2 class="account-name">{{ userName }}</h2>
+          <div class="account-meta">
+            <span class="account-role" :class="'pos-color-' + posClass(position)">{{ position }}</span>
+            <span class="account-nik">NIK: {{ memberNik }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ganti Password -->
+    <div class="card">
+      <h3 style="margin-bottom: 16px;">🔐 Ganti Password</h3>
+      <div class="form-group">
+        <label>Password Lama</label>
+        <div class="password-wrapper">
+          <input :type="showOld ? 'text' : 'password'" v-model="oldPassword" placeholder="Masukkan password lama">
+          <span class="eye-toggle" @click="showOld = !showOld">
+            <svg v-if="!showOld" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Password Baru</label>
+        <div class="password-wrapper">
+          <input :type="showNew ? 'text' : 'password'" v-model="newPassword" placeholder="Minimal 6 karakter" @keyup.enter="$refs.confirmInput.focus()">
+          <span class="eye-toggle" @click="showNew = !showNew">
+            <svg v-if="!showNew" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Konfirmasi Password Baru</label>
+        <div class="password-wrapper">
+          <input :type="showConfirm ? 'text' : 'password'" v-model="confirmPassword" placeholder="Ketik ulang password baru" ref="confirmInput" @keyup.enter="changePassword">
+          <span class="eye-toggle" @click="showConfirm = !showConfirm">
+            <svg v-if="!showConfirm" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </span>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" @click="changePassword" :disabled="saving">{{ saving ? 'Menyimpan...' : 'Simpan Password' }}</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <app-toast :show="toast.show" :message="toast.message" :success="toast.success" @close="toast.show = false"></app-toast>
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/components.js"></script>
+<script>
+const { createApp } = Vue;
+
+if (!checkAuth()) { /* redirected */ } else { initApp(); }
+
+function initApp() {
+const app = createApp({
+  mixins: [authMixin],
+  data() {
+    return {
+      navOpen: false,
+      oldPassword: '',
+      newPassword: '',
+      confirmPassword: '',
+      showOld: false,
+      showNew: false,
+      showConfirm: false,
+      saving: false,
+      toast: { show: false, message: '', success: true }
+    };
+  },
+  computed: {
+    pendingCount() { return 0; },
+    memberNik() { return sessionStorage.getItem('kas-it-member-nik') || ''; },
+    userName() { return sessionStorage.getItem('kas-it-member-name') || ''; },
+    position() { return sessionStorage.getItem('kas-it-member-position') || ''; }
+  },
+  methods: {
+    posClass(pos) {
+      const map = { 'Direktur': 'direktur', 'Senior Manager': 'sm', 'Junior Manager': 'jm', 'Coordinator': 'coord' };
+      return map[pos] || 'coord';
+    },
+    async changePassword() {
+      if (!this.oldPassword) {
+        this.showToast('Password lama wajib diisi', false);
+        return;
+      }
+      if (!this.newPassword || this.newPassword.length < 6) {
+        this.showToast('Password baru minimal 6 karakter', false);
+        return;
+      }
+      if (this.newPassword !== this.confirmPassword) {
+        this.showToast('Password baru tidak sama', false);
+        return;
+      }
+      this.saving = true;
+      try {
+        const encoder = new TextEncoder();
+        // Verify old password first
+        const oldData = encoder.encode(this.oldPassword);
+        const oldHashBuffer = await crypto.subtle.digest('SHA-256', oldData);
+        const oldHashHex = Array.from(new Uint8Array(oldHashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+
+        // Hash new password
+        const newData = encoder.encode(this.newPassword);
+        const newHashBuffer = await crypto.subtle.digest('SHA-256', newData);
+        const newHashHex = Array.from(new Uint8Array(newHashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'changePassword',
+            token: sessionStorage.getItem('kas-it-token'),
+            memberNik: this.memberNik,
+            oldPasswordHash: oldHashHex,
+            newPasswordHash: newHashHex
+          })
+        });
+        const result = await res.json();
+        if (result.ok !== false) {
+          this.showToast('Password berhasil diganti');
+          this.oldPassword = '';
+          this.newPassword = '';
+          this.confirmPassword = '';
+        } else {
+          this.showToast(result.error || 'Gagal mengganti password', false);
+        }
+      } catch (err) {
+        this.showToast('Gagal: koneksi error', false);
+      }
+      this.saving = false;
+    },
+    showToast(message, success = true) {
+      this.toast = { show: true, message, success };
+    }
+  }
+});
+registerComponents(app);
+app.mount('#app');
+}
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('../sw.js');
+}
+</script>
+</body>
+</html>

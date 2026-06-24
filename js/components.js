@@ -54,11 +54,13 @@ const AppNav = {
       <div class="sidebar-footer">
         <div class="sidebar-divider"></div>
         <div class="sidebar-user" v-if="userName">
-          <div class="sidebar-user-avatar">{{ userName.charAt(0) }}</div>
-          <div class="sidebar-user-info">
-            <div class="sidebar-user-name">{{ userName }}</div>
-            <div class="sidebar-user-role">{{ isAdmin ? 'Admin' : 'Member' }}</div>
-          </div>
+          <a href="account.html" class="sidebar-user-link">
+            <div class="sidebar-user-avatar">{{ userName.charAt(0) }}</div>
+            <div class="sidebar-user-info">
+              <div class="sidebar-user-name">{{ userName }}</div>
+              <div class="sidebar-user-role">{{ isAdmin ? 'Admin' : 'Member' }}</div>
+            </div>
+          </a>
           <button class="theme-toggle sidebar-theme" @click="toggleTheme" :title="isDark ? 'Light mode' : 'Dark mode'">{{ isDark ? '🌙' : '☀️' }}</button>
         </div>
         <button class="sidebar-logout-btn" @click="logout">🚪 Logout</button>
