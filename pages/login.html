@@ -17,7 +17,7 @@
 
 <!-- Theme toggle -->
 <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
-  <span id="theme-icon">??</span>
+  <span id="theme-icon">🌙</span>
 </button>
 
 <!-- Background orbs -->
@@ -33,7 +33,7 @@
     <!-- Login Form -->
     <template v-if="!showChangePassword">
       <div v-if="sessionExpired" class="session-expired-banner">
-        ?? Sesi kamu sudah habis. Silakan login ulang.
+        ⏱️ Sesi kamu sudah habis. Silakan login ulang.
       </div>
 
       <div class="form-group">
@@ -59,7 +59,7 @@
     <!-- Change Password Form -->
     <template v-else>
       <div class="change-pw-alert">
-        <strong>?? Buat Password Baru</strong>
+        <strong>🔐 Buat Password Baru</strong>
         <p>Kamu perlu membuat password baru sebelum bisa menggunakan dashboard.</p>
       </div>
 
@@ -111,7 +111,7 @@ function applyTheme(theme) {
     document.body.classList.remove('light');
   }
   const icon = document.getElementById('theme-icon');
-  if (icon) icon.textContent = theme === 'light' ? '??' : '??';
+  if (icon) icon.textContent = theme === 'light' ? '☀️' : '🌙';
   const logo = document.getElementById('login-logo');
   if (logo) logo.src = '../icons/icon-' + theme + '-192.png';
 }
