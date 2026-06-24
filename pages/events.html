@@ -23,8 +23,8 @@
       <div class="card-header">
         <h2>📅 Daftar Event</h2>
         <div class="events-header-actions">
-        <button class="btn-add" @click="loadData">🔄 Refresh</button>
-        <button class="btn btn-save" @click="openCreateModal">+ Buat Event</button>
+        <button class="btn btn-secondary" @click="loadData">🔄 Refresh</button>
+        <button class="btn btn-primary" @click="openCreateModal">+ Buat Event</button>
       </div>
     </div>
 
@@ -81,8 +81,8 @@
       <div class="form-group"><label>Iuran Junior Manager</label><input type="text" :value="fmtInput(form.iuranJuniorManager)" @input="form.iuranJuniorManager = parseRibuan($event.target.value); $event.target.value = fmtInput(form.iuranJuniorManager)" placeholder="Cth: 50.000" inputmode="numeric"></div>
       <div class="form-group"><label>Iuran Coordinator</label><input type="text" :value="fmtInput(form.iuranCoordinator)" @input="form.iuranCoordinator = parseRibuan($event.target.value); $event.target.value = fmtInput(form.iuranCoordinator)" placeholder="Cth: 50.000" inputmode="numeric"></div>
       <div class="form-actions">
-        <button class="btn btn-cancel" @click="closeCreateModal">Batal</button>
-        <button class="btn btn-save" @click="saveEvent" :disabled="saving">{{ saving ? 'Menyimpan...' : 'Simpan' }}</button>
+        <button class="btn btn-secondary" @click="closeCreateModal">Batal</button>
+        <button class="btn btn-primary" @click="saveEvent" :disabled="saving">{{ saving ? 'Menyimpan...' : 'Simpan' }}</button>
       </div>
     </div>
   </div>
@@ -127,8 +127,8 @@
         </div>
       </div>
       <div class="form-actions detail-form-actions">
-        <button class="btn btn-save" @click="openEditFromDetail">✏️ Edit</button>
-        <button class="btn btn-cancel" @click="closeDetailModal">Tutup</button>
+        <button class="btn btn-primary" @click="openEditFromDetail">✏️ Edit</button>
+        <button class="btn btn-secondary" @click="closeDetailModal">Tutup</button>
       </div>
     </div>
   </div>

@@ -381,25 +381,6 @@ body:not(.login-page) .nav-overlay {
 .btn-shimmer:hover::before { left: 100%; }
 .btn-shimmer:disabled::before { display: none; }
 
-/* Legacy aliases (backward compat — remove later) */
-.btn-save { background: var(--primary-gradient); color: white; }
-.btn-save:hover { box-shadow: 0 4px 16px rgba(46,125,50,0.4); }
-.btn-cancel { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.18); }
-.btn-cancel:hover { background: rgba(255,255,255,0.18); }
-.btn-logout { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.18); }
-.btn-logout:hover { background: rgba(255,255,255,0.18); }
-.btn-add {
-  padding: 8px 14px;
-  background: var(--primary-gradient);
-  color: white;
-  border: none;
-  border-radius: var(--radius-md);
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-}
-.btn-add:hover { box-shadow: 0 4px 16px rgba(46,125,50,0.4); }
-
 /* --- 7. Cards & Sections --- */
 .card, .table-section {
   background: #0a0a0a;
@@ -535,8 +516,6 @@ tr.inactive:hover td { background: rgba(255,255,255,0.03); }
 .form-group input::placeholder { color: rgba(255,255,255,0.3); }
 .form-group select option { background: #1a2e1c; color: #e8f5e9; }
 .form-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; }
-.form-actions .btn-save { background: var(--primary-gradient); color: white; padding: 8px 16px; border: none; border-radius: var(--radius-md); cursor: pointer; font-size: 15px; font-weight: 600; }
-.form-actions .btn-cancel { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.7); padding: 8px 16px; border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-md); cursor: pointer; font-size: 15px; font-weight: 600; }
 .form-checkbox { display: flex; align-items: center; gap: 8px; }
 .form-checkbox input { width: auto; }
 .form-checkbox label { margin: 0; cursor: pointer; }
@@ -1216,7 +1195,6 @@ body.light .header {
 }
 body.light .header h1 { color: #1b5e20; }
 body.light .header-right span { color: rgba(0, 0, 0, 0.6); }
-body.light .btn-logout { background: rgba(0,0,0,0.04); color: rgba(0,0,0,0.7); border-color: rgba(0,0,0,0.1); }
 body.light .hamburger-btn span { background: #1b5e20; }
 
 /* Sidebar */
@@ -1389,11 +1367,6 @@ body.light select {
   color: #333 !important;
 }
 body.light select option { background: #fff; color: #333; }
-
-/* Buttons */
-body.light .btn-cancel { background: rgba(0,0,0,0.04); color: rgba(0,0,0,0.7); border-color: rgba(0,0,0,0.1); }
-body.light .btn-add:hover,
-body.light .btn-save:hover { box-shadow: 0 4px 16px rgba(46,125,50,0.25); }
 
 /* Inbox items */
 body.light .tx-item {
