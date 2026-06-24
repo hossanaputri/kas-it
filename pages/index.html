@@ -25,6 +25,8 @@
     </div>
 
     <template v-else>
+    <!-- Refreshing indicator -->
+    <div v-if="dataRefreshing" class="refreshing-bar"></div>
     <!-- 3-Column Grid: Summary | Master Iuran | Status Bulan Ini -->
     <div class="dash-grid" ref="dashGrid" @scroll="onGalleryScroll">
 
@@ -610,6 +612,7 @@ const app = createApp({
       galleryIdx: 0,
       rekapTab: 'iuran',
       dataLoading: true,
+      dataRefreshing: false,
       members: [],
       transactions: [],
       masterIuran: [],
@@ -850,23 +853,38 @@ const app = createApp({
       this.galleryIdx = idx;
     },
     async loadData() {
-      this.dataLoading = true;
+      const cacheKey = 'kas-it-dashboard-cache';
+      const year = this.selectedYear;
+
+      // 1. Load from cache instantly (if available)
       try {
-        const year = this.selectedYear;
-        const [mRes, tRes, iRes, evRes, rRes] = await Promise.all([
-          fetch(API_URL + '?action=members'),
-          fetch(API_URL + '?action=transactions'),
-          fetch(API_URL + '?action=masterIuran'),
-          fetch(API_URL + '?action=events'),
-          fetch(API_URL + '?action=ratesForYear&year=' + year)
-        ]);
-        this.members = await mRes.json();
-        this.transactions = await tRes.json();
-        this.masterIuran = await iRes.json();
-        this.events = await evRes.json();
-        this.ratesForYear = await rRes.json();
+        const cached = localStorage.getItem(cacheKey);
+        if (cached) {
+          const data = JSON.parse(cached);
+          if (data.members) this.members = data.members;
+          if (data.transactions) this.transactions = data.transactions;
+          if (data.masterIuran) this.masterIuran = data.masterIuran;
+          if (data.events) this.events = data.events;
+          if (data.ratesForYear) this.ratesForYear = data.ratesForYear;
+          this.dataLoading = false;
+          this.dataRefreshing = true;
+        }
+      } catch (e) {}
+
+      // 2. Fetch fresh data in background (single request)
+      try {
+        const res = await fetch(API_URL + '?action=getDashboardData&year=' + year);
+        const data = await res.json();
+        if (data.members) this.members = data.members;
+        if (data.transactions) this.transactions = data.transactions;
+        if (data.masterIuran) this.masterIuran = data.masterIuran;
+        if (data.events) this.events = data.events;
+        if (data.ratesForYear) this.ratesForYear = data.ratesForYear;
+        // Save to cache
+        try { localStorage.setItem(cacheKey, JSON.stringify(data)); } catch (e) {}
       } catch (err) { console.error(err); }
       this.dataLoading = false;
+      this.dataRefreshing = false;
     },
     getMemberMonthStatus(nik, month) {
       const year = this.selectedYear;
