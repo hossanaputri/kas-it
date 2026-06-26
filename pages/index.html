@@ -541,12 +541,16 @@
         <div style="font-size:18px;font-weight:700;color:#c62828;margin-top:4px;">{{ fmt(reportKeluarBulan) }}</div>
       </div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
-      <div style="background:#e8f5e9;border-radius:10px;padding:12px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;">
+      <div style="background:#e8f5e9;border-radius:10px;padding:12px;text-align:center;">
         <div style="font-size:12px;font-weight:600;color:#2e7d32;margin-bottom:6px;">✅ Sudah Bayar</div>
         <div style="font-size:24px;font-weight:700;color:#2e7d32;">{{ reportPaidCount }}</div>
       </div>
-      <div style="background:#ffebee;border-radius:10px;padding:12px;">
+      <div style="background:#fff8e1;border-radius:10px;padding:12px;text-align:center;">
+        <div style="font-size:12px;font-weight:600;color:#f57f17;margin-bottom:6px;">⏳ Pending</div>
+        <div style="font-size:24px;font-weight:700;color:#f57f17;">{{ reportPendingCount }}</div>
+      </div>
+      <div style="background:#ffebee;border-radius:10px;padding:12px;text-align:center;">
         <div style="font-size:12px;font-weight:600;color:#c62828;margin-bottom:6px;">❌ Belum Bayar</div>
         <div style="font-size:24px;font-weight:700;color:#c62828;">{{ reportUnpaidCount }}</div>
       </div>
@@ -554,6 +558,10 @@
     <div v-if="reportUnpaidNames.length" style="background:#fff8e1;border-radius:10px;padding:12px;margin-bottom:20px;">
       <div style="font-size:12px;font-weight:600;color:#e65100;margin-bottom:6px;">⚠️ Belum bayar:</div>
       <div style="font-size:12px;color:#555;line-height:1.8;">{{ reportUnpaidNames.join(', ') }}</div>
+    </div>
+    <div v-if="reportPendingNames.length" style="background:#fffde7;border-radius:10px;padding:12px;margin-bottom:20px;">
+      <div style="font-size:12px;font-weight:600;color:#f57f17;margin-bottom:6px;">⏳ Pending:</div>
+      <div style="font-size:12px;color:#555;line-height:1.8;">{{ reportPendingNames.join(', ') }}</div>
     </div>
     <div v-if="reportExpenses.length" style="background:#f5f5f5;border-radius:10px;padding:12px;margin-bottom:20px;">
       <div style="font-size:12px;font-weight:600;color:#555;margin-bottom:6px;">📋 Pengeluaran Bulan Ini</div>
@@ -583,7 +591,7 @@
         <img v-if="reportImage" :src="reportImage" style="width:100%;display:block;">
         <div v-else style="padding:40px;color:rgba(255,255,255,0.4);">Generating...</div>
       </div>
-      <div class="form-actions" style="justify-content:center;">
+      <div class="form-actions" style="justify-content:center;flex-wrap:wrap;gap:8px;width:100%;">
         <button class="btn btn-secondary" @click="showReportPreview = false">Tutup</button>
         <button class="btn btn-primary" @click="copyReportImage">📋 Copy Gambar</button>
       </div>
@@ -806,9 +814,11 @@ const app = createApp({
     reportPeriod() { return this.monthNames[this.reportMonth - 1] + ' ' + this.reportYear; },
     reportMasukBulan() { return this.transactions.filter(t => t.status === 'approved' && t.type === 'masuk' && Number(t.month) === this.reportMonth && Number(t.year) === this.reportYear).reduce((s, t) => s + Number(t.amount), 0); },
     reportKeluarBulan() { return this.transactions.filter(t => t.status === 'approved' && t.type === 'keluar' && Number(t.month) === this.reportMonth && Number(t.year) === this.reportYear).reduce((s, t) => s + Number(t.amount), 0); },
-    reportPaidCount() { return this.activeMembers.filter(mem => this.transactions.some(t => t.memberNik === mem.nik && t.kategori === 'iuran' && t.type === 'masuk' && Number(t.month) === this.reportMonth && Number(t.year) === this.reportYear && t.status !== 'rejected')).length; },
-    reportUnpaidCount() { return this.activeMembers.length - this.reportPaidCount; },
+    reportPaidCount() { return this.activeMembers.filter(mem => this.transactions.some(t => t.memberNik === mem.nik && t.kategori === 'iuran' && t.type === 'masuk' && Number(t.month) === this.reportMonth && Number(t.year) === this.reportYear && t.status === 'approved')).length; },
+    reportPendingCount() { return this.activeMembers.filter(mem => !this.transactions.some(t => t.memberNik === mem.nik && t.kategori === 'iuran' && t.type === 'masuk' && Number(t.month) === this.reportMonth && Number(t.year) === this.reportYear && t.status === 'approved') && this.transactions.some(t => t.memberNik === mem.nik && t.kategori === 'iuran' && t.type === 'masuk' && Number(t.month) === this.reportMonth && Number(t.year) === this.reportYear && t.status === 'pending')).length; },
+    reportUnpaidCount() { return this.activeMembers.length - this.reportPaidCount - this.reportPendingCount; },
     reportUnpaidNames() { return this.activeMembers.filter(mem => !this.transactions.some(t => t.memberNik === mem.nik && t.kategori === 'iuran' && t.type === 'masuk' && Number(t.month) === this.reportMonth && Number(t.year) === this.reportYear && t.status !== 'rejected')).map(m => m.name); },
+    reportPendingNames() { return this.activeMembers.filter(mem => !this.transactions.some(t => t.memberNik === mem.nik && t.kategori === 'iuran' && t.type === 'masuk' && Number(t.month) === this.reportMonth && Number(t.year) === this.reportYear && t.status === 'approved') && this.transactions.some(t => t.memberNik === mem.nik && t.kategori === 'iuran' && t.type === 'masuk' && Number(t.month) === this.reportMonth && Number(t.year) === this.reportYear && t.status === 'pending')).map(m => m.name); },
     reportExpenses() { return this.transactions.filter(t => t.status === 'approved' && t.type === 'keluar' && Number(t.month) === this.reportMonth && Number(t.year) === this.reportYear); },
     profileHistory() {
       if (!this.profileMember.nik) return [];
