@@ -16,7 +16,7 @@
 <body class="dashboard-page">
 <div id="app" v-cloak>
   <app-header @toggle-nav="navOpen = !navOpen"></app-header>
-  <app-nav active="index" :pending-count="pendingCount" :open="navOpen" @close="navOpen = false"></app-nav>
+  <app-nav active="index" :pending-count="pendingCount" :notif-count="notifCount" :open="navOpen" @close="navOpen = false"></app-nav>
 
   <div class="content">
     <!-- Loading -->
@@ -613,7 +613,7 @@ if (!checkAuth()) { /* redirected */ } else { initApp(); }
 
 function initApp() {
 const app = createApp({
-  mixins: [authMixin],
+  mixins: [authMixin, notifMixin],
   data() {
     return {
       navOpen: false,
@@ -777,7 +777,7 @@ const app = createApp({
       }, 0);
     },
     simTotal() { return this.positionList.reduce((sum, pos) => sum + (this.simValues[pos] || 0) * this.getPosMemberCount(pos), 0); },
-    targetPct() { if (!this.targetKas) return 0; return Math.min(100, Math.round((this.summary.masuk / this.targetKas) * 100)); },
+    targetPct() { if (!this.targetKas) return 0; return Math.min(100, Math.round(((this.summary.masuk - this.summary.keluar) / this.targetKas) * 100)); },
     lateMembers() {
       const now = new Date();
       const year = now.getFullYear();
