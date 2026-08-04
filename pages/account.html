@@ -16,7 +16,7 @@
 <body>
 <div id="app" v-cloak>
   <app-header @toggle-nav="navOpen = !navOpen"></app-header>
-  <app-nav active="account" :pending-count="pendingCount" :open="navOpen" @close="navOpen = false"></app-nav>
+  <app-nav active="account" :pending-count="pendingCount" :notif-count="notifCount" :open="navOpen" @close="navOpen = false"></app-nav>
 
   <div class="content">
     <!-- Profil Card -->
@@ -86,7 +86,7 @@ if (!checkAuth()) { /* redirected */ } else { initApp(); }
 
 function initApp() {
 const app = createApp({
-  mixins: [authMixin],
+  mixins: [authMixin, notifMixin],
   data() {
     return {
       navOpen: false,

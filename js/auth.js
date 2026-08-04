@@ -95,3 +95,29 @@ const authMixin = {
     }
   }
 };
+
+/**
+ * Notification count mixin — auto-fetches unread count for badge display.
+ * Pages that include this get `notifCount` in data, loaded on mount.
+ */
+const notifMixin = {
+  data() {
+    return {
+      notifCount: 0
+    };
+  },
+  mounted() {
+    this.loadNotifCount();
+  },
+  methods: {
+    async loadNotifCount() {
+      try {
+        const token = sessionStorage.getItem('kas-it-token');
+        if (!token) return;
+        const res = await fetch(API_URL + '?action=notifCount&token=' + encodeURIComponent(token));
+        const data = await res.json();
+        this.notifCount = data.count || 0;
+      } catch (e) { /* silent */ }
+    }
+  }
+};

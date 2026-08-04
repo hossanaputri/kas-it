@@ -37,6 +37,7 @@ const AppNav = {
   props: {
     active: { type: String, default: '' },
     pendingCount: { type: Number, default: 0 },
+    notifCount: { type: Number, default: 0 },
     open: { type: Boolean, default: false }
   },
   emits: ['close'],
@@ -52,6 +53,7 @@ const AppNav = {
       <div class="sidebar-links">
         <a href="index.html" :class="{ active: active === 'index' }"><span class="nav-icon">🏠</span> Dashboard</a>
         <a href="transactions.html" :class="{ active: active === 'transactions' }"><span class="nav-icon">📋</span> Transaksi</a>
+        <a href="notifications.html" :class="{ active: active === 'notifications' }"><span class="nav-icon">🔔</span> Notifikasi<span v-if="notifCount > 0" class="notif-badge-nav">{{ notifCount }}</span></a>
         <a v-if="isAdmin" href="inbox.html" :class="{ active: active === 'inbox' }"><span class="nav-icon">📬</span> Inbox<span v-if="pendingCount > 0" class="inbox-badge-nav"></span></a>
         <a v-if="isAdmin" href="events.html" :class="{ active: active === 'events' }"><span class="nav-icon">📅</span> Events</a>
         <a v-if="isAdmin" href="members.html" :class="{ active: active === 'members' }"><span class="nav-icon">⚙️</span> Anggota</a>

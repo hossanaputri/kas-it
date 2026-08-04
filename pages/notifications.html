@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IT-Kas - Notifikasi</title>
+<link rel="icon" type="image/png" href="../icons/icon-light-192.png">
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0a1a0d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="IT-Kas">
+<link rel="apple-touch-icon" href="../icons/icon-light-192.png">
+</head>
+<body class="notifications-page">
+<div id="app" v-cloak>
+  <app-header @toggle-nav="navOpen = !navOpen"></app-header>
+  <app-nav active="notifications" :pending-count="pendingCount" :notif-count="unreadCount" :open="navOpen" @close="navOpen = false"></app-nav>
+
+  <div class="content">
+    <div class="card">
+      <div class="card-header">
+        <h2>🔔 Notifikasi</h2>
+        <button v-if="unreadCount > 0" class="btn btn-sm btn-primary" @click="markAllRead">Tandai Semua Dibaca</button>
+      </div>
+
+      <!-- Loading -->
+      <div v-if="loading" class="table-loading">
+        <div class="spinner"></div> Memuat notifikasi...
+      </div>
+
+      <!-- Empty -->
+      <div v-else-if="!notifications.length" class="notif-empty">
+        <div class="notif-empty-icon">🔕</div>
+        <p>Belum ada notifikasi</p>
+      </div>
+
+      <!-- List -->
+      <div v-else class="notif-list">
+        <div v-for="n in notifications" :key="n.id"
+             class="notif-item" :class="{ unread: !isRead(n) }"
+             @click="markRead(n)">
+          <div class="notif-icon">{{ getIcon(n.type) }}</div>
+          <div class="notif-body">
+            <div class="notif-title">{{ n.title }}</div>
+            <div class="notif-message">{{ n.message }}</div>
+            <div class="notif-time">{{ formatTime(n.createdAt) }}</div>
+          </div>
+          <div v-if="!isRead(n)" class="notif-dot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <app-toast :show="toast.show" :message="toast.message" :success="toast.success" @close="toast.show = false"></app-toast>
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/components.js"></script>
+<script>
+const { createApp } = Vue;
+
+if (!checkAuth()) { /* redirected */ } else { initApp(); }
+
+function initApp() {
+const app = createApp({
+  mixins: [authMixin, notifMixin],
+  data() {
+    return {
+      navOpen: false,
+      notifications: [],
+      loading: false,
+      pendingCount: 0,
+      toast: { show: false, message: '', success: true }
+    };
+  },
+  computed: {
+    unreadCount() {
+      return this.notifications.filter(n => !this.isRead(n)).length;
+    }
+  },
+  mounted() {
+    this.loadNotifications();
+    this.loadPendingCount();
+  },
+  methods: {
+    isRead(n) {
+      return n.isRead === true || n.isRead === 'TRUE';
+    },
+    getIcon(type) {
+      switch (type) {
+        case 'approved': return '✅';
+        case 'rejected': return '❌';
+        case 'new_event': return '📅';
+        default: return '🔔';
+      }
+    },
+    formatTime(iso) {
+      if (!iso) return '-';
+      const d = new Date(iso);
+      const now = new Date();
+      const diff = now - d;
+      if (diff < 60000) return 'Baru saja';
+      if (diff < 3600000) return Math.floor(diff / 60000) + ' menit lalu';
+      if (diff < 86400000) return Math.floor(diff / 3600000) + ' jam lalu';
+      if (diff < 604800000) return Math.floor(diff / 86400000) + ' hari lalu';
+      return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    },
+    async loadNotifications() {
+      this.loading = true;
+      try {
+        const token = sessionStorage.getItem('kas-it-token');
+        const res = await fetch(API_URL + '?action=notifications&token=' + encodeURIComponent(token));
+        this.notifications = await res.json();
+      } catch (err) {
+        console.error(err);
+        this.showToast('Gagal memuat notifikasi', false);
+      }
+      this.loading = false;
+    },
+    async loadPendingCount() {
+      try {
+        const res = await fetch(API_URL + '?action=transactions');
+        const data = await res.json();
+        this.pendingCount = data.filter(t => t.status === 'pending').length;
+      } catch (e) { /* silent */ }
+    },
+    async markRead(n) {
+      if (this.isRead(n)) return;
+      n.isRead = true;
+      try {
+        const token = sessionStorage.getItem('kas-it-token');
+        await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'markNotifRead', token, id: n.id })
+        });
+      } catch (e) { /* silent */ }
+    },
+    async markAllRead() {
+      this.notifications.forEach(n => n.isRead = true);
+      try {
+        const token = sessionStorage.getItem('kas-it-token');
+        await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'markNotifRead', token, all: true })
+        });
+        this.showToast('Semua notifikasi ditandai dibaca');
+      } catch (e) {
+        this.showToast('Gagal menandai', false);
+      }
+    },
+    showToast(message, success = true) {
+      this.toast = { show: true, message, success };
+    }
+  }
+});
+registerComponents(app);
+app.mount('#app');
+} // end initApp
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('../sw.js');
+}
+</script>
+</body>
+</html>
