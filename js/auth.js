@@ -17,24 +17,25 @@ const API_URL = atob('aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy9BS2Z5Y2J6V2
  */
 function checkAuth() {
   const token = sessionStorage.getItem('kas-it-token');
-  const loginTime = sessionStorage.getItem('kas-it-login-time');
-  if (!token || !loginTime) { window.location.href = 'login.html'; return false; }
-  if (Date.now() - Number(loginTime) > 24 * 60 * 60 * 1000) {
-    sessionStorage.removeItem('kas-it-token');
-    sessionStorage.removeItem('kas-it-login-time');
-    window.location.href = 'login.html?expired';
-    return false;
-  }
-  // Async server-side verify + auto-refresh
-  fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'verifyToken', token }) })
+  if (!token) { window.location.href = 'login.html'; return false; }
+  // Server-side verification is authoritative and refreshes the session timestamp.
+  const verifySession = () => fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'verifyToken', token }) })
     .then(r => r.json())
     .then(result => {
-      if (!result.valid) {
+      if (result.valid) {
+        sessionStorage.setItem('kas-it-login-time', String(Date.now()));
+      } else {
         sessionStorage.removeItem('kas-it-token');
         sessionStorage.removeItem('kas-it-login-time');
         window.location.href = 'login.html?expired';
       }
     }).catch(() => {});
+  verifySession();
+  if (!window.kasItSessionRefresh) {
+    window.kasItSessionRefresh = setInterval(() => {
+      if (sessionStorage.getItem('kas-it-token')) verifySession();
+    }, 30 * 60 * 1000);
+  }
   return true;
 }
 
@@ -73,9 +74,7 @@ const authMixin = {
   computed: {
     isLoggedIn() {
       const token = sessionStorage.getItem('kas-it-token');
-      const loginTime = sessionStorage.getItem('kas-it-login-time');
-      if (!token || !loginTime) return false;
-      return Date.now() - Number(loginTime) < 24 * 60 * 60 * 1000;
+      return Boolean(token);
     },
     isAdmin() {
       return this.isLoggedIn && sessionStorage.getItem('kas-it-is-admin') === 'true';

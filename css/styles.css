@@ -2135,6 +2135,22 @@ body.light {
 }
 body.light .all-paid-msg { color: var(--text); }
 
+.personal-payment-alert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 12px;
+  padding: 13px 16px;
+  border: 1px solid rgba(198, 40, 40, 0.3);
+  border-left: 4px solid #c62828;
+  border-radius: var(--radius-md);
+  background: #fff1f1;
+  color: #b71c1c;
+  font-size: var(--fs-md);
+  line-height: 1.5;
+}
+.personal-payment-alert-icon { font-size: 20px; flex: 0 0 auto; }
+
 /* --- Master Iuran Card --- */
 .dash-card .iuran-list {
   flex: 1;
