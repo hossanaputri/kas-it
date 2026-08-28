@@ -7,13 +7,13 @@
 <link rel="icon" type="image/png" href="../icons/icon-light-192.png">
 <link rel="stylesheet" href="../css/styles.css">
 <link rel="manifest" href="../manifest.json">
-<meta name="theme-color" content="#0a1a0d">
+<meta name="theme-color" content="#f5fbf6">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="IT-Kas">
 <link rel="apple-touch-icon" href="../icons/icon-light-192.png">
 </head>
-<body class="notifications-page">
+<body class="notifications-page light">
 <div id="app" v-cloak>
   <app-header @toggle-nav="navOpen = !navOpen"></app-header>
   <app-nav active="notifications" :pending-count="pendingCount" :notif-count="unreadCount" :open="navOpen" @close="navOpen = false"></app-nav>

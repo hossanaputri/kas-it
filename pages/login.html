@@ -7,18 +7,13 @@
 <link rel="icon" type="image/png" href="../icons/icon-light-192.png">
 <link rel="stylesheet" href="../css/styles.css">
 <link rel="manifest" href="../manifest.json">
-<meta name="theme-color" content="#0a1a0d">
+<meta name="theme-color" content="#f5fbf6">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="IT-Kas">
 <link rel="apple-touch-icon" href="../icons/icon-light-192.png">
 </head>
-<body class="login-page">
-
-<!-- Theme toggle -->
-<button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
-  <span id="theme-icon">🌙</span>
-</button>
+<body class="login-page light">
 
 <!-- Background orbs -->
 <div class="bg-orb bg-orb-1"></div>
@@ -99,31 +94,6 @@
 <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 <script src="../js/auth.js"></script>
 <script>
-// Theme management
-function initTheme() {
-  const saved = localStorage.getItem('kas-it-theme') || 'light';
-  applyTheme(saved);
-}
-function applyTheme(theme) {
-  if (theme === 'light') {
-    document.body.classList.add('light');
-  } else {
-    document.body.classList.remove('light');
-  }
-  const icon = document.getElementById('theme-icon');
-  if (icon) icon.textContent = theme === 'light' ? '☀️' : '🌙';
-  const logo = document.getElementById('login-logo');
-  if (logo) logo.src = '../icons/icon-' + theme + '-192.png';
-}
-function toggleTheme() {
-  const current = localStorage.getItem('kas-it-theme') || 'dark';
-  const next = current === 'dark' ? 'light' : 'dark';
-  localStorage.setItem('kas-it-theme', next);
-  applyTheme(next);
-}
-initTheme();
-</script>
-<script>
 const { createApp } = Vue;
 
 createApp({
@@ -184,8 +154,19 @@ createApp({
           })
         });
         const text = await res.text();
+        if (!res.ok) {
+          console.error('Login server error:', { status: res.status, url: res.url, body: text.slice(0, 500) });
+          this.errorMsg = 'Server error (HTTP ' + res.status + '). Cek deployment Apps Script.';
+          return;
+        }
         let result;
-        try { result = JSON.parse(text); } catch(e) { this.errorMsg = 'Server error: response bukan JSON'; return; }
+        try {
+          result = JSON.parse(text);
+        } catch (e) {
+          console.error('Login response bukan JSON:', { url: res.url, contentType: res.headers.get('content-type'), body: text.slice(0, 500) });
+          this.errorMsg = 'Server mengembalikan respons bukan JSON. Cek Apps Script dan deployment-nya.';
+          return;
+        }
         if (result.token) {
           if (result.mustChangePassword) {
             this.pendingToken = result.token;

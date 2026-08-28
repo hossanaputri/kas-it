@@ -22,8 +22,7 @@ const AppHeader = {
   emits: ['toggle-nav'],
   computed: {
     logoSrc() {
-      const theme = document.body.classList.contains('light') ? 'light' : 'dark';
-      return '../icons/icon-' + theme + '-192.png';
+      return '../icons/icon-light-192.png';
     }
   }
 };
@@ -69,17 +68,11 @@ const AppNav = {
               <div class="sidebar-user-role">{{ isAdmin ? 'Admin' : 'Member' }}</div>
             </div>
           </a>
-          <button class="theme-toggle sidebar-theme" @click="toggleTheme" :title="isDark ? 'Light mode' : 'Dark mode'">{{ isDark ? '🌙' : '☀️' }}</button>
         </div>
         <button class="sidebar-logout-btn" @click="logout">🚪 Logout</button>
       </div>
     </aside>
   `,
-  data() {
-    return {
-      isDark: (localStorage.getItem('kas-it-theme') || 'dark') === 'dark'
-    };
-  },
   computed: {
     isAdmin() {
       return sessionStorage.getItem('kas-it-is-admin') === 'true';
@@ -88,22 +81,12 @@ const AppNav = {
       return sessionStorage.getItem('kas-it-member-name') || '';
     },
     logoSrc() {
-      return '../icons/icon-' + (this.isDark ? 'dark' : 'light') + '-192.png';
+      return '../icons/icon-light-192.png';
     }
   },
   methods: {
     logout() {
       doLogout();
-    },
-    toggleTheme() {
-      this.isDark = !this.isDark;
-      const theme = this.isDark ? 'dark' : 'light';
-      localStorage.setItem('kas-it-theme', theme);
-      if (theme === 'light') {
-        document.body.classList.add('light');
-      } else {
-        document.body.classList.remove('light');
-      }
     }
   }
 };
