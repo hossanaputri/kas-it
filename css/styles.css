@@ -853,6 +853,7 @@ body.light .month-cb:hover { background: rgba(0,0,0,0.06); }
 }
 .search-input::placeholder { color: var(--text-muted); }
 .search-input:focus { border-color: var(--primary); }
+.filter-select { width: auto; cursor: pointer; }
 
 /* Member grid */
 .members-grid {

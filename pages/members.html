@@ -39,7 +39,7 @@
       </div>
       <div class="stat-card">
         <div class="stat-icon">🔒</div>
-        <div class="stat-value stat-locked">{{ members.filter(m => Number(m.retry_count) >= 3).length }}</div>
+        <div class="stat-value stat-locked">{{ members.filter(m => isLocked(m)).length }}</div>
         <div class="stat-label">Locked</div>
       </div>
     </div>
@@ -49,6 +49,11 @@
       <h2>👥 Anggota</h2>
       <div class="toolbar-right">
         <input class="search-input" type="text" v-model="searchQuery" placeholder="🔍 Cari nama / NIK...">
+        <select class="search-input filter-select" v-model="lockedFilter">
+          <option value="all">Semua Status</option>
+          <option value="locked">🔒 Terkunci</option>
+          <option value="unlocked">Tidak Terkunci</option>
+        </select>
         <button class="btn btn-primary btn-sm" @click="loadMembers">🔄</button>
         <button class="btn btn-primary btn-sm" @click="openModal()">+ Tambah</button>
       </div>
@@ -79,7 +84,7 @@
             </div>
             <div class="member-card-row3">
               <span class="member-card-since">Sejak: {{ formatActiveFrom(m.activeFrom) }}</span>
-              <span v-if="Number(m.retry_count) >= 3" class="member-badge-locked">🔒 Locked</span>
+              <span v-if="isLocked(m)" class="member-badge-locked">🔒 Locked</span>
             </div>
           </div>
         </div>
@@ -153,6 +158,7 @@ const app = createApp({
       form: { nik: '', name: '', position: '', activeFrom: '', isAdmin: false },
       toast: { show: false, message: '', success: true },
       searchQuery: '',
+      lockedFilter: 'all',
       posOrder: { 'Direktur': 0, 'Senior Manager': 1, 'Junior Manager': 2, 'Coordinator': 3 }
     };
   },
@@ -166,11 +172,12 @@ const app = createApp({
       });
     },
     filteredMembers() {
-      if (!this.searchQuery.trim()) return this.sortedMembers;
+      let list = this.sortedMembers;
+      if (this.lockedFilter === 'locked') list = list.filter(m => this.isLocked(m));
+      else if (this.lockedFilter === 'unlocked') list = list.filter(m => !this.isLocked(m));
       const q = this.searchQuery.trim().toLowerCase();
-      return this.sortedMembers.filter(m =>
-        m.name.toLowerCase().includes(q) || m.nik.includes(q)
-      );
+      if (q) list = list.filter(m => m.name.toLowerCase().includes(q) || m.nik.includes(q));
+      return list;
     }
   },
   mounted() {
@@ -183,6 +190,10 @@ const app = createApp({
   methods: {
     isActive(m) {
       return m.isActive === true || m.isActive === 'TRUE' || m.isActive === true;
+    },
+
+    isLocked(m) {
+      return Number(m.retry_count) >= 3;
     },
 
     posClass(position, type) {
