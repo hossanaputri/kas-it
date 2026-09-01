@@ -36,21 +36,35 @@
         ✅ Tidak ada transaksi pending
       </div>
 
+      <!-- Bulk actions -->
+      <div v-else class="bulk-actions">
+        <label class="tx-select-all">
+          <input type="checkbox" :checked="allSelected" @change="toggleSelectAll">
+          Pilih Semua
+        </label>
+        <button class="btn btn-primary btn-sm" :disabled="!selectedCount || bulkLoading" @click="approveSelected">
+          {{ bulkLoading ? '⏳ Memproses...' : '✅ Approve Terpilih (' + selectedCount + ')' }}
+        </button>
+      </div>
+
       <!-- Pending Items (unified) -->
-      <div v-else>
+      <div v-if="!loading && pendingItems.length">
         <div v-for="tx in pendingItems" :key="tx.id" class="tx-item">
           <div class="tx-top">
-            <div class="tx-info">
-              <div class="name">{{ tx.memberName || 'Tanpa Anggota' }}</div>
-              <div class="detail">
-                <span class="kat-badge" :class="'kat-' + tx.kategori">
-                  {{ tx.kategori === 'iuran' ? '💳' : tx.kategori === 'event' ? '📅' : '📦' }}
-                  {{ tx.note || kategoriLabel(tx.kategori) }}
-                </span>
-                <span v-if="tx.kategori === 'event'" class="tx-detail-meta">
-                  ({{ getEventName(tx.eventId) }})
-                </span>
-                <span class="tx-detail-meta tx-detail-date">• {{ formatDate(tx.submittedAt) }}</span>
+            <div class="tx-left">
+              <input type="checkbox" class="tx-checkbox" v-model="tx._selected">
+              <div class="tx-info">
+                <div class="name">{{ tx.memberName || 'Tanpa Anggota' }}</div>
+                <div class="detail">
+                  <span class="kat-badge" :class="'kat-' + tx.kategori">
+                    {{ tx.kategori === 'iuran' ? '💳' : tx.kategori === 'event' ? '📅' : '📦' }}
+                    {{ tx.note || kategoriLabel(tx.kategori) }}
+                  </span>
+                  <span v-if="tx.kategori === 'event'" class="tx-detail-meta">
+                    ({{ getEventName(tx.eventId) }})
+                  </span>
+                  <span class="tx-detail-meta tx-detail-date">• {{ formatDate(tx.submittedAt) }}</span>
+                </div>
               </div>
             </div>
             <div class="tx-amount-row">
@@ -74,7 +88,7 @@
         <div class="toast-msg">{{ confirmMsg }}</div>
         <div class="confirm-btns">
           <button class="btn-no" @click="cancelConfirm">Batal</button>
-          <button class="btn-yes" @click="doConfirm">Reject</button>
+          <button class="btn-yes" @click="doConfirm">{{ confirmLabel }}</button>
         </div>
       </div>
     </div>
@@ -103,7 +117,9 @@ const app = createApp({
       loading: false,
       showConfirm: false,
       confirmMsg: '',
+      confirmLabel: 'Reject',
       confirmCallback: null,
+      bulkLoading: false,
       toast: { show: false, message: '', success: true }
     };
   },
@@ -113,6 +129,15 @@ const app = createApp({
     },
     pendingCount() {
       return this.pendingItems.length;
+    },
+    selectedItems() {
+      return this.pendingItems.filter(t => t._selected);
+    },
+    selectedCount() {
+      return this.selectedItems.length;
+    },
+    allSelected() {
+      return this.pendingItems.length > 0 && this.pendingItems.every(t => t._selected);
     }
   },
   mounted() {
@@ -145,7 +170,7 @@ const app = createApp({
           fetch(API_URL + '?action=transactions'),
           fetch(API_URL + '?action=events')
         ]);
-        this.transactions = (await tRes.json()).map(t => ({ ...t, _loading: false }));
+        this.transactions = (await tRes.json()).map(t => ({ ...t, _loading: false, _selected: false }));
         this.events = await evRes.json();
       } catch (err) {
         console.error('Gagal memuat data:', err);
@@ -154,20 +179,25 @@ const app = createApp({
       }
     },
 
+    async approveOne(tx) {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'approveTransaction',
+          id: tx.id,
+          approvedAt: new Date().toISOString(),
+          approvedBy: sessionStorage.getItem('kas-it-member-nik') || ''
+        })
+      });
+      const result = await res.json();
+      return result.ok !== false;
+    },
+
     async approveTx(tx) {
       tx._loading = true;
       try {
-        const res = await fetch(API_URL, {
-          method: 'POST',
-          body: JSON.stringify({
-            action: 'approveTransaction',
-            id: tx.id,
-            approvedAt: new Date().toISOString(),
-            approvedBy: sessionStorage.getItem('kas-it-member-nik') || ''
-          })
-        });
-        const result = await res.json();
-        if (result.ok !== false) {
+        const ok = await this.approveOne(tx);
+        if (ok) {
           this.showToast('Transaksi di-approve ✅');
           this.loadData();
         } else {
@@ -177,6 +207,35 @@ const app = createApp({
         this.showToast('Gagal: koneksi error', false);
       }
       tx._loading = false;
+    },
+
+    toggleSelectAll(e) {
+      const checked = e.target.checked;
+      this.pendingItems.forEach(t => { t._selected = checked; });
+    },
+
+    approveSelected() {
+      const items = this.selectedItems;
+      if (!items.length) return;
+      this.askConfirm(`Approve ${items.length} transaksi terpilih?`, async () => {
+        this.bulkLoading = true;
+        let success = 0, failed = 0;
+        for (const tx of items) {
+          tx._loading = true;
+          try {
+            if (await this.approveOne(tx)) success++; else failed++;
+          } catch (err) {
+            failed++;
+          }
+          tx._loading = false;
+        }
+        this.bulkLoading = false;
+        this.showToast(
+          failed === 0 ? `${success} transaksi berhasil di-approve ✅` : `${success} berhasil, ${failed} gagal di-approve`,
+          failed === 0
+        );
+        this.loadData();
+      }, 'Approve');
     },
 
     rejectTx(tx) {
@@ -202,9 +261,10 @@ const app = createApp({
       });
     },
 
-    askConfirm(msg, callback) {
+    askConfirm(msg, callback, label = 'Reject') {
       this.confirmMsg = msg;
       this.confirmCallback = callback;
+      this.confirmLabel = label;
       this.showConfirm = true;
     },
     async doConfirm() {

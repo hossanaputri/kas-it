@@ -747,6 +747,22 @@ body.light .month-cb:hover { background: rgba(0,0,0,0.06); }
 .btn-approve:hover { background: rgba(102,187,106,0.2); }
 .btn-reject { background: var(--red-bg); color: var(--red); }
 .btn-reject:hover { background: rgba(239,83,80,0.2); }
+.bulk-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.tx-select-all { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text); cursor: pointer; }
+.tx-select-all input { width: auto; cursor: pointer; }
+.tx-left { display: flex; align-items: flex-start; gap: 10px; }
+.tx-checkbox { width: auto; margin-top: 4px; cursor: pointer; }
 
 /* --- 20. Events Page --- */
 .event-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
