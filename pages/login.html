@@ -26,7 +26,7 @@
     <h1>IT-Kas</h1>
 
     <!-- Login Form -->
-    <template v-if="!showChangePassword">
+    <template v-if="!showChangePassword && !showForgot">
       <div v-if="sessionExpired" class="session-expired-banner">
         ⏱️ Sesi kamu sudah habis. Silakan login ulang.
       </div>
@@ -49,6 +49,62 @@
       <button class="btn btn-primary btn-block btn-shimmer" @click="login" :disabled="loading">
         {{ loading ? 'Memproses...' : 'Masuk' }}
       </button>
+      <button type="button" class="link-btn" @click="openForgot">Lupa password?</button>
+    </template>
+
+    <!-- Forgot Password Form -->
+    <template v-else-if="showForgot">
+      <div class="change-pw-alert">
+        <strong>🔑 Reset Password</strong>
+        <p v-if="forgotStep === 1">Masukkan NIK kamu. Kode verifikasi akan dikirim ke email yang terdaftar.</p>
+        <p v-else>Masukkan kode 6 digit dari email kamu, lalu buat password baru. Kode berlaku 10 menit.</p>
+      </div>
+
+      <template v-if="forgotStep === 1">
+        <div class="form-group">
+          <label>NIK</label>
+          <input type="text" v-model="nik" placeholder="Masukkan NIK" @keyup.enter="requestReset">
+        </div>
+        <button class="btn btn-primary btn-block btn-shimmer" @click="requestReset" :disabled="loading">
+          {{ loading ? 'Mengirim...' : 'Kirim Kode' }}
+        </button>
+      </template>
+
+      <template v-else>
+        <div v-if="infoMsg" class="success-msg">{{ infoMsg }}</div>
+        <div class="form-group">
+          <label>Kode Verifikasi</label>
+          <input type="text" v-model="otp" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="6 digit kode" @input="otp = otp.replace(/\D/g, '')">
+        </div>
+        <div class="form-group">
+          <label>Password Baru</label>
+          <div class="password-wrapper">
+            <input :type="showNewPass ? 'text' : 'password'" v-model="newPassword" placeholder="Minimal 6 karakter">
+            <span class="eye-toggle" @click="showNewPass = !showNewPass">
+              <svg v-if="!showNewPass" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Konfirmasi Password</label>
+          <div class="password-wrapper">
+            <input :type="showConfirmPass ? 'text' : 'password'" v-model="confirmPassword" placeholder="Ketik ulang password" @keyup.enter="confirmReset">
+            <span class="eye-toggle" @click="showConfirmPass = !showConfirmPass">
+              <svg v-if="!showConfirmPass" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </span>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block btn-shimmer" @click="confirmReset" :disabled="loading">
+          {{ loading ? 'Menyimpan...' : 'Simpan Password' }}
+        </button>
+        <button type="button" class="link-btn" @click="requestReset" :disabled="loading || resendIn > 0">
+          {{ resendIn > 0 ? 'Kirim ulang kode (' + resendIn + 's)' : 'Kirim ulang kode' }}
+        </button>
+      </template>
+
+      <button type="button" class="link-btn" @click="closeForgot">← Kembali ke login</button>
     </template>
 
     <!-- Change Password Form -->
@@ -84,6 +140,7 @@
       </button>
     </template>
 
+    <div v-if="resetDone" class="success-msg">✅ Password berhasil direset. Silakan login dengan password baru.</div>
     <div class="error-msg" :class="{ show: errorMsg }">{{ errorMsg }}</div>
 
     <div class="divider"></div>
@@ -110,7 +167,14 @@ createApp({
       pendingToken: '',
       showPass: false,
       showNewPass: false,
-      showConfirmPass: false
+      showConfirmPass: false,
+      showForgot: false,
+      forgotStep: 1,
+      otp: '',
+      infoMsg: '',
+      resetDone: false,
+      resendIn: 0,
+      resendTimer: null
     };
   },
   mounted() {
@@ -120,6 +184,109 @@ createApp({
     }
   },
   methods: {
+    async hashPassword(plain) {
+      const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(plain));
+      return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+    },
+
+    openForgot() {
+      this.showForgot = true;
+      this.forgotStep = 1;
+      this.otp = '';
+      this.newPassword = '';
+      this.confirmPassword = '';
+      this.infoMsg = '';
+      this.errorMsg = '';
+      this.resetDone = false;
+    },
+
+    closeForgot() {
+      this.showForgot = false;
+      this.errorMsg = '';
+      this.infoMsg = '';
+      clearInterval(this.resendTimer);
+      this.resendIn = 0;
+    },
+
+    startResendCooldown() {
+      clearInterval(this.resendTimer);
+      this.resendIn = 60;
+      this.resendTimer = setInterval(() => {
+        if (--this.resendIn <= 0) clearInterval(this.resendTimer);
+      }, 1000);
+    },
+
+    async requestReset() {
+      if (!this.nik.trim()) {
+        this.errorMsg = 'NIK wajib diisi';
+        return;
+      }
+      this.loading = true;
+      this.errorMsg = '';
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'requestPasswordReset', nik: this.nik.trim() })
+        });
+        const result = await res.json();
+        if (result.ok === false) {
+          this.errorMsg = result.error || 'Gagal mengirim kode';
+          return;
+        }
+        // Server always answers the same way whether or not the NIK exists.
+        this.infoMsg = result.message || 'Jika NIK terdaftar dan punya email, kode verifikasi sudah dikirim.';
+        this.forgotStep = 2;
+        this.startResendCooldown();
+      } catch (err) {
+        this.errorMsg = 'Gagal konek ke server';
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    async confirmReset() {
+      if (!/^\d{6}$/.test(this.otp)) {
+        this.errorMsg = 'Kode verifikasi harus 6 digit angka';
+        return;
+      }
+      if (!this.newPassword || this.newPassword.length < 6) {
+        this.errorMsg = 'Password minimal 6 karakter';
+        return;
+      }
+      if (this.newPassword !== this.confirmPassword) {
+        this.errorMsg = 'Password tidak sama';
+        return;
+      }
+      this.loading = true;
+      this.errorMsg = '';
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'confirmPasswordReset',
+            nik: this.nik.trim(),
+            otp: this.otp,
+            newPasswordHash: await this.hashPassword(this.newPassword)
+          })
+        });
+        const result = await res.json();
+        if (result.ok) {
+          this.closeForgot();
+          this.password = '';
+          this.newPassword = '';
+          this.confirmPassword = '';
+          this.otp = '';
+          this.resetDone = true;
+        } else {
+          this.errorMsg = result.error || 'Kode salah atau sudah kedaluwarsa';
+        }
+      } catch (err) {
+        this.errorMsg = 'Gagal konek ke server';
+      } finally {
+        this.loading = false;
+      }
+    },
+
     async verifyAndRedirect(token) {
       try {
         const res = await fetch(API_URL, {
@@ -143,6 +310,7 @@ createApp({
       }
       this.loading = true;
       this.errorMsg = '';
+      this.resetDone = false;
 
       try {
         const res = await fetch(API_URL, {
@@ -212,11 +380,7 @@ createApp({
       this.errorMsg = '';
 
       try {
-        const encoder = new TextEncoder();
-        const data = encoder.encode(this.newPassword);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        const hashHex = await this.hashPassword(this.newPassword);
 
         const res = await fetch(API_URL, {
           method: 'POST',
