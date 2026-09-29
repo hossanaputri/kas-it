@@ -281,8 +281,8 @@ const app = createApp({
       }
       this.saving = true;
       const payload = this.editingEvent
-        ? { action: 'updateEvent', id: this.editingEvent.id, ...this.form }
-        : { action: 'addEvent', ...this.form, createdBy: 'admin' };
+        ? { action: 'updateEvent', token: getSession().token, id: this.editingEvent.id, ...this.form }
+        : { action: 'addEvent', token: getSession().token, ...this.form, createdBy: 'admin' };
 
       try {
         const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
@@ -353,7 +353,7 @@ const app = createApp({
 
     async postAction(payload) {
       try {
-        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ ...payload, token: getSession().token }) });
         const result = await res.json();
         if (result.ok !== false) {
           this.showToast('Berhasil!');

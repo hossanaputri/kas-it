@@ -90,7 +90,6 @@
         </div>
         <div v-if="isAdmin" class="member-card-actions">
           <button class="btn btn-sm btn-secondary" @click.stop="editMember(m)">✏️ Edit</button>
-          <button class="btn btn-sm btn-warning" @click.stop="resetPassword(m)">🔑 Reset</button>
           <button class="btn btn-sm" :class="isActive(m) ? 'btn-danger' : 'btn-success'" @click.stop="toggleMember(m)">{{ isActive(m) ? '⏸ Nonaktif' : '▶ Aktifkan' }}</button>
         </div>
       </div>
@@ -109,6 +108,7 @@
       <h2>{{ editingMember ? '✏️ Edit Anggota' : '+ Tambah Anggota' }}</h2>
       <div class="form-group"><label>NIK</label><input type="text" v-model="form.nik" :disabled="!!editingMember" placeholder="NIK anggota"></div>
       <div class="form-group"><label>Nama</label><input type="text" v-model="form.name" placeholder="Nama lengkap"></div>
+      <div class="form-group"><label>Email</label><input type="email" v-model="form.email" placeholder="email@contoh.com (untuk reset password)"></div>
       <div class="form-group"><label>Jabatan</label>
         <select v-model="form.position">
           <option value="">-- Pilih Jabatan --</option>
@@ -155,7 +155,8 @@ const app = createApp({
       showModal: false,
       saving: false,
       editingMember: null,
-      form: { nik: '', name: '', position: '', activeFrom: '', isAdmin: false },
+      form: { nik: '', name: '', email: '', position: '', activeFrom: '', isAdmin: false },
+      emails: {},
       toast: { show: false, message: '', success: true },
       searchQuery: '',
       lockedFilter: 'all',
@@ -212,10 +213,28 @@ const app = createApp({
       try {
         const res = await fetch(API_URL + '?action=members');
         this.members = await res.json();
+        if (this.isAdmin) this.loadEmails();
       } catch (err) {
         console.error('Gagal memuat members:', err);
       } finally {
         this.loading = false;
+      }
+    },
+
+    normNik(nik) {
+      return String(nik == null ? '' : nik).trim().replace(/^0+/, '');
+    },
+
+    async loadEmails() {
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'getMemberEmails', token: getSession().token })
+        });
+        const result = await res.json();
+        if (result.ok) this.emails = result.emails || {};
+      } catch (err) {
+        console.error('Gagal memuat email:', err);
       }
     },
 
@@ -236,9 +255,9 @@ const app = createApp({
     openModal(member) {
       this.editingMember = member || null;
       if (member) {
-        this.form = { nik: member.nik, name: member.name, position: member.position, activeFrom: member.activeFrom || '', isAdmin: member.isAdmin === true || member.isAdmin === 'TRUE' };
+        this.form = { nik: member.nik, name: member.name, email: this.emails[this.normNik(member.nik)] || '', position: member.position, activeFrom: member.activeFrom || '', isAdmin: member.isAdmin === true || member.isAdmin === 'TRUE' };
       } else {
-        this.form = { nik: '', name: '', position: '', activeFrom: new Date().toISOString().slice(0, 7), isAdmin: false };
+        this.form = { nik: '', name: '', email: '', position: '', activeFrom: new Date().toISOString().slice(0, 7), isAdmin: false };
       }
       this.showModal = true;
     },
@@ -257,10 +276,16 @@ const app = createApp({
         this.showToast('NIK dan Nama wajib diisi', false);
         return;
       }
+      const email = this.form.email.trim().toLowerCase();
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        this.showToast('Format email tidak valid', false);
+        return;
+      }
       this.saving = true;
       const payload = this.editingMember
         ? {
             action: 'updateMember',
+            token: getSession().token,
             nik: this.form.nik.trim(),
             name: this.form.name.trim().toUpperCase(),
             position: this.form.position,
@@ -269,6 +294,7 @@ const app = createApp({
           }
         : {
             action: 'addMember',
+            token: getSession().token,
             nik: this.form.nik.trim(),
             name: this.form.name.trim().toUpperCase(),
             position: this.form.position,
@@ -281,6 +307,20 @@ const app = createApp({
         const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
         const result = await res.json();
         if (result.ok !== false) {
+          const nik = this.form.nik.trim();
+          if (email !== (this.emails[this.normNik(nik)] || '')) {
+            const emailRes = await fetch(API_URL, {
+              method: 'POST',
+              body: JSON.stringify({ action: 'setMemberEmail', token: getSession().token, nik, email })
+            });
+            const emailResult = await emailRes.json();
+            if (!emailResult.ok) {
+              this.showToast('Data tersimpan, tapi email gagal disimpan: ' + (emailResult.error || ''), false);
+              this.closeModal();
+              this.loadMembers();
+              return;
+            }
+          }
           this.showToast(this.editingMember ? `${payload.name} berhasil diupdate` : `${payload.name} berhasil ditambahkan`);
           this.closeModal();
           this.loadMembers();
@@ -294,32 +334,13 @@ const app = createApp({
       }
     },
 
-    async resetPassword(m) {
-      if (!confirm('Reset password ' + m.name + '? User harus buat password baru saat login berikutnya.')) return;
-      try {
-        const res = await fetch(API_URL, {
-          method: 'POST',
-          body: JSON.stringify({ action: 'resetMemberPassword', nik: m.nik })
-        });
-        const result = await res.json();
-        if (result.ok !== false) {
-          this.showToast(m.name + ' password di-reset. Login berikutnya pakai default "123".');
-          this.loadMembers();
-        } else {
-          this.showToast(result.error || 'Gagal reset', false);
-        }
-      } catch (err) {
-        this.showToast('Gagal: koneksi error', false);
-      }
-    },
-
     async toggleMember(m) {
       const action = this.isActive(m) ? 'nonaktifkan' : 'aktifkan';
       if (!confirm(action.charAt(0).toUpperCase() + action.slice(1) + ' ' + m.name + '?')) return;
       try {
         const res = await fetch(API_URL, {
           method: 'POST',
-          body: JSON.stringify({ action: 'toggleMember', nik: m.nik })
+          body: JSON.stringify({ action: 'toggleMember', token: getSession().token, nik: m.nik })
         });
         const result = await res.json();
         if (result.ok !== false) {

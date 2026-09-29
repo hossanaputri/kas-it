@@ -1746,6 +1746,29 @@ html:has(.login-page) {
   display: block;
 }
 
+/* Forgot password */
+.login-card .link-btn {
+  display: block;
+  margin: 14px auto 0;
+  background: none;
+  border: none;
+  color: #66bb6a;
+  font-size: 14px;
+  cursor: pointer;
+}
+.login-card .link-btn:hover:not(:disabled) { text-decoration: underline; }
+.login-card .link-btn:disabled { opacity: 0.5; cursor: default; }
+.login-card .success-msg {
+  color: #81c784;
+  font-size: 14px;
+  margin: 16px 0;
+  background: rgba(102, 187, 106, 0.1);
+  border: 1px solid rgba(102, 187, 106, 0.25);
+  padding: 10px 14px;
+  border-radius: 10px;
+  text-align: left;
+}
+
 /* Session expired */
 .session-expired-banner {
   background: rgba(255, 152, 0, 0.1);
@@ -1944,6 +1967,15 @@ html:has(.login-page) {
   background: rgba(239, 83, 80, 0.08);
   border-color: rgba(239, 83, 80, 0.2);
   color: #c62828;
+}
+
+.login-page.light .login-card .link-btn {
+  color: #2e7d32;
+}
+.login-page.light .login-card .success-msg {
+  background: rgba(76, 175, 80, 0.08);
+  border-color: rgba(76, 175, 80, 0.25);
+  color: #2e7d32;
 }
 
 .login-page.light .session-expired-banner {
