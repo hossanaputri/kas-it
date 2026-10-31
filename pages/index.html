@@ -943,6 +943,9 @@ const app = createApp({
       if (paid >= target && target > 0) return 'approved';
       if (paid > 0 && paid < target) return 'partial';
       if (hasPending) return 'pending';
+      // Inactive members are no longer obligated to pay going forward,
+      // so an unpaid month for them is just empty, never "late".
+      if (member && !(member.isActive === true || member.isActive === 'TRUE')) return 'none';
       const now = new Date();
       const lateMonth = now.getDate() > 28 ? now.getMonth() + 1 : now.getMonth();
       if (year === now.getFullYear() && month <= lateMonth) return 'late';
