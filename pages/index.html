@@ -92,6 +92,7 @@
           <h2 class="dash-card-title">📅 Status Bulan Ini ({{ monthNames[new Date().getMonth()] }})</h2>
           <div class="dash-card-actions">
             <button v-if="isAdmin && statusBulanIni.unpaidNames.length" @click="copyReminder" class="btn btn-sm btn-copy-wa">📋 Copy WA</button>
+            <button v-if="isAdmin && statusBulanLalu.telatNames.length" @click="copyReminderLastMonth" class="btn btn-sm btn-copy-wa btn-copy-wa-late" :title="'Masih ada ' + statusBulanLalu.telatNames.length + ' yang telat bulan lalu'">📋 Copy WA Telat ({{ monthNames[statusBulanLalu.month - 1] }})</button>
           </div>
         </div>
         <div class="status-counts">
@@ -731,6 +732,28 @@ const app = createApp({
       });
       return { lunas, pending, belum, unpaidNames };
     },
+    statusBulanLalu() {
+      const now = new Date();
+      let month = now.getMonth(); // 0-indexed current month == 1-indexed last month
+      let year = now.getFullYear();
+      if (month === 0) { month = 12; year -= 1; }
+      const telatNames = [];
+      this.activeMembers.forEach(m => {
+        if (m.activeFrom) {
+          const parts = m.activeFrom.split('-');
+          const afYear = parseInt(parts[0]);
+          const afMonth = parseInt(parts[1]);
+          if (year < afYear || (year === afYear && month < afMonth)) return;
+        }
+        const target = this.getRateForYearMonth(m.position, year, month);
+        const paid = this.transactions
+          .filter(t => t.memberNik === m.nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status === 'approved')
+          .reduce((sum, t) => sum + Number(t.amount), 0);
+        const hasPending = this.transactions.some(t => t.memberNik === m.nik && Number(t.month) === month && Number(t.year) === year && t.kategori === 'iuran' && t.type === 'masuk' && t.status === 'pending');
+        if (paid < target && !hasPending) telatNames.push(m.name);
+      });
+      return { month, year, telatNames };
+    },
     personalPaymentAlert() {
       const nik = sessionStorage.getItem('kas-it-member-nik') || '';
       const member = this.members.find(item => String(item.nik) === String(nik));
@@ -1121,6 +1144,13 @@ const app = createApp({
       const monthName = this.monthNames[now.getMonth()];
       const names = this.statusBulanIni.unpaidNames.map(n => '• ' + n).join('\n');
       const text = `⚠️ Reminder Iuran Kas IT - ${monthName} ${now.getFullYear()}\n\nYang belum bayar:\n${names}\n\nMohon segera disetor ya. Terima kasih 🙏\n\n📲 Submit via: https://hossanaputri.github.io/kas-it/`;
+      navigator.clipboard.writeText(text).then(() => { this.showToast('Berhasil di-copy! Tinggal paste ke WA'); }).catch(() => { this.showToast('Gagal copy', false); });
+    },
+    copyReminderLastMonth() {
+      const { month, year, telatNames } = this.statusBulanLalu;
+      const monthName = this.monthNames[month - 1];
+      const names = telatNames.map(n => '• ' + n).join('\n');
+      const text = `⚠️ Reminder Iuran Kas IT - ${monthName} ${year} (TELAT)\n\nMasih belum bayar iuran bulan lalu:\n${names}\n\nMohon segera disetor ya. Terima kasih 🙏\n\n📲 Submit via: https://hossanaputri.github.io/kas-it/`;
       navigator.clipboard.writeText(text).then(() => { this.showToast('Berhasil di-copy! Tinggal paste ke WA'); }).catch(() => { this.showToast('Gagal copy', false); });
     },
     getPosMemberCount(pos) { return this.activeMembers.filter(m => m.position === pos).length; },

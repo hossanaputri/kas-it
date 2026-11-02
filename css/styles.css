@@ -2284,6 +2284,7 @@ body.light .iuran-item {
 .btn-edit-iuran { background: var(--btn-green-bg); color: var(--saldo-green); border: 1px solid var(--btn-green-border); }
 .btn-transaksi { background: var(--btn-green-bg); color: var(--saldo-green); border: 1px solid var(--btn-green-border); }
 .btn-copy-wa { background: var(--btn-neutral-bg); color: var(--text-light); border: 1px solid var(--subtle-border-strong); padding: 5px 12px; border-radius: var(--radius-sm); font-size: var(--fs-sm); cursor: pointer; font-weight: 500; }
+.btn-copy-wa-late { background: var(--red-bg); color: var(--red); border-color: transparent; }
 
 /* --- Tab Switcher (Rekap) --- */
 .rekap-tabs {
