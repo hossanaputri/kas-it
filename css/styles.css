@@ -2445,6 +2445,10 @@ body.light .iuran-item {
 .status-empty { color: rgba(255,255,255,0.15); font-size: var(--fs-md); }
 body.light .status-empty { color: rgba(0,0,0,0.15); }
 
+/* Month cell for a member who was already inactive that month — no obligation, visually "voided out" */
+.cell-void { background: #1a1a1a !important; }
+.cell-void .status-empty { color: rgba(255,255,255,0.25) !important; }
+
 /* --- Dropdown --- */
 .dropdown-menu {
   background: var(--dropdown-bg);

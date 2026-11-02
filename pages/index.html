@@ -159,7 +159,7 @@
                   <span class="rekap-name" :style="{ color: posColors[member.position] || 'var(--text)' }">{{ member.name }}</span>
                   <div class="rekap-position">{{ member.position }}</div>
                 </td>
-                <td v-for="(m, i) in months" :key="i" style="text-align:center;" :style="getMemberMonthStatus(member.nik, i+1) === 'late' ? { background: 'rgba(239,83,80,0.08)' } : getMemberMonthStatus(member.nik, i+1) === 'pending' ? { background: 'rgba(255,202,40,0.08)' } : getMemberMonthStatus(member.nik, i+1) === 'partial' ? { background: 'rgba(255,152,0,0.08)' } : {}">
+                <td v-for="(m, i) in months" :key="i" style="text-align:center;" :class="{ 'cell-void': getMemberMonthStatus(member.nik, i+1) === 'none' && !isMemberActive(member) }" :style="getMemberMonthStatus(member.nik, i+1) === 'late' ? { background: 'rgba(239,83,80,0.08)' } : getMemberMonthStatus(member.nik, i+1) === 'pending' ? { background: 'rgba(255,202,40,0.08)' } : getMemberMonthStatus(member.nik, i+1) === 'partial' ? { background: 'rgba(255,152,0,0.08)' } : {}">
                   <span v-if="getMemberMonthStatus(member.nik, i+1) === 'approved'" class="amount-in">
                     <span class="rekap-amt-full">{{ Number(getMemberMonthAmount(member.nik, i+1)).toLocaleString('id-ID') }}</span>
                     <span class="rekap-amt-short">{{ fmtRekap(getMemberMonthAmount(member.nik, i+1)) }}</span>
