@@ -534,8 +534,8 @@
     </div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center;margin-bottom:20px;">
       <div style="background:#f0faf1;border-radius:10px;padding:14px;">
-        <div style="font-size:11px;color:#666;">💰 Saldo Bulan Ini</div>
-        <div style="font-size:18px;font-weight:700;color:#7DCD85;margin-top:4px;">{{ fmt(reportMasukBulan - reportKeluarBulan) }}</div>
+        <div style="font-size:11px;color:#666;">💰 Total Kas</div>
+        <div style="font-size:18px;font-weight:700;color:#7DCD85;margin-top:4px;">{{ fmt(summary.masuk - summary.keluar) }}</div>
       </div>
       <div style="background:#e8f5e9;border-radius:10px;padding:14px;">
         <div style="font-size:11px;color:#666;">📥 Masuk</div>
