@@ -133,6 +133,24 @@
             <select v-model="selectedYear" @change="loadData" class="rekap-select rekap-select-inline">
               <option v-for="y in yearOptions" :key="y" :value="y">{{ y }}</option>
             </select>
+            <span v-if="isAdmin" class="rekap-info" tabindex="0" @click.stop="showSisaInfo = !showSisaInfo" @mouseleave="showSisaInfo = false" @blur="showSisaInfo = false">
+              <span class="rekap-info-icon">ⓘ</span>
+              <span class="rekap-sisa" :class="{ open: showSisaInfo }">
+                <span class="rekap-sisa-row">
+                  <span>Target iuran {{ selectedYear }}</span>
+                  <span>{{ fmt(sisaIuran.target) }}</span>
+                </span>
+                <span class="rekap-sisa-row">
+                  <span>Sudah terbayar</span>
+                  <span class="rekap-sisa-paid">{{ fmt(sisaIuran.paid) }}</span>
+                </span>
+                <span class="rekap-sisa-row rekap-sisa-total">
+                  <span>Sisa (belum terbayar s/d Des {{ selectedYear }})</span>
+                  <span><span class="rekap-sisa-amount">{{ fmt(sisaIuran.sisa) }}</span><span v-if="sisaIuran.pending" class="rekap-sisa-pending"> (pending {{ fmt(sisaIuran.pending) }})</span></span>
+                </span>
+                <span class="rekap-sisa-note">Hanya anggota aktif. Iuran pending belum dihitung terbayar, tapi ditampilkan di samping sisa.</span>
+              </span>
+            </span>
           </h2>
           <div class="rekap-controls-row">
             <div v-if="isLoggedIn" style="position:relative;">
@@ -674,7 +692,8 @@ const app = createApp({
       showReportPicker: false,
       reportMonth: new Date().getMonth() + 1,
       reportYear: new Date().getFullYear(),
-      reportImage: ''
+      reportImage: '',
+      showSisaInfo: false
     };
   },
   computed: {
@@ -825,6 +844,23 @@ const app = createApp({
         // Fallback: flat rate × 12
         return sum + this.getMemberIuran(m.position) * 12;
       }, 0);
+    },
+    sisaIuran() {
+      let target = 0, paid = 0, pending = 0;
+      this.activeMembers.forEach(m => {
+        for (let mo = 1; mo <= 12; mo++) {
+          if (this.isBeforeActive(m, mo)) continue;
+          const rate = this.getRateForMonth(m.position, mo);
+          const p = Math.min(rate, this.getMemberMonthAmount(m.nik, mo));
+          const pend = this.transactions
+            .filter(t => t.memberNik === m.nik && Number(t.month) === mo && Number(t.year) === this.selectedYear && t.kategori === 'iuran' && t.type === 'masuk' && t.status === 'pending')
+            .reduce((sum, t) => sum + Number(t.amount), 0);
+          target += rate;
+          paid += p;
+          pending += Math.min(rate - p, pend);
+        }
+      });
+      return { target, paid, pending, sisa: target - paid };
     },
     simTotal() { return this.positionList.reduce((sum, pos) => sum + (this.simValues[pos] || 0) * this.getPosMemberCount(pos), 0); },
     targetPct() { if (!this.targetKas) return 0; return Math.min(100, Math.round(((this.summary.masuk - this.summary.keluar) / this.targetKas) * 100)); },
