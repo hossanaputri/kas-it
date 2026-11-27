@@ -3550,3 +3550,4 @@ body.light .notif-item.unread {
 .rekap-sisa-total { margin-top: 6px; padding-top: 8px; border-top: 1px solid var(--border); font-weight: 600; color: var(--text); }
 .rekap-sisa-amount { color: var(--red); }
 .rekap-sisa-note { margin-top: 6px; font-size: var(--fs-xs); color: var(--text-muted); }
+.rekap-sisa-pending { color: var(--yellow); font-weight: 500; }

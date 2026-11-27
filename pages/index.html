@@ -188,9 +188,9 @@
           </div>
           <div class="rekap-sisa-row rekap-sisa-total">
             <span>Sisa (belum terbayar s/d Des {{ selectedYear }})</span>
-            <span class="rekap-sisa-amount">{{ fmt(sisaIuran.sisa) }}</span>
+            <span><span class="rekap-sisa-amount">{{ fmt(sisaIuran.sisa) }}</span><span v-if="sisaIuran.pending" class="rekap-sisa-pending"> (pending {{ fmt(sisaIuran.pending) }})</span></span>
           </div>
-          <div class="rekap-sisa-note">Hanya anggota aktif. Iuran pending belum dihitung terbayar.</div>
+          <div class="rekap-sisa-note">Hanya anggota aktif. Iuran pending belum dihitung terbayar, tapi ditampilkan di samping sisa.</div>
         </div>
       </div>
 
@@ -842,17 +842,21 @@ const app = createApp({
       }, 0);
     },
     sisaIuran() {
-      let target = 0, paid = 0;
+      let target = 0, paid = 0, pending = 0;
       this.activeMembers.forEach(m => {
         for (let mo = 1; mo <= 12; mo++) {
           if (this.isBeforeActive(m, mo)) continue;
           const rate = this.getRateForMonth(m.position, mo);
           const p = Math.min(rate, this.getMemberMonthAmount(m.nik, mo));
+          const pend = this.transactions
+            .filter(t => t.memberNik === m.nik && Number(t.month) === mo && Number(t.year) === this.selectedYear && t.kategori === 'iuran' && t.type === 'masuk' && t.status === 'pending')
+            .reduce((sum, t) => sum + Number(t.amount), 0);
           target += rate;
           paid += p;
+          pending += Math.min(rate - p, pend);
         }
       });
-      return { target, paid, sisa: target - paid };
+      return { target, paid, pending, sisa: target - paid };
     },
     simTotal() { return this.positionList.reduce((sum, pos) => sum + (this.simValues[pos] || 0) * this.getPosMemberCount(pos), 0); },
     targetPct() { if (!this.targetKas) return 0; return Math.min(100, Math.round(((this.summary.masuk - this.summary.keluar) / this.targetKas) * 100)); },
