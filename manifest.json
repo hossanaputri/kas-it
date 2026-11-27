@@ -2,7 +2,7 @@
   "name": "IT-Kas",
   "short_name": "IT-Kas",
   "description": "Dashboard Kas IT — Kelola iuran, event, dan keuangan tim IT",
-  "start_url": "./pages/login.html",
+  "start_url": "./pages/index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f5fbf6",

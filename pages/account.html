@@ -102,9 +102,9 @@ const app = createApp({
   },
   computed: {
     pendingCount() { return 0; },
-    memberNik() { return sessionStorage.getItem('kas-it-member-nik') || ''; },
-    userName() { return sessionStorage.getItem('kas-it-member-name') || ''; },
-    position() { return sessionStorage.getItem('kas-it-member-position') || ''; }
+    memberNik() { return localStorage.getItem('kas-it-member-nik') || ''; },
+    userName() { return localStorage.getItem('kas-it-member-name') || ''; },
+    position() { return localStorage.getItem('kas-it-member-position') || ''; }
   },
   methods: {
     posClass(pos) {
@@ -141,7 +141,7 @@ const app = createApp({
           method: 'POST',
           body: JSON.stringify({
             action: 'changePassword',
-            token: sessionStorage.getItem('kas-it-token'),
+            token: localStorage.getItem('kas-it-token'),
             memberNik: this.memberNik,
             oldPasswordHash: oldHashHex,
             newPasswordHash: newHashHex

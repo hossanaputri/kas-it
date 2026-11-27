@@ -775,7 +775,7 @@ const app = createApp({
       return { month, year, telatNames };
     },
     personalPaymentAlert() {
-      const nik = sessionStorage.getItem('kas-it-member-nik') || '';
+      const nik = localStorage.getItem('kas-it-member-nik') || '';
       const member = this.members.find(item => String(item.nik) === String(nik));
       if (!nik || !member || !(member.isActive === true || member.isActive === 'TRUE')) return null;
 
@@ -953,7 +953,7 @@ const app = createApp({
     'form.year'(newYear) {
       this.form.months = [];
       // Reload rates for the new year
-      const token = sessionStorage.getItem('kas-it-token') || '';
+      const token = localStorage.getItem('kas-it-token') || '';
       fetch(API_URL + '?action=ratesForYear&year=' + newYear + '&token=' + encodeURIComponent(token)).then(r => r.json()).then(data => { this.ratesForYear = data; }).catch(() => {});
     },
     bulkRows(newRows) { this.bulkMemberData = newRows.map(r => ({ nik: r.nik, checked: this.bulkMemberData.find(x => x.nik === r.nik)?.checked || false })); },
@@ -976,7 +976,7 @@ const app = createApp({
     async loadData() {
       const cacheKey = 'kas-it-dashboard-cache-' + this.selectedYear;
       const year = this.selectedYear;
-      const token = sessionStorage.getItem('kas-it-token') || '';
+      const token = localStorage.getItem('kas-it-token') || '';
 
       // 1. Load from cache instantly (if available)
       try {
@@ -1060,8 +1060,8 @@ const app = createApp({
     openSubmitModal() {
       this.showSubmitModal = true;
       if (!this.isAdmin) {
-        const nik = sessionStorage.getItem('kas-it-member-nik') || '';
-        const name = sessionStorage.getItem('kas-it-member-name') || '';
+        const nik = localStorage.getItem('kas-it-member-nik') || '';
+        const name = localStorage.getItem('kas-it-member-name') || '';
         if (nik) { this.form.memberNik = nik; this.form.memberName = name; this.onMemberChange(); }
       }
     },
@@ -1169,7 +1169,7 @@ const app = createApp({
         this.submitting = true;
         const isAdmin = this.isAdmin;
         try {
-          const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'addTransaction', token: sessionStorage.getItem('kas-it-token') || '', kategori: 'event', type: 'masuk', amount: this.form.eventAmount, status: isAdmin ? 'approved' : 'pending', memberNik: this.form.memberNik, memberName: this.form.memberName, note: 'Event payment', month: new Date().getMonth() + 1, year: new Date().getFullYear(), eventId: this.form.eventId, submittedAt: new Date().toISOString(), approvedAt: isAdmin ? new Date().toISOString() : '', approvedBy: isAdmin ? 'admin' : '', createdBy: sessionStorage.getItem('kas-it-member-nik') || '' }) });
+          const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'addTransaction', token: localStorage.getItem('kas-it-token') || '', kategori: 'event', type: 'masuk', amount: this.form.eventAmount, status: isAdmin ? 'approved' : 'pending', memberNik: this.form.memberNik, memberName: this.form.memberName, note: 'Event payment', month: new Date().getMonth() + 1, year: new Date().getFullYear(), eventId: this.form.eventId, submittedAt: new Date().toISOString(), approvedAt: isAdmin ? new Date().toISOString() : '', approvedBy: isAdmin ? 'admin' : '', createdBy: localStorage.getItem('kas-it-member-nik') || '' }) });
           const result = await res.json();
           if (result.ok !== false) { this.showToast('Pembayaran event berhasil!'); this.showSubmitModal = false; this.form = { memberNik: '', memberName: '', type: 'masuk', txType: '', months: [], amount: 0, note: '', eventId: '', eventAmount: 0, year: new Date().getFullYear() }; this.loadData(); }
           else { this.showToast(result.error || 'Gagal', false); }
@@ -1184,11 +1184,11 @@ const app = createApp({
         const remaining = this.getFormMonthRemaining(this.form.memberNik, month);
         const isSelisih = this.isFormMonthSelisih(this.form.memberNik, month);
         const notePrefix = isSelisih ? 'Selisih Iuran ' : 'Iuran ';
-        return { kategori: 'iuran', memberNik: this.form.memberNik, memberName: this.form.memberName, month, year, type: 'masuk', amount: remaining, note: notePrefix + this.monthNames[month - 1] + ' ' + year, submittedAt: new Date().toISOString(), status: isAdmin ? 'approved' : 'pending', eventId: '', approvedAt: isAdmin ? new Date().toISOString() : '', approvedBy: isAdmin ? 'admin' : '', createdBy: sessionStorage.getItem('kas-it-member-nik') || '' };
+        return { kategori: 'iuran', memberNik: this.form.memberNik, memberName: this.form.memberName, month, year, type: 'masuk', amount: remaining, note: notePrefix + this.monthNames[month - 1] + ' ' + year, submittedAt: new Date().toISOString(), status: isAdmin ? 'approved' : 'pending', eventId: '', approvedAt: isAdmin ? new Date().toISOString() : '', approvedBy: isAdmin ? 'admin' : '', createdBy: localStorage.getItem('kas-it-member-nik') || '' };
       }).filter(t => t.amount > 0);
       if (!txs.length) { this.showToast('Tidak ada sisa yang perlu dibayar', false); this.submitting = false; return; }
       try {
-        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'bulkAddTransactions', token: sessionStorage.getItem('kas-it-token') || '', transactions: txs }) });
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'bulkAddTransactions', token: localStorage.getItem('kas-it-token') || '', transactions: txs }) });
         const result = await res.json();
         if (result.ok !== false) { this.showToast(txs.length + ' transaksi berhasil disimpan!'); this.showSubmitModal = false; this.form = { memberNik: '', memberName: '', type: 'masuk', txType: '', months: [], amount: 0, note: '', eventId: '', eventAmount: 0, year: new Date().getFullYear() }; this.loadData(); }
         else { this.showToast('Gagal menyimpan', false); }
@@ -1240,7 +1240,7 @@ const app = createApp({
       if (!rates.length) { this.showToast('Tidak ada perubahan tarif', false); return; }
       this.editIuranSaving = true;
       try {
-        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'addMasterIuran', token: sessionStorage.getItem('kas-it-token') || '', rates }) });
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'addMasterIuran', token: localStorage.getItem('kas-it-token') || '', rates }) });
         const result = await res.json();
         if (result.ok !== false) { this.showToast(rates.length + ' tarif baru berhasil disimpan!'); this.showEditIuranModal = false; this.loadData(); }
         else { this.showToast(result.error || 'Gagal', false); }
@@ -1253,7 +1253,7 @@ const app = createApp({
       const activeFrom = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
       const rates = this.positionList.map(pos => ({ position: pos, amount: this.simValues[pos], activeFrom }));
       try {
-        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'addMasterIuran', token: sessionStorage.getItem('kas-it-token') || '', rates }) });
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'addMasterIuran', token: localStorage.getItem('kas-it-token') || '', rates }) });
         const result = await res.json();
         if (result.ok !== false) { this.showToast('Simulasi diterapkan!'); this.showSimModal = false; this.loadData(); }
         else { this.showToast(result.error || 'Gagal', false); }
@@ -1316,13 +1316,13 @@ const app = createApp({
       this.bulkRows.filter(r => checkedNiks.includes(r.nik)).forEach(row => {
         row.unpaidMonths.forEach(month => {
           const amount = this.getRateForMonth(row.position, month);
-          txs.push({ kategori: 'iuran', memberNik: row.nik, memberName: row.name, month, year, type: 'masuk', amount, note: 'Iuran ' + this.monthNames[month - 1] + ' ' + year, submittedAt: new Date().toISOString(), status: 'approved', eventId: '', approvedAt: new Date().toISOString(), approvedBy: sessionStorage.getItem('kas-it-member-nik') || '', createdBy: sessionStorage.getItem('kas-it-member-nik') || '' });
+          txs.push({ kategori: 'iuran', memberNik: row.nik, memberName: row.name, month, year, type: 'masuk', amount, note: 'Iuran ' + this.monthNames[month - 1] + ' ' + year, submittedAt: new Date().toISOString(), status: 'approved', eventId: '', approvedAt: new Date().toISOString(), approvedBy: localStorage.getItem('kas-it-member-nik') || '', createdBy: localStorage.getItem('kas-it-member-nik') || '' });
         });
       });
       if (!txs.length) return;
       this.bulkSaving = true;
       try {
-        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'bulkAddTransactions', token: sessionStorage.getItem('kas-it-token') || '', transactions: txs }) });
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'bulkAddTransactions', token: localStorage.getItem('kas-it-token') || '', transactions: txs }) });
         const result = await res.json();
         if (result.ok !== false) { this.showToast(txs.length + ' transaksi berhasil disimpan!'); this.showBulkModal = false; this.loadData(); }
         else { this.showToast('Gagal menyimpan', false); }
@@ -1393,7 +1393,7 @@ const app = createApp({
       if (!this.extForm.note || !this.extForm.amount) { this.showToast('Isi keterangan dan jumlah', false); return; }
       this.extSaving = true;
       try {
-        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'addTransaction', token: sessionStorage.getItem('kas-it-token') || '', kategori: 'lainnya', type: 'masuk', amount: this.extForm.amount, status: 'approved', memberNik: '', memberName: '', note: this.extForm.note, month: new Date().getMonth() + 1, year: new Date().getFullYear(), eventId: '', submittedAt: new Date().toISOString(), approvedAt: new Date().toISOString(), approvedBy: sessionStorage.getItem('kas-it-member-nik') || '', createdBy: sessionStorage.getItem('kas-it-member-nik') || '' }) });
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'addTransaction', token: localStorage.getItem('kas-it-token') || '', kategori: 'lainnya', type: 'masuk', amount: this.extForm.amount, status: 'approved', memberNik: '', memberName: '', note: this.extForm.note, month: new Date().getMonth() + 1, year: new Date().getFullYear(), eventId: '', submittedAt: new Date().toISOString(), approvedAt: new Date().toISOString(), approvedBy: localStorage.getItem('kas-it-member-nik') || '', createdBy: localStorage.getItem('kas-it-member-nik') || '' }) });
         const result = await res.json();
         if (result.ok !== false) { this.showToast('Pemasukan berhasil dicatat!'); this.showExtModal = false; this.extForm = { note: '', amount: 0 }; this.loadData(); }
         else { this.showToast(result.error || 'Gagal', false); }
@@ -1404,7 +1404,7 @@ const app = createApp({
       if (!this.outForm.note || !this.outForm.amount) { this.showToast('Isi keterangan dan jumlah', false); return; }
       this.outSaving = true;
       try {
-        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'addTransaction', token: sessionStorage.getItem('kas-it-token') || '', kategori: 'lainnya', type: 'keluar', amount: this.outForm.amount, status: 'approved', memberNik: '', memberName: '', note: this.outForm.note, month: new Date().getMonth() + 1, year: new Date().getFullYear(), eventId: '', submittedAt: new Date().toISOString(), approvedAt: new Date().toISOString(), approvedBy: sessionStorage.getItem('kas-it-member-nik') || '', createdBy: sessionStorage.getItem('kas-it-member-nik') || '' }) });
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'addTransaction', token: localStorage.getItem('kas-it-token') || '', kategori: 'lainnya', type: 'keluar', amount: this.outForm.amount, status: 'approved', memberNik: '', memberName: '', note: this.outForm.note, month: new Date().getMonth() + 1, year: new Date().getFullYear(), eventId: '', submittedAt: new Date().toISOString(), approvedAt: new Date().toISOString(), approvedBy: localStorage.getItem('kas-it-member-nik') || '', createdBy: localStorage.getItem('kas-it-member-nik') || '' }) });
         const result = await res.json();
         if (result.ok !== false) { this.showToast('Pengeluaran berhasil dicatat!'); this.showOutModal = false; this.outForm = { note: '', amount: 0 }; this.loadData(); }
         else { this.showToast(result.error || 'Gagal', false); }

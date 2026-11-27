@@ -75,10 +75,10 @@ const AppNav = {
   `,
   computed: {
     isAdmin() {
-      return sessionStorage.getItem('kas-it-is-admin') === 'true';
+      return localStorage.getItem('kas-it-is-admin') === 'true';
     },
     userName() {
-      return sessionStorage.getItem('kas-it-member-name') || '';
+      return localStorage.getItem('kas-it-member-name') || '';
     },
     logoSrc() {
       return '../icons/icon-light-192.png';
