@@ -187,7 +187,7 @@ const app = createApp({
           token: getSession().token,
           id: tx.id,
           approvedAt: new Date().toISOString(),
-          approvedBy: sessionStorage.getItem('kas-it-member-nik') || ''
+          approvedBy: localStorage.getItem('kas-it-member-nik') || ''
         })
       });
       const result = await res.json();

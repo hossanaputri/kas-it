@@ -178,7 +178,7 @@ createApp({
     };
   },
   mounted() {
-    const token = sessionStorage.getItem('kas-it-token');
+    const token = localStorage.getItem('kas-it-token');
     if (token) {
       this.verifyAndRedirect(token);
     }
@@ -304,10 +304,10 @@ createApp({
         });
         const result = await res.json();
         if (result.valid) {
-          sessionStorage.setItem('kas-it-login-time', String(Date.now()));
+          localStorage.setItem('kas-it-login-time', String(Date.now()));
           window.location.href = 'index.html';
         } else {
-          sessionStorage.removeItem('kas-it-token');
+          clearSession();
         }
       } catch (err) {}
     },
@@ -350,19 +350,19 @@ createApp({
             this.pendingToken = result.token;
             this.showChangePassword = true;
             this.errorMsg = '';
-            sessionStorage.setItem('kas-it-token', result.token);
-            sessionStorage.setItem('kas-it-login-time', String(Date.now()));
-            sessionStorage.setItem('kas-it-member-nik', result.memberNik || '');
-            sessionStorage.setItem('kas-it-member-name', result.memberName || '');
-            sessionStorage.setItem('kas-it-member-position', result.memberPosition || '');
-            sessionStorage.setItem('kas-it-is-admin', result.isAdmin ? 'true' : 'false');
+            localStorage.setItem('kas-it-token', result.token);
+            localStorage.setItem('kas-it-login-time', String(Date.now()));
+            localStorage.setItem('kas-it-member-nik', result.memberNik || '');
+            localStorage.setItem('kas-it-member-name', result.memberName || '');
+            localStorage.setItem('kas-it-member-position', result.memberPosition || '');
+            localStorage.setItem('kas-it-is-admin', result.isAdmin ? 'true' : 'false');
           } else {
-            sessionStorage.setItem('kas-it-token', result.token);
-            sessionStorage.setItem('kas-it-login-time', String(Date.now()));
-            sessionStorage.setItem('kas-it-member-nik', result.memberNik || '');
-            sessionStorage.setItem('kas-it-member-name', result.memberName || '');
-            sessionStorage.setItem('kas-it-member-position', result.memberPosition || '');
-            sessionStorage.setItem('kas-it-is-admin', result.isAdmin ? 'true' : 'false');
+            localStorage.setItem('kas-it-token', result.token);
+            localStorage.setItem('kas-it-login-time', String(Date.now()));
+            localStorage.setItem('kas-it-member-nik', result.memberNik || '');
+            localStorage.setItem('kas-it-member-name', result.memberName || '');
+            localStorage.setItem('kas-it-member-position', result.memberPosition || '');
+            localStorage.setItem('kas-it-is-admin', result.isAdmin ? 'true' : 'false');
             window.location.href = 'index.html';
           }
         } else {
@@ -396,7 +396,7 @@ createApp({
           body: JSON.stringify({
             action: 'changePassword',
             token: this.pendingToken,
-            memberNik: sessionStorage.getItem('kas-it-member-nik') || '',
+            memberNik: localStorage.getItem('kas-it-member-nik') || '',
             newPasswordHash: hashHex
           })
         });

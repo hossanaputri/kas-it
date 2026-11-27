@@ -315,7 +315,7 @@ const app = createApp({
     // Actions
     closeEvent(ev) {
       this.askConfirm('Close event "' + ev.name + '"?', 'Close', async () => {
-        await this.postAction({ action: 'closeEvent', id: ev.id, closedBy: sessionStorage.getItem('kas-it-member-nik') || '' });
+        await this.postAction({ action: 'closeEvent', id: ev.id, closedBy: localStorage.getItem('kas-it-member-nik') || '' });
       });
     },
 
