@@ -3542,3 +3542,11 @@ body.light .notif-item.unread {
   background: rgba(102, 187, 106, 0.06);
   border-color: rgba(102, 187, 106, 0.2);
 }
+
+/* --- Sisa iuran (admin) --- */
+.rekap-sisa { margin-top: 12px; padding: 12px 14px; border-radius: var(--radius-md); background: var(--bg-card); border: 1px solid var(--border); font-size: var(--fs-sm); }
+.rekap-sisa-row { display: flex; justify-content: space-between; gap: 12px; padding: 3px 0; color: var(--text-light); }
+.rekap-sisa-paid { color: var(--green); }
+.rekap-sisa-total { margin-top: 6px; padding-top: 8px; border-top: 1px solid var(--border); font-weight: 600; color: var(--text); }
+.rekap-sisa-amount { color: var(--red); }
+.rekap-sisa-note { margin-top: 6px; font-size: var(--fs-xs); color: var(--text-muted); }

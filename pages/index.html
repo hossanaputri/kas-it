@@ -177,6 +177,21 @@
             </tbody>
           </table>
         </div>
+        <div v-if="isAdmin" class="rekap-sisa">
+          <div class="rekap-sisa-row">
+            <span>Target iuran {{ selectedYear }}</span>
+            <span>{{ fmt(sisaIuran.target) }}</span>
+          </div>
+          <div class="rekap-sisa-row">
+            <span>Sudah terbayar</span>
+            <span class="rekap-sisa-paid">{{ fmt(sisaIuran.paid) }}</span>
+          </div>
+          <div class="rekap-sisa-row rekap-sisa-total">
+            <span>Sisa (belum terbayar s/d Des {{ selectedYear }})</span>
+            <span class="rekap-sisa-amount">{{ fmt(sisaIuran.sisa) }}</span>
+          </div>
+          <div class="rekap-sisa-note">Hanya anggota aktif. Iuran pending belum dihitung terbayar.</div>
+        </div>
       </div>
 
       <!-- Tab: Rekap Event -->
@@ -825,6 +840,19 @@ const app = createApp({
         // Fallback: flat rate × 12
         return sum + this.getMemberIuran(m.position) * 12;
       }, 0);
+    },
+    sisaIuran() {
+      let target = 0, paid = 0;
+      this.activeMembers.forEach(m => {
+        for (let mo = 1; mo <= 12; mo++) {
+          if (this.isBeforeActive(m, mo)) continue;
+          const rate = this.getRateForMonth(m.position, mo);
+          const p = Math.min(rate, this.getMemberMonthAmount(m.nik, mo));
+          target += rate;
+          paid += p;
+        }
+      });
+      return { target, paid, sisa: target - paid };
     },
     simTotal() { return this.positionList.reduce((sum, pos) => sum + (this.simValues[pos] || 0) * this.getPosMemberCount(pos), 0); },
     targetPct() { if (!this.targetKas) return 0; return Math.min(100, Math.round(((this.summary.masuk - this.summary.keluar) / this.targetKas) * 100)); },
