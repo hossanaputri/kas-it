@@ -133,6 +133,24 @@
             <select v-model="selectedYear" @change="loadData" class="rekap-select rekap-select-inline">
               <option v-for="y in yearOptions" :key="y" :value="y">{{ y }}</option>
             </select>
+            <span v-if="isAdmin" class="rekap-info" tabindex="0" @click.stop="showSisaInfo = !showSisaInfo" @mouseleave="showSisaInfo = false" @blur="showSisaInfo = false">
+              <span class="rekap-info-icon">ⓘ</span>
+              <span class="rekap-sisa" :class="{ open: showSisaInfo }">
+                <span class="rekap-sisa-row">
+                  <span>Target iuran {{ selectedYear }}</span>
+                  <span>{{ fmt(sisaIuran.target) }}</span>
+                </span>
+                <span class="rekap-sisa-row">
+                  <span>Sudah terbayar</span>
+                  <span class="rekap-sisa-paid">{{ fmt(sisaIuran.paid) }}</span>
+                </span>
+                <span class="rekap-sisa-row rekap-sisa-total">
+                  <span>Sisa (belum terbayar s/d Des {{ selectedYear }})</span>
+                  <span><span class="rekap-sisa-amount">{{ fmt(sisaIuran.sisa) }}</span><span v-if="sisaIuran.pending" class="rekap-sisa-pending"> (pending {{ fmt(sisaIuran.pending) }})</span></span>
+                </span>
+                <span class="rekap-sisa-note">Hanya anggota aktif. Iuran pending belum dihitung terbayar, tapi ditampilkan di samping sisa.</span>
+              </span>
+            </span>
           </h2>
           <div class="rekap-controls-row">
             <div v-if="isLoggedIn" style="position:relative;">
@@ -176,21 +194,6 @@
               </tr>
             </tbody>
           </table>
-        </div>
-        <div v-if="isAdmin" class="rekap-sisa">
-          <div class="rekap-sisa-row">
-            <span>Target iuran {{ selectedYear }}</span>
-            <span>{{ fmt(sisaIuran.target) }}</span>
-          </div>
-          <div class="rekap-sisa-row">
-            <span>Sudah terbayar</span>
-            <span class="rekap-sisa-paid">{{ fmt(sisaIuran.paid) }}</span>
-          </div>
-          <div class="rekap-sisa-row rekap-sisa-total">
-            <span>Sisa (belum terbayar s/d Des {{ selectedYear }})</span>
-            <span><span class="rekap-sisa-amount">{{ fmt(sisaIuran.sisa) }}</span><span v-if="sisaIuran.pending" class="rekap-sisa-pending"> (pending {{ fmt(sisaIuran.pending) }})</span></span>
-          </div>
-          <div class="rekap-sisa-note">Hanya anggota aktif. Iuran pending belum dihitung terbayar, tapi ditampilkan di samping sisa.</div>
         </div>
       </div>
 
@@ -689,7 +692,8 @@ const app = createApp({
       showReportPicker: false,
       reportMonth: new Date().getMonth() + 1,
       reportYear: new Date().getFullYear(),
-      reportImage: ''
+      reportImage: '',
+      showSisaInfo: false
     };
   },
   computed: {

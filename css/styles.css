@@ -3543,11 +3543,15 @@ body.light .notif-item.unread {
   border-color: rgba(102, 187, 106, 0.2);
 }
 
-/* --- Sisa iuran (admin) --- */
-.rekap-sisa { margin-top: 12px; padding: 12px 14px; border-radius: var(--radius-md); background: var(--bg-card); border: 1px solid var(--border); font-size: var(--fs-sm); }
+/* --- Sisa iuran (admin, info popover) --- */
+.rekap-info { position: relative; display: inline-flex; align-items: center; margin-left: 6px; vertical-align: middle; cursor: pointer; outline: none; }
+.rekap-info-icon { font-size: 16px; line-height: 1; color: var(--text-muted); transition: color .15s; }
+.rekap-info:hover .rekap-info-icon, .rekap-info:focus .rekap-info-icon { color: var(--primary); }
+.rekap-sisa { display: none; position: absolute; top: calc(100% + 8px); left: 0; z-index: 20; width: 300px; max-width: calc(100vw - 32px); padding: 12px 14px; border-radius: var(--radius-md); background: var(--bg); border: 1px solid var(--border); box-shadow: var(--shadow-md); font-size: var(--fs-sm); font-weight: 400; cursor: default; }
+.rekap-info:hover .rekap-sisa, .rekap-sisa.open { display: block; }
 .rekap-sisa-row { display: flex; justify-content: space-between; gap: 12px; padding: 3px 0; color: var(--text-light); }
 .rekap-sisa-paid { color: var(--green); }
 .rekap-sisa-total { margin-top: 6px; padding-top: 8px; border-top: 1px solid var(--border); font-weight: 600; color: var(--text); }
 .rekap-sisa-amount { color: var(--red); }
-.rekap-sisa-note { margin-top: 6px; font-size: var(--fs-xs); color: var(--text-muted); }
 .rekap-sisa-pending { color: var(--yellow); font-weight: 500; }
+.rekap-sisa-note { display: block; margin-top: 6px; font-size: var(--fs-xs); color: var(--text-muted); }
